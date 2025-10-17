@@ -38,7 +38,7 @@
         class="text-base sm:text-lg md:text-xl text-gray-300 mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed font-ibm-plex-mono"
       >
         We create cutting-edge digital solutions that empower startups, and small
-        to medium-sized companies to achieve their business goals.
+        to enterprise companies to achieve their business goals.
       </p>
 
       <button

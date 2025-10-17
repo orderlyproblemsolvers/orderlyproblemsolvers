@@ -155,6 +155,12 @@ const toggleMobileSubMenu = (menu) => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
 
+@font-face {
+  font-family: 'Copperplate Gothic';
+  src: url('/fonts/copperplate-gothic-bold.woff2') format('woff2');
+  font-weight: bold;
+}
+
 .font-copperplate {
   font-family: 'Copperplate Gothic', 'Playfair Display', serif;
 }
