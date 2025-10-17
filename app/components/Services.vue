@@ -21,10 +21,7 @@
       </div>
 
       <!-- Services Tab -->
-      <transition
-        name="fade-slide"
-        mode="out-in"
-      >
+      <transition name="fade-slide" mode="out-in">
         <div v-if="activeTab === 'Services'" :key="'services'" class="w-full">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <div
@@ -34,7 +31,14 @@
             >
               <div class="mb-4">
                 <div class="w-12 h-12 flex items-center justify-center p-2">
-                  <img :src="service.icon" :alt="service.title" class="w-full h-full" />
+                  <NuxtImg
+                    :src="service.icon"
+                    :alt="service.title"
+                    class="w-full h-full"
+                    format="webp"
+                    quality="80"
+                    loading="lazy"
+                  />
                 </div>
               </div>
               <h3 class="text-xl md:text-2xl font-heading font-bold mb-3 text-white">
@@ -58,10 +62,7 @@
       </transition>
 
       <!-- Projects Tab -->
-      <transition
-        name="fade-slide"
-        mode="out-in"
-      >
+      <transition name="fade-slide" mode="out-in">
         <div v-if="activeTab === 'Projects'" :key="'projects'" class="w-full">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 mb-12">
             <div
@@ -69,16 +70,35 @@
               :key="project.id"
               class="group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-800"
             >
-              <div class="relative overflow-hidden bg-gray-800">
-                <img
+              <div class="relative overflow-hidden bg-gray-800 aspect-video">
+                <!-- Skeleton Loader -->
+                <div
+                  v-if="!loadedImages[project.id]"
+                  class="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 animate-pulse"
+                />
+
+                <!-- Mobile Image -->
+                <NuxtImg
                   :src="project.imageMob"
                   :alt="project.name"
-                  class="w-full h-auto group-hover:scale-105 transition-transform duration-500 md:hidden"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 md:hidden"
+                  format="webp"
+                  quality="75"
+                  loading="lazy"
+                  sizes="sm:100vw md:50vw lg:50vw"
+                  @load="loadedImages[project.id] = true"
                 />
-                <img
+
+                <!-- Desktop Image -->
+                <NuxtImg
                   :src="project.image"
                   :alt="project.name"
-                  class="w-full h-auto group-hover:scale-105 transition-transform duration-500 hidden md:block"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 hidden md:block"
+                  format="webp"
+                  quality="80"
+                  loading="lazy"
+                  sizes="sm:100vw md:50vw lg:50vw"
+                  @load="loadedImages[project.id] = true"
                 />
               </div>
               <div class="bg-slate-900 p-6 md:p-8">
@@ -106,6 +126,7 @@ import { ref } from 'vue'
 
 const activeTab = ref('Services')
 const tabs = ['Services', 'Projects']
+const loadedImages = ref({})
 
 const services = [
   {
@@ -200,5 +221,23 @@ const projects = [
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+@keyframes pulse-shimmer {
+  0%, 100% {
+    background-position: -1000px 0;
+  }
+  50% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-pulse {
+  animation: pulse-shimmer 2s infinite;
+  background-size: 1000px 100%;
 }
 </style>
