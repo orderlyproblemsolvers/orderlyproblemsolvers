@@ -70,35 +70,38 @@
               :key="project.id"
               class="group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-800"
             >
-              <div class="relative overflow-hidden bg-gray-800 aspect-video">
-                <!-- Skeleton Loader -->
+              <div class="relative overflow-hidden bg-gray-800">
+                <!-- Skeleton Loader Mobile -->
                 <div
-                  v-if="!loadedImages[project.id]"
-                  class="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 animate-pulse"
+                  v-if="!loadedImages[`${project.id}-mob`]"
+                  class="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 animate-pulse md:hidden"
+                />
+
+                <!-- Skeleton Loader Desktop -->
+                <div
+                  v-if="!loadedImages[`${project.id}-desk`]"
+                  class="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 animate-pulse hidden md:block"
                 />
 
                 <!-- Mobile Image -->
-                <NuxtImg
+                <img
                   :src="project.imageMob"
                   :alt="project.name"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 md:hidden"
-                  format="webp"
-                  quality="75"
+                  class="w-full h-auto group-hover:scale-105 transition-transform duration-500 md:hidden"
                   loading="lazy"
-                  sizes="sm:100vw md:50vw lg:50vw"
-                  @load="loadedImages[project.id] = true"
+                  @load="loadedImages[`${project.id}-mob`] = true"
                 />
 
                 <!-- Desktop Image -->
                 <NuxtImg
                   :src="project.image"
                   :alt="project.name"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 hidden md:block"
+                  class="w-full h-auto group-hover:scale-105 transition-transform duration-500 hidden md:block"
                   format="webp"
                   quality="80"
                   loading="lazy"
-                  sizes="sm:100vw md:50vw lg:50vw"
-                  @load="loadedImages[project.id] = true"
+                  sizes="md:50vw lg:50vw"
+                  @load="loadedImages[`${project.id}-desk`] = true"
                 />
               </div>
               <div class="bg-slate-900 p-6 md:p-8">
