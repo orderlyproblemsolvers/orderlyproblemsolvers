@@ -5,7 +5,7 @@
     <!-- Animated Grid Background -->
     <div class="absolute inset-0">
       <!-- Grid lines with SVG -->
-      <svg class="w-full h-full opacity-10" preserveAspectRatio="none">
+      <svg class="w-full h-full opacity-20" preserveAspectRatio="none">
         <defs>
           <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
             <path d="M 60 0 L 0 0 0 60" fill="none" stroke="url(#gridGradient)" stroke-width="0.5"/>

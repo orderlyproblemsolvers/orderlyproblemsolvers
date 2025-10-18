@@ -131,6 +131,7 @@ const menuData = {
     { label: 'Web Development', href: '#' },
     { label: 'Mobile Apps', href: '#' },
     { label: 'Consulting', href: '#' },
+    { label: 'Digital Literacy', href: '#' },
     { label: 'Support', href: '#' }
   ],
   resources: [
