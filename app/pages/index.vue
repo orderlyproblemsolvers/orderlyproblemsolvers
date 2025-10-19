@@ -2,6 +2,7 @@
     <Hero/>
     <Services/>
     <Featured/>
+    <Articles/>
 </template>
 
 <script setup>
