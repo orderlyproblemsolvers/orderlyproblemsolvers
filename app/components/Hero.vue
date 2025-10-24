@@ -14,9 +14,9 @@
 
     <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-8 text-center">
       <h1
-        class="text-4xl sm:text-6xl lg:text-8xl font-bold mb-6 md:mb-8 font-heading bg-gradient-to-r from-yellow-300 via-yellow-100 to-blue-300 bg-clip-text text-transparent p-4"
+        class="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 md:mb-8 font-heading bg-gradient-to-r from-yellow-300 via-yellow-100 to-blue-300 bg-clip-text text-transparent p-4"
       >
-        We Are Agents Of Change
+        Custom Software Solutions For Your Business
       </h1>
 
       <p

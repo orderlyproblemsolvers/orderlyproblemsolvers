@@ -41,14 +41,14 @@
             <img 
               src="/img/bdl.png" 
               alt="Featured project"
-              class="relative w-full rounded-xl shadow-2xl object-cover aspect-video md:aspect-auto md:h-[500px] transition-transform duration-300 group-hover:scale-101"
+              class="relative w-full rounded-xl shadow-2xl object-cover aspect-video md:aspect-auto md:h-[50dvh] transition-transform duration-300 group-hover:scale-101"
             />
           </div>
         </div>
 
         <!-- Description & CTA -->
         <div class="order-1 md:order-2 flex flex-col justify-center">
-          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 font-heading bg-gradient-to-r from-yellow-300 via-yellow-100 to-blue-300 bg-clip-text text-transparent">
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 font-heading text-white">
             Building Digital Legacy
           </h2>
 
