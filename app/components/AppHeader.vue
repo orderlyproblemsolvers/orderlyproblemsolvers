@@ -124,8 +124,7 @@ const menuData = {
   company: [
     { label: 'About Us', href: '/about' },
     { label: 'Team', href: '/team' },
-    { label: 'Careers', href: '#' },
-    { label: 'Contact', href: '#' }
+    { label: 'Contact', href: '/contact' }
   ],
   services: [
     { label: 'Web Development', href: '#' },

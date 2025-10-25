@@ -150,28 +150,28 @@ const team = [
   {
     id: 1,
     name: 'Inikori Efe',
-    role: 'CEO & Founder',
+    role: 'Founder',
     image: '/img/team/efe.png',
     bio: 'Visionary leader driving OPS mission to simplify complexity through intelligent systems.'
   },
   {
     id: 2,
     name: 'Anita Olaleye',
-    role: 'Team Member',
+    role: 'Founding Member',
     image: '/img/team/anita.jpg',
     bio: 'Passionate problem solver dedicated to creating user-centered solutions that drive impact.'
   },
   {
     id: 3,
     name: 'Antony Idiata',
-    role: 'Team Member',
+    role: 'Founding Member',
     image: '/img/team/anton.jpg',
     bio: 'Technical expert committed to building scalable systems that transform operations.'
   },
   {
     id: 4,
     name: 'Marvella Nwaka',
-    role: 'Team Member',
+    role: 'Founding Member',
     image: '/img/team/marvella.jpg',
     bio: 'Creative thinker focused on designing elegant solutions that bridge ideas and execution.'
   }
