@@ -21,10 +21,10 @@
       <div
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between"
       >
-        <a href="/" class="text-2xl md:text-3xl font-bold text-white font-copperplate">
+        <NuxtLink to="/" class="text-2xl md:text-3xl font-bold text-white font-copperplate">
           <span class="hidden md:inline">Orderly Problem Solvers</span>
           <span class="md:hidden">OPS</span>
-        </a>
+        </NuxtLink>
 
         <nav class="hidden md:flex items-center gap-10">
           <div
@@ -41,14 +41,14 @@
             <div
               class="absolute left-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-md shadow-xl overflow-hidden transition-all duration-300 ease-out origin-top opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2"
             >
-              <a
+              <NuxtLink
                 v-for="(item, idx) in items"
                 :key="idx"
-                :href="item.href"
+                :to="item.href"
                 class="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-sm font-ibm-plex-mono"
               >
                 {{ item.label }}
-              </a>
+          </NuxtLink>
             </div>
           </div>
         </nav>
@@ -122,8 +122,8 @@ const openMobileSubMenu = ref(null);
 
 const menuData = {
   company: [
-    { label: 'About Us', href: '#' },
-    { label: 'Team', href: '#' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Team', href: '/team' },
     { label: 'Careers', href: '#' },
     { label: 'Contact', href: '#' }
   ],

@@ -12,9 +12,11 @@
   "dependencies": {
     "@nuxt/image": "^1.11.0",
     "@nuxt/ui": "^4.0.1",
+    "@nuxtjs/seo": "^3.2.2",
     "@tailwindcss/vite": "^4.1.14",
     "nuxt": "^4.1.2",
     "nuxt-charts": "^0.2.4",
+    "nuxt-schema-org": "^5.0.9",
     "tailwindcss": "^4.1.14",
     "three": "^0.180.0",
     "typescript": "^5.9.3",
