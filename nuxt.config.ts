@@ -4,8 +4,30 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/ui', '@nuxt/image', 'nuxt-charts', 'nuxt-schema-org', '@nuxtjs/seo'],
+  modules: ['@nuxt/ui', '@nuxt/image', 'nuxt-charts', 'nuxt-schema-org', '@nuxtjs/seo', '@nuxtjs/supabase'],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_KEY
+    }
+  },
+  supabase: {
+    // Supabase configuration
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    
+    // Optional: Redirect options
+    redirect: false, // Disable automatic redirects (we handle manually)
+    
+    // Optional: Cookie options
+    cookieName: 'ops-auth',
+    cookieOptions: {
+      maxAge: 60 * 60 * 8, // 8 hours
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    },
+  },
   app: {
     head: {
       title: 'Orderly Problem Solvers',

@@ -149,6 +149,7 @@ const menuData = {
     { label: "About Us", href: "/about" },
     { label: "Team", href: "/team" },
     { label: "Contact", href: "/contact" },
+    { label: "Writers Room", href: "/writer" },
   ],
   services: [
     { label: "Web Development", href: "#" },
