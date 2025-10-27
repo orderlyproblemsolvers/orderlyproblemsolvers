@@ -5,34 +5,45 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
 
-  // 🧠 Wait until user is available
-  if (!user.value) {
+  // 🔄 Robust session check with retries
+  let retries = 0
+  const maxRetries = 5
+  
+  while ((!user.value || !user.value.id) && retries < maxRetries) {
     const { data: { session } } = await supabase.auth.getSession()
+    
     if (!session?.user) {
       return navigateTo('/writer/login')
     }
+    
     user.value = session.user
+    
+    if (!user.value.id) {
+      await new Promise((r) => setTimeout(r, 100 * (retries + 1))) // Progressive delay
+      retries++
+    }
   }
 
-  // 🕒 Still null? (rare edge case)
+  // ❌ Final check - if still no user ID, redirect
   if (!user.value?.id) {
-    console.warn('User not yet available, retrying...')
-    await new Promise((r) => setTimeout(r, 300))
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) return navigateTo('/writer/login')
-    user.value = session.user
+    console.error('Failed to load user session after retries')
+    await supabase.auth.signOut()
+    return navigateTo('/writer/login')
   }
 
-  // ✅ Now safe to query
-  const { data: adminData, error } = await supabase
+  // ✅ Verify writer status
+  const { data: writerData, error } = await supabase
     .from('writers')
     .select('*')
     .eq('user_id', user.value.id)
     .eq('is_active', true)
     .single()
 
-  if (error || !adminData) {
+  if (error || !writerData) {
     await supabase.auth.signOut()
     return navigateTo('/writer/login')
   }
+
+  // 🎯 Store writer data in a global state for components to use
+  useState('writerData', () => writerData)
 })

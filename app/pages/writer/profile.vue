@@ -29,8 +29,8 @@
           />
         </div>
 
-        <div v_if="profileSuccessMsg" class="text-green-400 text-sm">{{ profileSuccessMsg }}</div>
-        <div v_if="profileErrorMsg" class="text-red-400 text-sm">{{ profileErrorMsg }}</div>
+        <div v-if="profileSuccessMsg" class="text-green-400 text-sm">{{ profileSuccessMsg }}</div>
+        <div v-if="profileErrorMsg" class="text-red-400 text-sm">{{ profileErrorMsg }}</div>
 
         <div class="pt-2">
           <button 
@@ -73,9 +73,9 @@
             placeholder="••••••••"
           />
         </div>
-
-        <div v_if="passwordSuccessMsg" class="text-green-400 text-sm">{{ passwordSuccessMsg }}</div>
-        <div v_if="passwordErrorMsg" class="text-red-400 text-sm">{{ passwordErrorMsg }}</div>
+        
+        <div v-if="passwordSuccessMsg" class="text-green-400 text-sm">{{ passwordSuccessMsg }}</div>
+        <div v-if="passwordErrorMsg" class="text-red-400 text-sm">{{ passwordErrorMsg }}</div>
 
         <div class="pt-2">
           <button 
@@ -94,13 +94,18 @@
 
 <script setup>
 import { ref, reactive, watch } from 'vue'
+// 1. IMPORT YOUR COMPOSABLE
+import { useWriterAuth } from '~/composables/useWriterAuth'
 
 definePageMeta({
   layout: 'writer',
 })
 
 const supabase = useSupabaseClient()
-const user = useSupabaseUser()
+
+// 2. USE THE COMPOSABLE TO GET THE STATE
+// This state is guaranteed to be populated by your middleware
+const { user, writerData, getUserId } = useWriterAuth()
 
 // Profile Form
 const profileLoading = ref(false)
@@ -119,74 +124,54 @@ const password = reactive({
   confirm: '',
 })
 
-// Fetch initial profile name
-const fetchWriterName = async (userId) => {
-  try {
-    const { data, error } = await supabase
-      .from('writers')
-      .select('name')
-      .eq('user_id', userId)
-      .single()
-    
-    if (error) throw error
-    if (data) {
-      profile.name = data.name
-    }
-  } catch (err) {
-    profileErrorMsg.value = `Error loading profile: ${err.message}`
-  }
-}
+// 3. REMOVE THE REDUNDANT FETCHER
+// DELETE THE 'fetchWriterName' function. It's not needed.
 
-// Watch user and fetch data
-watch(user, (currentUser) => {
-  if (currentUser && currentUser.id) {
-    fetchWriterName(currentUser.id)
+// 4. POPULATE THE FORM FROM THE GLOBAL STATE
+// This watch will populate the form as soon as the 'writerData' state is available.
+watch(writerData, (newData) => {
+  if (newData && newData.name) {
+    profile.name = newData.name
   }
 }, { immediate: true })
 
-
-
-// Handle profile update
+// 5. FIX THE UPDATE HANDLER
 const handleUpdateProfile = async () => {
   profileLoading.value = true
   profileSuccessMsg.value = null
   profileErrorMsg.value = null
 
-  // --- THIS IS THE FIX ---
-  // Add a guard clause to ensure the user ID is available
-  if (!user.value || !user.value.id) {
+  // Use the reliable getter from your composable
+  const currentUserId = getUserId()
+
+  if (!currentUserId) {
     profileErrorMsg.value = "User session not found or has expired. Please try again."
-    console.error("handleUpdateProfile error: user.value.id is null or undefined.")
-    profileLoading.value = false // Stop loading
-    return; // Stop the function
+    console.error("handleUpdateProfile error: getUserId() returned null.")
+    profileLoading.value = false
+    return;
   }
-  // --- END OF FIX ---
 
   try {
     const { data, error } = await supabase
       .from('writers')
       .update({ name: profile.name })
-      .eq('user_id', user.value.id) // This line is now safe
+      .eq('user_id', currentUserId) // Use the safe ID
       .select()
     
     if (error) throw error
     
     profileSuccessMsg.value = 'Profile updated successfully!'
     
+    // 6. UPDATE THE GLOBAL STATE
+    // This is the most important part!
+    // This will automatically update your layout.
     if (data && data[0]) {
-      // Find the layout's name element and update it (hacky but works)
-      const layoutName = document.querySelector('.font-ibm-plex-mono.font-bold.text-white.text-sm.truncate')
-      if (layoutName) layoutName.textContent = data[0].name
-
-      // Also update the initials
-      const initialsEl = document.querySelector('.font-heading.font-bold.text-black.text-sm')
-      if (initialsEl) {
-        initialsEl.textContent = data[0].name
-          .split(' ')
-          .map(n => n[0]?.toUpperCase())
-          .join('')
-      }
+      writerData.value = { ...writerData.value, name: data[0].name }
     }
+    
+    // 7. REMOVE THE "HACKY" DOM MANIPULATION
+    // You don't need 'document.querySelector' anymore
+    // The layout will update automatically because it reads from 'writerData'.
 
   } catch (err) {
     profileErrorMsg.value = err.message
@@ -195,7 +180,7 @@ const handleUpdateProfile = async () => {
   }
 }
 
-// Handle password update
+// ... handleUpdatePassword function is fine ...
 const handleUpdatePassword = async () => {
   if (password.new !== password.confirm) {
     passwordErrorMsg.value = "Passwords do not match."

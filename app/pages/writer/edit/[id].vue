@@ -95,21 +95,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue' // Simplified imports
+import { ref, onMounted } from 'vue'
 
 definePageMeta({
   layout: 'writer',
-  // No middleware: 'auth' needed here, the global middleware handles it
 })
 
 const supabase = useSupabaseClient()
-const user = useSupabaseUser() // Guaranteed to be ready by middleware
 const router = useRouter()
 const route = useRoute()
 const postId = route.params.id
 
+const { isReady, waitForAuth, getWriterId } = useWriterAuth()
+
 const loading = ref(false)
-const loadingData = ref(true) // For initial fetch
+const loadingData = ref(true)
 const errorMsg = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
@@ -118,7 +118,7 @@ const oldImageUrl = ref(null)
 const post = ref({
   title: '',
   description: '',
-  content: '', // This will be populated with HTML
+  content: '',
   tag: null,
   image_url: null,
 })
@@ -128,18 +128,17 @@ const tagOptions = [
   'hardware', 'graphics', 'web', 'community'
 ]
 
-// Fetch existing post data
 const fetchPostData = async () => {
   loadingData.value = true
   try {
-    const writerId = await getWriterId()
+    const writerId = getWriterId()
     if (!writerId) throw new Error("Could not find writer profile.")
 
     const { data, error } = await supabase
       .from('posts')
       .select('*')
       .eq('id', postId)
-      .eq('author_id', writerId) // Ensure this post belongs to this writer
+      .eq('author_id', writerId)
       .single()
 
     if (error) throw new Error(`Could not fetch post or permission denied: ${error.message}`)
@@ -157,24 +156,13 @@ const fetchPostData = async () => {
   }
 }
 
-// Helper to get writer ID
-const getWriterId = async () => {
-  // We can trust user.value.id exists because of the global middleware
-  const { data, error } = await supabase
-    .from('writers')
-    .select('id')
-    .eq('user_id', user.value.id)
-    .single()
-  if (error) {
-    console.error('Error getting writer ID:', error.message)
-    return null
+onMounted(async () => {
+  await waitForAuth()
+  if (isReady.value) {
+    await fetchPostData()
+  } else {
+    errorMsg.value = "Authentication failed. Please refresh the page."
   }
-  return data.id
-}
-
-// We just use onMounted. The middleware guarantees the user is ready.
-onMounted(() => {
-  fetchPostData()
 })
 
 

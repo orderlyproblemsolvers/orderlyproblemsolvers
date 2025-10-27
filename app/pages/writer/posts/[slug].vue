@@ -20,7 +20,10 @@
       Back to All Posts
     </NuxtLink>
 
-    <div v-if="loading" class="text-center text-gray-400">Loading post...</div>
+    <div v-if="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+      <p class="mt-4 text-gray-400 font-ibm-plex-mono">Loading post...</p>
+    </div>
 
     <div
       v-else-if="errorMsg"
@@ -40,55 +43,98 @@
         <h1 class="font-heading text-4xl md:text-5xl text-white mt-2 mb-4">
           {{ post.title }}
         </h1>
-        <p class="text-gray-400">
-          By
-          <span class="text-white">{{ post.writers.name || "Writer" }}</span> on
-          {{ new Date(post.created_at).toLocaleDateString() }}
-        </p>
+        <div class="flex items-center gap-4 text-gray-400 text-sm">
+          <p>
+            By
+            <span class="text-white">{{ post.writers?.name || "Writer" }}</span>
+          </p>
+          <span>•</span>
+          <p>{{ new Date(post.created_at).toLocaleDateString() }}</p>
+          <span>•</span>
+          <p class="flex items-center gap-1">
+            <span 
+              class="inline-block w-2 h-2 rounded-full"
+              :class="post.status === 'published' ? 'bg-green-500' : 'bg-yellow-500'"
+            ></span>
+            {{ post.status === 'published' ? 'Published' : 'Draft' }}
+          </p>
+        </div>
       </div>
 
       <img
         v-if="post.image_url"
         :src="post.image_url"
         alt="Post image"
-        class="rounded-lg w-full object-cover max-h-[500px]"
+        class="rounded-lg w-full object-cover max-h-[500px] mb-8"
       />
+      
       <div class="text-gray-300 font-serif" v-html="post.content"></div>
+      
+      <div class="mt-12 pt-8 border-t border-gray-800 flex items-center justify-between">
+        <NuxtLink
+          :to="`/writer/edit/${post.id}`"
+          class="flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-lg font-ibm-plex-mono font-bold text-sm hover:bg-yellow-300 transition-colors duration-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          Edit Post
+        </NuxtLink>
+      </div>
     </article>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, onMounted } from "vue";
 
 definePageMeta({
   layout: "writer",
 });
 
 const supabase = useSupabaseClient();
-const user = useSupabaseUser();
 const route = useRoute();
+const { isReady, waitForAuth, getWriterId } = useWriterAuth();
 
 const post = ref(null);
 const loading = ref(true);
 const errorMsg = ref(null);
 
 const fetchPost = async () => {
-  if (!route.params.slug) return;
+  if (!route.params.slug) {
+    errorMsg.value = "No post slug provided.";
+    loading.value = false;
+    return;
+  }
 
   loading.value = true;
   errorMsg.value = null;
+  
   try {
-    // RLS policy ensures only published posts are public,
-    // but the writer's own RLS policy allows them to read their own drafts too.
+    const writerId = getWriterId();
+    if (!writerId) {
+      throw new Error("Could not find writer profile.");
+    }
+
+    // Fetch the post
+    // RLS policy allows writers to see their own posts (published or draft)
     const { data, error } = await supabase
       .from("posts")
-      .select("*, writers ( name )") // Fetch post and author name
+      .select("*, writers ( name )")
       .eq("slug", route.params.slug)
+      .eq("author_id", writerId) // Ensure writer can only view their own posts
       .single();
 
-    if (error) throw error;
-    if (!data) throw new Error("Post not found.");
+    if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error("Post not found or you don't have permission to view it.");
+      }
+      throw error;
+    }
+    
+    if (!data) {
+      throw new Error("Post not found.");
+    }
 
     post.value = data;
   } catch (err) {
@@ -99,17 +145,16 @@ const fetchPost = async () => {
   }
 };
 
-// Watch for user to be loaded before fetching
-// This ensures RLS policies are in effect
-watch(
-  user,
-  (currentUser) => {
-    if (currentUser) {
-      fetchPost();
-    }
-  },
-  { immediate: true }
-);
+onMounted(async () => {
+  await waitForAuth();
+  
+  if (isReady.value) {
+    await fetchPost();
+  } else {
+    errorMsg.value = "Authentication failed. Please refresh the page.";
+    loading.value = false;
+  }
+});
 </script>
 
 <style lang="postcss">
@@ -127,6 +172,9 @@ watch(
 .prose a {
   color: theme("colors.yellow.400");
 }
+.prose a:hover {
+  color: theme("colors.yellow.300");
+}
 .prose strong {
   color: theme("colors.white");
 }
@@ -139,9 +187,23 @@ watch(
   background-color: theme("colors.gray.800");
   padding: 0.2em 0.4em;
   border-radius: 6px;
+  font-size: 0.875em;
 }
 .prose pre {
   background-color: theme("colors.slate.900");
   border: 1px solid theme("colors.gray.800");
+  border-radius: 0.5rem;
+}
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+.prose ul,
+.prose ol {
+  color: theme("colors.gray.300");
+}
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 </style>

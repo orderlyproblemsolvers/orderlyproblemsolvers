@@ -42,7 +42,6 @@
             </NuxtLink>
           </div>
         </nav>
-
         <div class="p-4 border-t border-gray-800">
           <div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-800">
             <div class="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center">
@@ -52,7 +51,7 @@
             </div>
             <div class="flex-1 min-w-0">
               <p class="font-ibm-plex-mono font-bold text-white text-sm truncate">
-                {{ writerName || 'Loading...' }}
+                {{ writerName }}
               </p>
               <p class="text-xs text-gray-400 truncate">Writer</p>
             </div>
@@ -130,75 +129,49 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue' // Removed onMounted
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+// 1. IMPORT YOUR COMPOSABLE
+import { useWriterAuth } from '~/composables/useWriterAuth'
 
 const supabase = useSupabaseClient()
 const router = useRouter()
 const route = useRoute()
-const user = useSupabaseUser()
+
+// 2. USE THE COMPOSABLE TO GET THE STATE
+const { user, writerData } = useWriterAuth()
 
 const sidebarOpen = ref(false)
-const writerName = ref('')
 
-// Compute initials from name
+// 3. COMPUTE NAME AND INITIALS FROM GLOBAL STATE
+const writerName = computed(() => writerData.value?.name || 'Loading...')
 const writerInitials = computed(() => {
-  if (!writerName.value) return '...'
-  return writerName.value
+  if (!writerData.value?.name) return '...'
+  return writerData.value.name
     .split(' ')
     .map(n => n[0]?.toUpperCase())
     .join('')
 })
 
-// Fetch writer name from Supabase
-const fetchWriterName = async ()=> {
-  // Guard clause is still here for safety
-  if (!user.value || !user.value.id) {
-    console.warn("fetchWriterName skipped: user.value.id is not available.")
-    return 
-  }
+// 4. (REMOVED fetchWriterName)
 
-  const { data, error } = await supabase
-    .from('writers')
-    .select('name')
-    .eq('user_id', user.value.id)
-    .eq('is_active', true)
-    .single()
-
-  if (error) {
-    console.error('Error fetching writer name:', error.message)
-    return
-  }
-  writerName.value = data?.name || 'Writer'
-}
-
-// --- THIS IS THE CORRECTED LOGIC ---
-// This watcher now also handles authentication
+// 5. CORRECTED WATCHER FOR LOGOUTS
 watch(user, (currentUser) => {
-  if (currentUser && currentUser.id) {
-    // Case 1: User is logged in and has an ID. Fetch name.
-    fetchWriterName()
-  } else if (currentUser === null) {
-    // Case 2: The watcher has confirmed the user is logged out.
-    // Redirect them to your login page.
-    console.log('No user session in layout, redirecting to login.')
-    
-    // --- IMPORTANT ---
-    // Change '/login' if your login page is at a different path
-    router.push('/') 
+  if (currentUser === null && route.path.startsWith('/writer')) {
+    // This correctly handles a session expiring in the background
+    console.log('User session ended, redirecting to login.')
+    router.push('/writer/login')
   }
-  // Case 3 (Implicit): currentUser is not null but has no ID.
-  // This means the session is still hydrating. We wait.
-  // The watcher will run again when the state settles.
-}, { immediate: true }) // { immediate: true } runs this check on load
+})
 
-// ROUTES
+// 6. THIS IS THE PART I MISSED - THE ICONS AND ROUTES
 const DashboardIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>` }
 const PostsIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6M7 8h6"/></svg>` }
 const DraftsIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>` }
 const PublishedIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>` }
 const ProfileIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>` }
-const SettingsIcon = { template: `<svg classs="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>` }
+// (Fixed typo: 'classs' -> 'class')
+const SettingsIcon = { template: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>` }
 
 
 const routes = ref([
@@ -217,14 +190,16 @@ const isActive = (path) => {
 
 const currentPageTitle = computed(() => routes.value.find(r => isActive(r.path))?.name || 'Writer Dashboard')
 
-// Logout
+// 7. FIXED LOGOUT FUNCTION
 const logout = async () => {
   try {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
-    const user = useSupabaseUser()
+    // Clear the global state
     user.value = null
-    await router.push('/') 
+    writerData.value = null
+    // Redirect to the correct login page
+    await router.push('/writer/login') 
   } catch (err) {
     console.error('Logout error:', err.message)
   }

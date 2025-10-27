@@ -1,8 +1,148 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+
+definePageMeta({
+  layout: 'writer',
+})
+
+const supabase = useSupabaseClient()
+const router = useRouter()
+const { isReady, waitForAuth, getWriterId, getUserId } = useWriterAuth()
+
+const loading = ref(false)
+const errorMsg = ref(null)
+const imageFile = ref(null)
+const imagePreview = ref(null)
+const initializing = ref(true)
+
+const post = ref({
+  title: '',
+  description: '',
+  content: '',
+  tag: null,
+  image_url: null,
+})
+
+const tagOptions = [
+  'technology', 'ai', 'science', 'news', 'networking', 
+  'hardware', 'graphics', 'web', 'community'
+]
+
+onMounted(async () => {
+  const ready = await waitForAuth()
+  if (!ready) {
+    errorMsg.value = 'Session timeout. Please refresh the page.'
+  }
+  initializing.value = false
+})
+
+const handleImageUpload = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  
+  imageFile.value = file
+  
+  const reader = new FileReader()
+
+  reader.onload = (event) => {
+    imagePreview.value = event.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+const createSlug = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+const handleSubmit = async (status) => {
+  if (!post.value.title) {
+    errorMsg.value = "Title is required."
+    return
+  }
+
+  if (!isReady.value) {
+    errorMsg.value = "Authentication not ready. Please wait a moment and try again."
+    return
+  }
+
+  loading.value = true
+  errorMsg.value = null
+
+  try {
+    const writerId = getWriterId()
+    
+    if (!writerId) {
+      throw new Error("Could not find writer profile.")
+    }
+    
+    // Upload image if one was selected
+    if (imageFile.value) {
+      const fileExt = imageFile.value.name.split('.').pop()
+      const filePath = `${writerId}/${Date.now()}.${fileExt}`
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('post_images')
+        .upload(filePath, imageFile.value)
+        
+      if (uploadError) throw uploadError
+      
+      const { data: urlData } = supabase.storage
+        .from('post_images')
+        .getPublicUrl(uploadData.path)
+        
+      post.value.image_url = urlData.publicUrl
+    }
+
+    const slug = createSlug(post.value.title)
+
+    const { data: postData, error: postError } = await supabase
+      .from('posts')
+      .insert([
+        {
+          title: post.value.title,
+          description: post.value.description,
+          content: post.value.content,
+          tag: post.value.tag,
+          image_url: post.value.image_url,
+          author_id: writerId,
+          status: status,
+          slug: slug,
+        }
+      ])
+      .select()
+      
+    if (postError) {
+      if (postError.code === '23505') {
+        throw new Error('A post with this title (slug) already exists.')
+      }
+      throw postError
+    }
+
+    router.push('/writer/posts')
+    
+  } catch (err) {
+    errorMsg.value = err.message
+    console.error(err)
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
 <template>
   <div class="max-w-4xl mx-auto text-white">
     <h1 class="font-heading text-3xl mb-8">Create New Post</h1>
     
-    <form @submit.prevent="handleSubmit('published')" class="space-y-6">
+    <div v-if="initializing" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
+      <p class="mt-4 text-gray-400 font-ibm-plex-mono">Initializing...</p>
+    </div>
+    
+    <form v-else @submit.prevent="handleSubmit('published')" class="space-y-6">
       
       <div>
         <label for="title" class="block text-sm font-ibm-plex-mono font-bold text-gray-300 mb-2">Title</label>
@@ -51,7 +191,6 @@
         />
       </div>
 
-
       <div>
         <label for="tag" class="block text-sm font-ibm-plex-mono font-bold text-gray-300 mb-2">Tag</label>
         <select 
@@ -67,10 +206,6 @@
         </select>
       </div>
 
-      <div v-if="!isUserReady" class="text-yellow-400 text-sm font-ibm-plex-mono p-3 bg-yellow-900/50 border border-yellow-800 rounded-lg">
-        Validating session... Please wait.
-      </div>
-
       <div v-if="errorMsg" class="text-red-400 bg-red-900/50 border border-red-800 rounded-lg p-4">
         {{ errorMsg }}
       </div>
@@ -78,14 +213,16 @@
       <div class="flex items-center gap-4 pt-4 border-t border-gray-800">
         <button 
           type="submit"
-          :disabled="loading || !isUserReady" class="px-6 py-3 rounded-lg font-bold font-ibm-plex-mono text-black bg-yellow-400 hover:bg-yellow-300 transition-all duration-300 disabled:opacity-50"
+          :disabled="loading || !isReady" 
+          class="px-6 py-3 rounded-lg font-bold font-ibm-plex-mono text-black bg-yellow-400 hover:bg-yellow-300 transition-all duration-300 disabled:opacity-50"
         >
           {{ loading ? 'Publishing...' : 'Publish' }}
         </button>
         <button 
           type="button"
           @click="handleSubmit('draft')"
-          :disabled="loading || !isUserReady" class="px-6 py-3 rounded-lg font-bold font-ibm-plex-mono text-gray-300 bg-slate-800 hover:bg-slate-700 transition-all duration-300 disabled:opacity-50"
+          :disabled="loading || !isReady" 
+          class="px-6 py-3 rounded-lg font-bold font-ibm-plex-mono text-gray-300 bg-slate-800 hover:bg-slate-700 transition-all duration-300 disabled:opacity-50"
         >
           {{ loading ? 'Saving...' : 'Save Draft' }}
         </button>
@@ -94,174 +231,30 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue' // <-- Added computed
-
-definePageMeta({
-  layout: 'writer',
-})
-
-const supabase = useSupabaseClient()
-const user = useSupabaseUser()
-const router = useRouter()
-
-// --- [FIX IS HERE] ---
-// This computed property will be false until the user object is fully loaded
-const isUserReady = computed(() => !!(user.value && user.value.id))
-// ---------------------
-
-const loading = ref(false)
-const errorMsg = ref(null)
-const imageFile = ref(null)
-const imagePreview = ref(null)
-
-const post = ref({
-  title: '',
-  description: '',
-  content: '', // This will now be HTML
-  tag: null,
-  image_url: null,
-})
-
-const tagOptions = [
-  'technology', 'ai', 'science', 'news', 'networking', 
-  'hardware', 'graphics', 'web', 'community'
-]
-
-const handleImageUpload = (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-  
-  imageFile.value = file
-  
-  // Create local preview
-  const reader = new FileReader()
-  reader.onload = (event) => {
-    imagePreview.value = event.target.result
-  }
-  reader.readAsDataURL(file)
-}
-
-// Function to create a URL-friendly slug
-const createSlug = (title) => {
-  return title
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-const handleSubmit = async (status) => {
-  if (!post.value.title) {
-    errorMsg.value = "Title is required."
-    return
-  }
-
-  // The guard clause remains as a final safety check
-  if (!isUserReady.value) { // <-- Uses the new computed property
-    errorMsg.value = "User session not found or has expired. Please try logging out and back in."
-    console.error("handleSubmit error: user.value.id is null or undefined.")
-    return; // Stop the submission
-  }
-
-  loading.value = true
-  errorMsg.value = null
-
-  try {
-    // 1. Get the writer's ID from their auth user ID
-    const { data: writerData, error: writerError } = await supabase
-      .from('writers')
-      .select('id')
-      .eq('user_id', user.value.id) // This line is now safe
-      .single()
-
-    if (writerError || !writerData) {
-      throw new Error("Could not find writer profile. " + (writerError?.message || ''))
-    }
-    
-    // 2. Upload image if one was selected
-    if (imageFile.value) {
-      const fileExt = imageFile.value.name.split('.').pop()
-      const filePath = `${writerData.id}/${Date.now()}.${fileExt}`
-      
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('post_images') // Make sure this bucket is public
-        .upload(filePath, imageFile.value)
-        
-      if (uploadError) throw uploadError
-      
-      // 3. Get the public URL
-      const { data: urlData } = supabase.storage
-        .from('post_images')
-        .getPublicUrl(uploadData.path)
-        
-      post.value.image_url = urlData.publicUrl
-    }
-
-    // 4. Generate slug
-    const slug = createSlug(post.value.title)
-
-    // 5. Insert the post
-    const { data: postData, error: postError } = await supabase
-      .from('posts')
-      .insert([
-        {
-          title: post.value.title,
-          description: post.value.description,
-          content: post.value.content, // This now sends HTML to Supabase
-          tag: post.value.tag,
-          image_url: post.value.image_url,
-          author_id: writerData.id,
-          status: status,
-          slug: slug,
-        }
-      ])
-      .select()
-      
-    if (postError) {
-      // Handle potential duplicate slug error
-      if (postError.code === '23505') {
-        throw new Error('A post with this title (slug) already exists.')
-      }
-      throw postError
-    }
-
-    // 6. Redirect on success
-    router.push('/writer/posts')
-    
-  } catch (err) {
-    errorMsg.value = err.message
-    console.error(err)
-  } finally {
-    loading.value = false
-  }
-}
-</script>
-
 <style>
 .editor-container .ql-toolbar {
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
-  border-color: #374151; /* gray-700 */
+  border-color: #374151;
 }
 .editor-container .ql-container {
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
-  border-color: #374151; /* gray-700 */
+  border-color: #374151;
 }
 .editor-container .ql-editor {
-  background-color: #1f2937; /* slate-800 */
-  color: #d1d5db; /* gray-300 */
+  background-color: #1f2937;
+  color: #d1d5db;
   min-height: 250px;
 }
 .editor-container .ql-editor.ql-blank::before {
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
   font-style: normal;
 }
 .editor-container .ql-snow .ql-stroke {
-  stroke: #9ca3af; /* gray-400 */
+  stroke: #9ca3af;
 }
 .editor-container .ql-snow .ql-picker-label {
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
 }
 </style>

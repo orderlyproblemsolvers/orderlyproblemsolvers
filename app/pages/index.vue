@@ -4,7 +4,6 @@
     <WhyUs/>
     <Featured/>
     <Articles/>
-    <Research/>
     <JoinUs/>
 </template>
 
