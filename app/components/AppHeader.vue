@@ -112,7 +112,7 @@
 
     <div
       v-if="isMobileMenuOpen"
-      class="md:hidden bg-black/95 backdrop-blur-sm fixed inset-0 z-40 pt-20"
+      class="md:hidden bg-black/95 backdrop-blur-sm fixed inset-0 z-40 pt-20 overflow-y-auto"
       @click.self="closeMobileMenu"
     >
       <nav class="flex flex-col px-6">
@@ -169,11 +169,20 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const isMobileMenuOpen = ref(false);
 const openMobileSubMenu = ref(null);
 const openDesktopSubMenu = ref(null);
+
+// Prevent body scroll when mobile menu is open
+watch(isMobileMenuOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
 
 const menuData = {
   company: [
