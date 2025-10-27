@@ -26,6 +26,7 @@
         <NuxtLink
           to="/"
           class="text-2xl md:text-3xl font-bold text-white font-copperplate"
+          @click="closeMobileMenu"
         >
           <span class="hidden md:inline">Orderly Problem Solvers</span>
           <span class="md:hidden">OPS</span>
@@ -35,7 +36,10 @@
           <div
             v-for="(items, key) in menuData"
             :key="key"
-            class="relative group"
+            class="relative"
+            @mouseenter="openDesktopMenu(key)"
+            @mouseleave="closeDesktopMenu"
+            @click="toggleDesktopMenu(key)"
           >
             <button
               class="flex items-center text-white hover:text-gray-300 transition-colors py-2 font-ibm-plex-mono capitalize"
@@ -43,23 +47,27 @@
               <span>{{ key }}</span>
             </button>
             
-
             <div
-              class="absolute left-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-md shadow-xl overflow-hidden transition-all duration-300 ease-out origin-top opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2"
+              v-if="openDesktopSubMenu === key"
+              class="absolute left-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-md shadow-xl overflow-hidden"
             >
               <NuxtLink
                 v-for="(item, idx) in items"
                 :key="idx"
                 :to="item.href"
                 class="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white transition-colors text-sm font-ibm-plex-mono"
+                @click="closeDesktopMenu"
               >
                 {{ item.label }}
               </NuxtLink>
             </div>
           </div>
-          <NuxtLink to="/pricing" class="text-white hover:text-gray-300 transition-colors py-2 font-ibm-plex-mono capitalize">
-              Pricing
-            </NuxtLink>
+          <NuxtLink 
+            to="/pricing" 
+            class="text-white hover:text-gray-300 transition-colors py-2 font-ibm-plex-mono capitalize"
+          >
+            Pricing
+          </NuxtLink>
         </nav>
 
         <div class="md:hidden">
@@ -68,6 +76,7 @@
             class="text-white"
           >
             <svg
+              v-if="!isMobileMenuOpen"
               class="w-6 h-6"
               fill="none"
               stroke="currentColor"
@@ -81,6 +90,21 @@
                 d="M4 6h16M4 12h16m-7 6h7"
               ></path>
             </svg>
+            <svg
+              v-else
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
           </button>
         </div>
       </div>
@@ -89,6 +113,7 @@
     <div
       v-if="isMobileMenuOpen"
       class="md:hidden bg-black/95 backdrop-blur-sm fixed inset-0 z-40 pt-20"
+      @click.self="closeMobileMenu"
     >
       <nav class="flex flex-col px-6">
         <div
@@ -123,16 +148,21 @@
             <NuxtLink
               v-for="(item, idx) in items"
               :key="idx"
-              :href="item.href"
+              :to="item.href"
               class="block pl-4 pr-2 py-3 text-gray-300 hover:text-white text-sm font-ibm-plex-mono"
+              @click="closeMobileMenu"
             >
               {{ item.label }}
             </NuxtLink>
           </div>
         </div>
-        <NuxtLink to="/pricing" class="text-white hover:text-gray-300 transition-colors py-2 font-ibm-plex-mono capitalize">
-              Pricing
-            </NuxtLink>
+        <NuxtLink 
+          to="/pricing" 
+          class="text-white hover:text-gray-300 transition-colors py-4 font-ibm-plex-mono capitalize border-b border-gray-800"
+          @click="closeMobileMenu"
+        >
+          Pricing
+        </NuxtLink>
       </nav>
     </div>
   </div>
@@ -143,6 +173,7 @@ import { ref } from "vue";
 
 const isMobileMenuOpen = ref(false);
 const openMobileSubMenu = ref(null);
+const openDesktopSubMenu = ref(null);
 
 const menuData = {
   company: [
@@ -168,6 +199,27 @@ const menuData = {
 
 const toggleMobileSubMenu = (menu) => {
   openMobileSubMenu.value = openMobileSubMenu.value === menu ? null : menu;
+};
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false;
+  openMobileSubMenu.value = null;
+};
+
+const openDesktopMenu = (menu) => {
+  openDesktopSubMenu.value = menu;
+};
+
+const closeDesktopMenu = () => {
+  openDesktopSubMenu.value = null;
+};
+
+const toggleDesktopMenu = (menu) => {
+  if (openDesktopSubMenu.value === menu) {
+    openDesktopSubMenu.value = null;
+  } else {
+    openDesktopSubMenu.value = menu;
+  }
 };
 </script>
 
