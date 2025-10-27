@@ -54,6 +54,14 @@ export default defineNuxtConfig({
       ]
     },
   },
+   image: {
+    provider: process.env.NODE_ENV === "development" ? "ipx" : "netlify",
+    dir: "public",
+    // Global options
+    quality: 80,
+    format: ["webp", "avif", "jpg", "png"],
+    domains: ["https://cuxkmxvesadvpffvtitr.supabase.co", "localhost:3000"],
+  },
   ssr: true,
   vite: {
     plugins: [
