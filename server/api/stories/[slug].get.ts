@@ -1,0 +1,79 @@
+import { eq, sql } from 'drizzle-orm';
+import { db } from '../../utils/db';
+import { articles, people, companies, articleCompanies, articlePeople } from '../../database/schema';
+
+export default defineEventHandler(async (event) => {
+  const slug = getRouterParam(event, 'slug');
+
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: 'Missing slug' });
+  }
+
+  try {
+    // 1. FETCH ARTICLE & AUTHOR
+    // We join the Author table but fallback to the text name if null
+    const articleResult = await db.select({
+      id: articles.id,
+      title: articles.title,
+      subtitle: articles.excerpt,
+      content: articles.content,
+      date: articles.publishedAt,
+      readTime: articles.readTime,
+      category: articles.category,
+      image: articles.coverImage,
+      
+      // Author Logic: Prefer Linked Person, Fallback to Text Name
+      authorName: sql<string>`COALESCE(${people.name}, ${articles.authorName})`,
+      authorRole: people.role,
+      authorImage: people.avatar,
+      authorBio: people.bio,
+      authorSlug: people.slug,
+    })
+    .from(articles)
+    .leftJoin(people, eq(articles.authorId, people.id))
+    .where(eq(articles.slug, slug))
+    .limit(1);
+
+    if (!articleResult.length) {
+      throw createError({ statusCode: 404, statusMessage: 'Story not found' });
+    }
+
+    const article = articleResult[0];
+
+    // 2. FETCH LINKED COMPANIES (Many-to-Many)
+    // Go through the junction table to get Company details
+    const linkedCompanies = await db.select({
+      name: companies.name,
+      slug: companies.slug,
+      logo: companies.logo,
+      industry: companies.industry,
+      headline: companies.headline
+    })
+    .from(articleCompanies)
+    .leftJoin(companies, eq(articleCompanies.companyId, companies.id))
+    .where(eq(articleCompanies.articleId, article.id));
+
+    // 3. FETCH LINKED PEOPLE (Many-to-Many)
+    // Go through the junction table to get Person details
+    const linkedPeople = await db.select({
+      name: people.name,
+      slug: people.slug,
+      avatar: people.avatar,
+      role: people.role
+    })
+    .from(articlePeople)
+    .leftJoin(people, eq(articlePeople.personId, people.id))
+    .where(eq(articlePeople.articleId, article.id));
+
+    // 4. RETURN COMPOSITE OBJECT
+    return {
+      ...article,
+      companies: linkedCompanies,
+      people: linkedPeople
+    };
+
+  } catch (error) {
+    console.error('🔥 DATABASE ERROR:', error);
+    throw createError({ statusCode: 500, statusMessage: 'Internal Server Error' });
+  }
+});
