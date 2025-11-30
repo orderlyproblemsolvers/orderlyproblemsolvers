@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxt/ui', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@unocss/nuxt', '@unocss/core'],
+  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
@@ -135,17 +135,6 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-    // 🚨 THIS IS THE FIX 🚨
-    // We force these packages to be bundled into the server code
-    externals: {
-      inline: [
-        '@unocss/core',
-        '@unocss/config', 
-        '@unocss/shared', 
-        'unocss', 
-        '@iconify/utils'
-      ]
-    }
   },
   routeRules: {
     // Relax security for the Auth API (Better-Auth needs flexibility)
