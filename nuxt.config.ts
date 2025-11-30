@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@unocss/nuxt'],
+  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
@@ -128,20 +128,6 @@ export default defineNuxtConfig({
   },
 
   // 7. NITRO
-  nitro: {
-  externals: {
-    inline: [ 'unocss',
-      '@unocss/core',
-      '@unocss/config',
-      '@unocss/preset-uno',
-      '@unocss/preset-attributify',
-      '@unocss/preset-icons',
-      '@unocss/transformer-directives',
-      '@unocss/transformer-variant-group',
-      '@unocss/transformer-compile-class',
-      '@unocss/rule-utils']
-}
-  },
   routeRules: {
     // Relax security for the Auth API (Better-Auth needs flexibility)
     '/api/auth/**': {
