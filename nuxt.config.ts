@@ -68,12 +68,6 @@ export default defineNuxtConfig({
     // For now, defaults work fine with external URLs
     domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000']
   },
-  unocss: {
- uno: true,
-  preflight: true,
-  inspector: false,
-  mode: 'dist-chunk'
-},
   security: {
     headers: {
       // 1. Content Security Policy (The Firewall for your browser)
@@ -135,7 +129,6 @@ export default defineNuxtConfig({
 
   // 7. NITRO
   nitro: {
-    preset: 'vercel', 
   externals: {
     inline: [ 'unocss',
       '@unocss/core',
