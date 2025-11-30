@@ -1,4 +1,4 @@
-import { as as decodeHtml, at as logger, L as useNitroOrigin, au as toBase64Image, ar as withBase, O as fetchIsland, av as htmlDecodeQuotes, N as useOgImageRuntimeConfig, a3 as defu, R as theme, aw as sendError, Q as normaliseFontInput, ax as fontCache } from './nitro.mjs';
+import { ar as decodeHtml, as as logger, K as useNitroOrigin, at as toBase64Image, aq as withBase, N as fetchIsland, au as htmlDecodeQuotes, M as useOgImageRuntimeConfig, a2 as defu, Q as theme, av as sendError, P as normaliseFontInput, aw as fontCache } from './nitro.mjs';
 import { a as applyEmojis, l as loadFont } from './eventHandlers.mjs';
 import { html } from 'satori-html';
 import sizeOf from 'image-size';

@@ -1,7 +1,7 @@
 import { computed, mergeProps, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderStyle, ssrInterpolate } from 'vue/server-renderer';
 import { r as useSiteConfig } from './server.mjs';
-import { X as parseURL } from '../_/nitro.mjs';
+import { W as parseURL } from '../_/nitro.mjs';
 import 'vue-router';
 import '@unhead/addons';
 import 'unhead/plugins';

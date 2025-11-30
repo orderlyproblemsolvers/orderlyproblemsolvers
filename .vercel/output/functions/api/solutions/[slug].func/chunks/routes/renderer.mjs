@@ -1,5 +1,5 @@
 import { getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'vue-bundle-renderer/runtime';
-import { q as getResponseStatusText, s as getResponseStatus, v as appId, w as defineRenderHandler, x as buildAssetsURL, y as publicAssetsURL, z as appTeleportTag, A as appTeleportAttrs, n as getQuery, h as createError, B as createSSRContext, C as appHead, D as destr, E as setSSRError, F as getRouteRules, G as getRenderer, H as renderInlineStyles, I as replaceIslandTeleports, u as useNitroApp } from '../_/nitro.mjs';
+import { q as getResponseStatusText, s as getResponseStatus, v as appId, w as defineRenderHandler, x as buildAssetsURL, y as publicAssetsURL, z as appTeleportTag, A as appTeleportAttrs, n as getQuery, h as createError, B as createSSRContext, C as appHead, D as destr, E as setSSRError, F as getRouteRules, G as getRenderer, H as replaceIslandTeleports, u as useNitroApp } from '../_/nitro.mjs';
 import { stringify, uneval } from 'devalue';
 import { propsToString, renderSSRHead } from 'unhead/server';
 import '@unocss/core';
@@ -69,8 +69,6 @@ function splitPayload(ssrContext) {
 
 const renderSSRHeadOptions = {"omitLineBreaks":true};
 
-const entryIds = [];
-
 globalThis.__buildAssetsURL = buildAssetsURL;
 globalThis.__publicAssetsURL = publicAssetsURL;
 const HAS_APP_TELEPORTS = !!(appTeleportAttrs.id);
@@ -110,11 +108,6 @@ const renderer = defineRenderHandler(async (event) => {
     ssrContext.noSSR = true;
   }
   const renderer = await getRenderer(ssrContext);
-  {
-    for (const id of entryIds) {
-      ssrContext.modules.add(id);
-    }
-  }
   const _rendered = await renderer.renderToString(ssrContext).catch(async (error) => {
     if (ssrContext._renderResponse && error.message === "skipping render") {
       return {};
@@ -123,7 +116,7 @@ const renderer = defineRenderHandler(async (event) => {
     await ssrContext.nuxt?.hooks.callHook("app:error", _err);
     throw _err;
   });
-  const inlinedStyles = !ssrContext._renderResponse && !isRenderingPayload ? await renderInlineStyles(ssrContext.modules ?? []) : [];
+  const inlinedStyles = [];
   await ssrContext.nuxt?.hooks.callHook("app:rendered", { ssrContext, renderResult: _rendered });
   if (ssrContext._renderResponse) {
     return ssrContext._renderResponse;
