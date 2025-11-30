@@ -13,6 +13,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@nuxt/image": "^2.0.0",
     "@nuxtjs/seo": "^3.2.2",
+    "@tailwindcss/vite": "^4.1.17",
     "@tiptap/extension-link": "^3.11.0",
     "@tiptap/starter-kit": "^3.11.0",
     "@tiptap/vue-3": "^3.11.0",
@@ -24,6 +25,7 @@
     "nuxt-jsonld": "^2.2.1",
     "nuxt-security": "^2.5.0",
     "resend": "^6.5.2",
+    "tailwindcss": "^4.1.17",
     "three": "^0.181.2",
     "typescript": "^5.9.3",
     "vue": "^3.5.24",
@@ -32,10 +34,8 @@
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.74",
     "@nuxtjs/tailwindcss": "^6.14.0",
-    "autoprefixer": "^10.4.22",
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.7",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17"
+    "postcss": "^8.5.6"
   }
 }

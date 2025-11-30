@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -27,7 +28,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@nuxtjs/tailwindcss'],
+  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
@@ -156,5 +157,10 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
 })

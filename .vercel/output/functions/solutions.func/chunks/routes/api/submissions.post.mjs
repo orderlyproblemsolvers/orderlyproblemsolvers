@@ -1,33 +1,30 @@
-import { d as defineEventHandler, r as readBody, h as createError, a as db, c as companies, b as people } from '../../_/nitro.mjs';
+import { d as defineEventHandler, r as readBody, c as createError } from '../../_/nitro.mjs';
+import { d as db, c as companies, p as people } from '../../_/db.mjs';
 import '@unocss/core';
 import '@unocss/preset-wind3';
 import 'devalue';
 import 'consola';
 import 'unhead';
-import 'better-auth';
-import 'better-auth/adapters/drizzle';
-import '@neondatabase/serverless';
-import 'drizzle-orm/neon-http';
-import 'drizzle-orm/pg-core';
 import 'node:http';
 import 'node:https';
 import 'node:events';
 import 'node:buffer';
-import 'vue';
 import 'lru-cache';
 import 'node:fs';
 import 'node:path';
+import 'node:crypto';
+import 'vue';
 import 'unhead/server';
 import 'unhead/plugins';
 import 'unhead/utils';
 import 'vue-bundle-renderer/runtime';
 import 'vue/server-renderer';
-import '@iconify/utils';
-import 'node:crypto';
 import 'xss';
+import '@neondatabase/serverless';
+import 'drizzle-orm/neon-http';
+import 'drizzle-orm/pg-core';
 
 const submissions_post = defineEventHandler(async (event) => {
-  var _a;
   const body = await readBody(event);
   if (!body.name || !body.type) {
     throw createError({ statusCode: 400, statusMessage: "Missing required fields" });
@@ -39,7 +36,7 @@ const submissions_post = defineEventHandler(async (event) => {
       await db.insert(companies).values({
         name: body.name,
         slug: uniqueSlug,
-        headline: (_a = body.description) == null ? void 0 : _a.substring(0, 100),
+        headline: body.description?.substring(0, 100),
         // First 100 chars as headline
         description: body.description,
         industry: body.industry,

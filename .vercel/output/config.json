@@ -35,12 +35,6 @@
     },
     {
       "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
-      },
-      "src": "/_fonts/(.*)"
-    },
-    {
-      "headers": {
         "Referrer-Policy": "no-referrer",
         "Strict-Transport-Security": "max-age=15552000; includeSubDomains",
         "X-Content-Type-Options": "nosniff",
@@ -60,13 +54,6 @@
     },
     {
       "src": "/_nuxt/builds(.*)",
-      "headers": {
-        "cache-control": "public,max-age=31536000,immutable"
-      },
-      "continue": true
-    },
-    {
-      "src": "/_fonts(.*)",
       "headers": {
         "cache-control": "public,max-age=31536000,immutable"
       },
@@ -305,10 +292,6 @@
     {
       "src": "/api/admin/companies/(?<id>[^/]+)",
       "dest": "/api/admin/companies/[id]"
-    },
-    {
-      "src": "/api/_nuxt_icon/(?<collection>[^/]+)",
-      "dest": "/api/_nuxt_icon/[collection]"
     },
     {
       "src": "/admin/people/(?<id>[^/]+)",

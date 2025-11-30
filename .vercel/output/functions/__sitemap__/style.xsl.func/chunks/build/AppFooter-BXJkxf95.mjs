@@ -2,7 +2,7 @@ import { _ as __nuxt_component_0$1 } from './server.mjs';
 import { defineComponent, ref, watch, mergeProps, withCtx, createVNode, createTextVNode, toDisplayString, createBlock, createCommentVNode, openBlock, unref, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderAttr, ssrInterpolate, ssrRenderClass, ssrRenderList, ssrRenderTeleport } from 'vue/server-renderer';
 import { useRoute } from 'vue-router';
-import { y as publicAssetsURL } from '../_/nitro.mjs';
+import { k as publicAssetsURL } from '../_/nitro.mjs';
 
 const _imports_0 = publicAssetsURL("/img/logo.png");
 const _sfc_main$1 = /* @__PURE__ */ defineComponent({

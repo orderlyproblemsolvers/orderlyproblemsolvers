@@ -1,1 +1,0 @@
-import{aj as s,ak as o,al as r}from"./3bhyZd_0.js";import{a as i}from"./DWHnDOjo.js";function u(t){return{}}const m=s(async(t,d)=>{let e,a;const{data:n}=([e,a]=o(()=>i.getSession({fetchOptions:{headers:u()}})),e=await e,a(),e);if(!n)return r(`/auth/sign-in?redirect=${encodeURIComponent(t.fullPath)}`);if(n.user?.role!=="admin")return r("/")});export{m as default};

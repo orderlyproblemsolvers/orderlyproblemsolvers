@@ -1,31 +1,29 @@
-import { d as defineEventHandler, a as db, c as companies, b as people, e as articles, f as technologies } from '../../../_/nitro.mjs';
+import { d as defineEventHandler } from '../../../_/nitro.mjs';
+import { d as db, c as companies, p as people, a as articles, t as technologies } from '../../../_/db.mjs';
 import { eq } from 'drizzle-orm';
 import '@unocss/core';
 import '@unocss/preset-wind3';
 import 'devalue';
 import 'consola';
 import 'unhead';
-import 'better-auth';
-import 'better-auth/adapters/drizzle';
-import '@neondatabase/serverless';
-import 'drizzle-orm/neon-http';
-import 'drizzle-orm/pg-core';
 import 'node:http';
 import 'node:https';
 import 'node:events';
 import 'node:buffer';
-import 'vue';
 import 'lru-cache';
 import 'node:fs';
 import 'node:path';
+import 'node:crypto';
+import 'vue';
 import 'unhead/server';
 import 'unhead/plugins';
 import 'unhead/utils';
 import 'vue-bundle-renderer/runtime';
 import 'vue/server-renderer';
-import '@iconify/utils';
-import 'node:crypto';
 import 'xss';
+import '@neondatabase/serverless';
+import 'drizzle-orm/neon-http';
+import 'drizzle-orm/pg-core';
 
 const urls = defineEventHandler(async () => {
   const urls = [];

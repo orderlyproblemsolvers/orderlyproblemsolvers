@@ -1,28 +1,22 @@
 import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { createGenerator } from '@unocss/core';
 import presetWind from '@unocss/preset-wind3';
 import { parse as parse$1 } from 'devalue';
-import { createConsola, consola } from 'consola';
+import { createConsola } from 'consola';
 import { createUnhead } from 'unhead';
-import { betterAuth } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { pgTable, timestamp, boolean, text, serial, integer } from 'drizzle-orm/pg-core';
 import http from 'node:http';
 import https from 'node:https';
 import { EventEmitter } from 'node:events';
 import { Buffer as Buffer$1 } from 'node:buffer';
-import { toValue, isRef, hasInjectionContext, inject, ref, watchEffect, getCurrentInstance, onBeforeUnmount, onDeactivated, onActivated } from 'vue';
 import { LRUCache } from 'lru-cache';
 import { promises, existsSync } from 'node:fs';
 import { resolve as resolve$1, dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { toValue, isRef, hasInjectionContext, inject, ref, watchEffect, getCurrentInstance, onBeforeUnmount, onDeactivated, onActivated } from 'vue';
 import { createHead as createHead$1, propsToString } from 'unhead/server';
 import { FlatMetaPlugin } from 'unhead/plugins';
 import { walkResolver } from 'unhead/utils';
 import { createRenderer } from 'vue-bundle-renderer/runtime';
 import { renderToString } from 'vue/server-renderer';
-import { getIcons } from '@iconify/utils';
-import { createHash } from 'node:crypto';
 import { FilterXSS } from 'xss';
 
 const suspectProtoRx = /"(?:_|\\u0{2}5[Ff]){2}(?:p|\\u0{2}70)(?:r|\\u0{2}72)(?:o|\\u0{2}6[Ff])(?:t|\\u0{2}74)(?:o|\\u0{2}6[Ff])(?:_|\\u0{2}5[Ff]){2}"\s*:/;
@@ -2847,10 +2841,10 @@ function createNodeFetch() {
     return l(input, { ...nodeFetchOptions, ...init });
   };
 }
-const fetch$1 = globalThis.fetch ? (...args) => globalThis.fetch(...args) : createNodeFetch();
+const fetch = globalThis.fetch ? (...args) => globalThis.fetch(...args) : createNodeFetch();
 const Headers$1 = globalThis.Headers || s$1;
 const AbortController$1 = globalThis.AbortController || i;
-const ofetch = createFetch({ fetch: fetch$1, Headers: Headers$1, AbortController: AbortController$1 });
+const ofetch = createFetch({ fetch, Headers: Headers$1, AbortController: AbortController$1 });
 const $fetch$1 = ofetch;
 
 function wrapToPromise(value) {
@@ -3448,11 +3442,11 @@ async function dispose(driver) {
 const _assets = {
   ["nuxt-og-image:fonts:Inter-normal-400.ttf.base64"]: {
     import: () => import('../raw/Inter-normal-400.ttf.mjs').then(r => r.default || r),
-    meta: {"type":"text/plain; charset=utf-8","etag":"\"652cc-qEeSD1DXCSV8gPP2rnBA6ePGdZ4\"","mtime":"2025-11-30T04:24:33.305Z"}
+    meta: {"type":"text/plain; charset=utf-8","etag":"\"652cc-qEeSD1DXCSV8gPP2rnBA6ePGdZ4\"","mtime":"2025-11-30T09:00:10.565Z"}
   },
   ["nuxt-og-image:fonts:Inter-normal-700.ttf.base64"]: {
     import: () => import('../raw/Inter-normal-700.ttf.mjs').then(r => r.default || r),
-    meta: {"type":"text/plain; charset=utf-8","etag":"\"674f0-FZReUXHhPTnY0HmYVn2iPpKm9ds\"","mtime":"2025-11-30T04:24:33.305Z"}
+    meta: {"type":"text/plain; charset=utf-8","etag":"\"674f0-FZReUXHhPTnY0HmYVn2iPpKm9ds\"","mtime":"2025-11-30T09:00:10.565Z"}
   }
 };
 
@@ -4310,259 +4304,7 @@ function klona(x) {
 }
 
 const inlineAppConfig = {
-  "nuxt": {},
-  "ui": {
-    "colors": {
-      "primary": "green",
-      "secondary": "blue",
-      "success": "green",
-      "info": "blue",
-      "warning": "yellow",
-      "error": "red",
-      "neutral": "slate"
-    },
-    "icons": {
-      "arrowDown": "i-lucide-arrow-down",
-      "arrowLeft": "i-lucide-arrow-left",
-      "arrowRight": "i-lucide-arrow-right",
-      "arrowUp": "i-lucide-arrow-up",
-      "caution": "i-lucide-circle-alert",
-      "check": "i-lucide-check",
-      "chevronDoubleLeft": "i-lucide-chevrons-left",
-      "chevronDoubleRight": "i-lucide-chevrons-right",
-      "chevronDown": "i-lucide-chevron-down",
-      "chevronLeft": "i-lucide-chevron-left",
-      "chevronRight": "i-lucide-chevron-right",
-      "chevronUp": "i-lucide-chevron-up",
-      "close": "i-lucide-x",
-      "copy": "i-lucide-copy",
-      "copyCheck": "i-lucide-copy-check",
-      "dark": "i-lucide-moon",
-      "ellipsis": "i-lucide-ellipsis",
-      "error": "i-lucide-circle-x",
-      "external": "i-lucide-arrow-up-right",
-      "eye": "i-lucide-eye",
-      "eyeOff": "i-lucide-eye-off",
-      "file": "i-lucide-file",
-      "folder": "i-lucide-folder",
-      "folderOpen": "i-lucide-folder-open",
-      "hash": "i-lucide-hash",
-      "info": "i-lucide-info",
-      "light": "i-lucide-sun",
-      "loading": "i-lucide-loader-circle",
-      "menu": "i-lucide-menu",
-      "minus": "i-lucide-minus",
-      "panelClose": "i-lucide-panel-left-close",
-      "panelOpen": "i-lucide-panel-left-open",
-      "plus": "i-lucide-plus",
-      "reload": "i-lucide-rotate-ccw",
-      "search": "i-lucide-search",
-      "stop": "i-lucide-square",
-      "success": "i-lucide-circle-check",
-      "system": "i-lucide-monitor",
-      "tip": "i-lucide-lightbulb",
-      "upload": "i-lucide-upload",
-      "warning": "i-lucide-triangle-alert"
-    },
-    "tv": {
-      "twMergeConfig": {}
-    }
-  },
-  "icon": {
-    "provider": "server",
-    "class": "",
-    "aliases": {},
-    "iconifyApiEndpoint": "https://api.iconify.design",
-    "localApiEndpoint": "/api/_nuxt_icon",
-    "fallbackToApi": true,
-    "cssSelectorPrefix": "i-",
-    "cssWherePseudo": true,
-    "cssLayer": "components",
-    "mode": "css",
-    "attrs": {
-      "aria-hidden": true
-    },
-    "collections": [
-      "academicons",
-      "akar-icons",
-      "ant-design",
-      "arcticons",
-      "basil",
-      "bi",
-      "bitcoin-icons",
-      "bpmn",
-      "brandico",
-      "bx",
-      "bxl",
-      "bxs",
-      "bytesize",
-      "carbon",
-      "catppuccin",
-      "cbi",
-      "charm",
-      "ci",
-      "cib",
-      "cif",
-      "cil",
-      "circle-flags",
-      "circum",
-      "clarity",
-      "codicon",
-      "covid",
-      "cryptocurrency",
-      "cryptocurrency-color",
-      "dashicons",
-      "devicon",
-      "devicon-plain",
-      "ei",
-      "el",
-      "emojione",
-      "emojione-monotone",
-      "emojione-v1",
-      "entypo",
-      "entypo-social",
-      "eos-icons",
-      "ep",
-      "et",
-      "eva",
-      "f7",
-      "fa",
-      "fa-brands",
-      "fa-regular",
-      "fa-solid",
-      "fa6-brands",
-      "fa6-regular",
-      "fa6-solid",
-      "fad",
-      "fe",
-      "feather",
-      "file-icons",
-      "flag",
-      "flagpack",
-      "flat-color-icons",
-      "flat-ui",
-      "flowbite",
-      "fluent",
-      "fluent-emoji",
-      "fluent-emoji-flat",
-      "fluent-emoji-high-contrast",
-      "fluent-mdl2",
-      "fontelico",
-      "fontisto",
-      "formkit",
-      "foundation",
-      "fxemoji",
-      "gala",
-      "game-icons",
-      "geo",
-      "gg",
-      "gis",
-      "gravity-ui",
-      "gridicons",
-      "grommet-icons",
-      "guidance",
-      "healthicons",
-      "heroicons",
-      "heroicons-outline",
-      "heroicons-solid",
-      "hugeicons",
-      "humbleicons",
-      "ic",
-      "icomoon-free",
-      "icon-park",
-      "icon-park-outline",
-      "icon-park-solid",
-      "icon-park-twotone",
-      "iconamoon",
-      "iconoir",
-      "icons8",
-      "il",
-      "ion",
-      "iwwa",
-      "jam",
-      "la",
-      "lets-icons",
-      "line-md",
-      "logos",
-      "ls",
-      "lucide",
-      "lucide-lab",
-      "mage",
-      "majesticons",
-      "maki",
-      "map",
-      "marketeq",
-      "material-symbols",
-      "material-symbols-light",
-      "mdi",
-      "mdi-light",
-      "medical-icon",
-      "memory",
-      "meteocons",
-      "mi",
-      "mingcute",
-      "mono-icons",
-      "mynaui",
-      "nimbus",
-      "nonicons",
-      "noto",
-      "noto-v1",
-      "octicon",
-      "oi",
-      "ooui",
-      "openmoji",
-      "oui",
-      "pajamas",
-      "pepicons",
-      "pepicons-pencil",
-      "pepicons-pop",
-      "pepicons-print",
-      "ph",
-      "pixelarticons",
-      "prime",
-      "ps",
-      "quill",
-      "radix-icons",
-      "raphael",
-      "ri",
-      "rivet-icons",
-      "si-glyph",
-      "simple-icons",
-      "simple-line-icons",
-      "skill-icons",
-      "solar",
-      "streamline",
-      "streamline-emojis",
-      "subway",
-      "svg-spinners",
-      "system-uicons",
-      "tabler",
-      "tdesign",
-      "teenyicons",
-      "token",
-      "token-branded",
-      "topcoat",
-      "twemoji",
-      "typcn",
-      "uil",
-      "uim",
-      "uis",
-      "uit",
-      "uiw",
-      "unjs",
-      "vaadin",
-      "vs",
-      "vscode-icons",
-      "websymbol",
-      "weui",
-      "whh",
-      "wi",
-      "wpf",
-      "zmdi",
-      "zondicons"
-    ],
-    "fetchTimeout": 1500
-  }
+  "nuxt": {}
 };
 
 
@@ -4683,7 +4425,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "2a75bd2d-3e35-466a-9ad5-cdcb5592881e",
+    "buildId": "4bcdffd5-abd4-418b-86c8-736af857ee8e",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4750,11 +4492,6 @@ const _inlineRuntimeConfig = {
         "headers": {
           "cache-control": "public, max-age=1, immutable"
         }
-      },
-      "/_fonts/**": {
-        "headers": {
-          "cache-control": "public, max-age=31536000, immutable"
-        }
       }
     }
   },
@@ -4787,9 +4524,6 @@ const _inlineRuntimeConfig = {
   },
   "databaseUrl": "postgresql://neondb_owner:npg_TexP6yqbAta0@ep-broad-union-agxaji8r-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require",
   "betterAuthSecret": "SEFBLMcWHteI89QGovPHzU4n17noIwqG",
-  "icon": {
-    "serverKnownCssClasses": []
-  },
   "private": {
     "basicAuth": false
   },
@@ -5085,7 +4819,7 @@ const _inlineRuntimeConfig = {
         "key": "nuxt-og-image:fonts:Inter-normal-700.ttf.base64"
       }
     ],
-    "hasNuxtIcon": true,
+    "hasNuxtIcon": false,
     "colorPreference": "light",
     "strictNuxtContentPaths": "",
     "isNuxtContentDocumentDriven": false
@@ -5111,12 +4845,7 @@ function useRuntimeConfig(event) {
   event.context.nitro.runtimeConfig = runtimeConfig;
   return runtimeConfig;
 }
-const _sharedAppConfig = _deepFreeze(klona(appConfig));
-function useAppConfig(event) {
-  {
-    return _sharedAppConfig;
-  }
-}
+_deepFreeze(klona(appConfig));
 function _deepFreeze(object) {
   const propNames = Object.getOwnPropertyNames(object);
   for (const name of propNames) {
@@ -6869,14 +6598,6 @@ const _n8pG9Cldx59vXV2j3YsAcqnofXNlfJU12VDj9scFDgo = defineNitroPlugin(async (ni
   return;
 });
 
-const script = "\"use strict\";(()=>{const t=window,e=document.documentElement,c=[\"dark\",\"light\"],n=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"system\";let i=n===\"system\"?u():n;const r=e.getAttribute(\"data-color-mode-forced\");r&&(i=r),l(i),t[\"__NUXT_COLOR_MODE__\"]={preference:n,value:i,getColorScheme:u,addColorScheme:l,removeColorScheme:d};function l(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.add(s):e.className+=\" \"+s,a&&e.setAttribute(\"data-\"+a,o)}function d(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.remove(s):e.className=e.className.replace(new RegExp(s,\"g\"),\"\"),a&&e.removeAttribute(\"data-\"+a)}function f(o){return t.matchMedia(\"(prefers-color-scheme\"+o+\")\")}function u(){if(t.matchMedia&&f(\"\").media!==\"not all\"){for(const o of c)if(f(\":\"+o).matches)return o}return\"light\"}})();function getStorageValue(t,e){switch(t){case\"localStorage\":return window.localStorage.getItem(e);case\"sessionStorage\":return window.sessionStorage.getItem(e);case\"cookie\":return getCookie(e);default:return null}}function getCookie(t){const c=(\"; \"+window.document.cookie).split(\"; \"+t+\"=\");if(c.length===2)return c.pop()?.split(\";\").shift()}";
-
-const _gX816O02ZQvvXJ38GFoCTSGCtOfUo1qV8hmIvlZZJDY = (function(nitro) {
-  nitro.hooks.hook("render:html", (htmlContext) => {
-    htmlContext.head.push(`<script>${script}<\/script>`);
-  });
-});
-
 const defuReplaceArray = createDefu((obj, key, value) => {
   if (Array.isArray(obj[key]) || Array.isArray(value)) {
     obj[key] = value;
@@ -7101,7 +6822,7 @@ const _wCdM9M6ONs2FGfURs1LSBkC_NO3p0VUz4mQwZ7D2Yk = defineNitroPlugin(async (nit
   await nitroApp.hooks.callHook("nuxt-security:ready");
 });
 
-const sriHashes = {"/_nuxt/builds/meta/2a75bd2d-3e35-466a-9ad5-cdcb5592881e.json":"sha384-0qI7x4Pjqjj0AeE8dIhQUTfElUp/2IMx8Vl8X/cREdyAfHNwpbKCxtpUHFbt5p8w","/_nuxt/3bhyZd_0.js":"sha384-p2FCDBr8vKwNdlfdazOuDHzgz40/TB+tdiAYjXhfDF+ZcLKVecMi2R7CAUQbA7LS","/_nuxt/B1xP7-wN.js":"sha384-Acpy9idfvXK+DQ0RTJrWiB4JbRHKMqY2Ve7ilTiBWz4t+uJUigKfCH1yY7Y+h95S","/_nuxt/B6hdLeSF.js":"sha384-pKsWTWozaMLjfhr1wgxLr7WhJZXrZ35bjtlXROW+x97BxJ7xZFmaj/W1tAvsmNjI","/_nuxt/B7Nz1nyJ.js":"sha384-LimiTVs7UVIbAq0FINpHdQpSCzynEZm8t6o8UJoCgVOxUHrHRFK9Cc9exfpUzXfg","/_nuxt/BH9fYHoZ.js":"sha384-qfVsrILR3tj17VloeTt5HXZdvc0J54WTjri8UuPV1uNvqEXlZoUCAwifoGmdc8zt","/_nuxt/BjcnlqYk.js":"sha384-kimz57RhN7wjHiXYcpeg/ispIYxBHtQoW5/kXqT01BILGESzZWFkJdq12qCzMoxB","/_nuxt/BMbrDem0.js":"sha384-m7TRVLYSkMWvdzasXHmQxvGSxOkKpcb28EkvSU6znwz6xkbu/KUmg1mlxdSSgtoB","/_nuxt/BOp-Zs_L.js":"sha384-bAmXoAB1OwWF85tvtnJyPiVgiKSidGAiO0z1B93BljMyCJCju+WsBTHpqVwXjSLh","/_nuxt/bozxvGvc.js":"sha384-mVNZmAx3VORKaBKQHqjW+catc1MHvREt8KcQAnaZloybewJZI+ylu3Se5BDW22W9","/_nuxt/BPt8KQi2.js":"sha384-VMjIKoaFm0S4a+AavTSC99/gc/ZqZxUAtEem/C9IjiWDYpQDfZLGX11BNz23ItDd","/_nuxt/BPzmNFXf.js":"sha384-M1Zi85Ws77I1X4XhjrDom4rQms/2U7lm6V3SPpCUUGO1K3aOpbixu1sH6oaRTPeC","/_nuxt/BqAit6_6.js":"sha384-t4kb4namIjfWMdioe/eHVlOaY4Yn61WY21lH/tgYDZdGHGcK0exLMYxIcH/79ZRK","/_nuxt/BsN4w72y.js":"sha384-QvZQH5m9zHUHzN4bshzWzvu79BlUaFlEhFi42N8fyGiPVROQTY2Q1GlYsXD87h4V","/_nuxt/C0XA2wFa.js":"sha384-OZrdu8WPL70qqCIqg8rPl4UJbMp6TTHQ3blG7ipA8GtHy1bTtonDIST49VJcwNS7","/_nuxt/C8rBcgbG.js":"sha384-/SQhcUBRwXpcwV4wnq3chvUY/35LHvcONAMPVKl8UVNIu2hHftuAAQv4UTrjJWHr","/_nuxt/C9vwqBfK.js":"sha384-ERcDoSv4LNTCNibJF4oKsKOadBE0nMGbRjj6/pqh5O8oz5KBTxM9dPExr+k/UmpK","/_nuxt/CBTyrr7G.js":"sha384-rEmjeMHu83whDyb1tegyzUMOVM8GOzJidoHMbLN7ET9K7S7btVRR1xFsuGfHm3eL","/_nuxt/CHbTA4CM.js":"sha384-oxGbkO1VDivOM6T5b72pkHkwut9igBurFPMxij+4ew1/31kpvC4Vo8np6xs3uDCZ","/_nuxt/ChKlvatS.js":"sha384-vS3UamQpkZ1+K25QKXLDws2jr1w5wnegVM3E48iMiZ7lTvZJ39ZdrdKi496R6GzC","/_nuxt/CJ2hqHOz.js":"sha384-Mrt71qqOklXTyLqgmL2OTyUs4L8mlKXjzVt9bU9+E1/GFFfm0ul6ccp6mfiyST3g","/_nuxt/CtxbIpGh.js":"sha384-SxaYHGu6BzVuI0owZBpW5aV85XZ4C1BdqcjQXACUebg2cN1zSyAnRVKD8tAzgsUk","/_nuxt/CY9X3l8S.js":"sha384-4CoZ6BVuV0QylDWYYszfMvi6KJqt9UNCtX+/tma4cTx9WPwBvGvn/8XNg3fN/i06","/_nuxt/C_mQfGGG.js":"sha384-K4hSNr7XuBA2TyMr9T4a+wM8idAeX9yYrJ0T7F9X7Qmbh4slOL147Cq+Y6QDRoOl","/_nuxt/C_tDFY8n.js":"sha384-wDaC97UNxApIyCUYg+nIoC7ctxsG2qJ9yaDTm9/MniAYqosuLV/nwAfxFVZswsFh","/_nuxt/D4eXZc34.js":"sha384-btT/kTLB7UTc0urgucwqi7Dr2iFzGkKk6loOViaGFhWTEpVqT3HN7Vm6H5cPUm8/","/_nuxt/D6NHFPYU.js":"sha384-hA9V6UvbM2tKs4JMrDriTU5bXSGPtrFS6/JMxIzYfH4K3YYpZXch9pumRGejuwm8","/_nuxt/DCxVvlbL.js":"sha384-vkS7WgUC9nTdNMiCaHj2Pdq5+1ZKQfshHxZJ7nHUYEwkPeyI14ZHrvvFO29SLTdk","/_nuxt/Dl-fE0xp.js":"sha384-8SY/CvZEnx8D0uAYTiHa8nJjbhSX3cfYmhpRtvr9uQycKwPgarmWFEwTlryIQ6PO","/_nuxt/DMR086gG.js":"sha384-fyxhugjF9MhYRDCYaM7G3zfUR+JDD+AddJHBQk/xlR6WVF/b1RPTh3zH15ATiTpx","/_nuxt/DQRLh2a8.js":"sha384-TaEtKN9NdqTz1fhzDkMkIX/l/u4ZcA0taq9xOAHxL2v8eZ8iq+mJ/DIGZbMOnVI2","/_nuxt/DsrzMGvE.js":"sha384-BTUXmSGs/zrxOsqPNRxvFh/asyauN7x4sWl043EVm+nAIfZ0rQLHQX44nAEuAfeD","/_nuxt/DTjr-op7.js":"sha384-PVOFqlIZtcf2X48eRPxmL7RsukUyAvdqT5dhEVq7iy8W3f27KM9Pinbn4UKwERYD","/_nuxt/DUexhnAP.js":"sha384-amwMTr1A+oU6OTZJwHvtxlFCP+UHfPQ0z2woQwCeFBJvd4Imm126WB5LD5tneE5K","/_nuxt/DwCDQpaU.js":"sha384-ljp9C8Pt5Y3RH5ZRF9FIZaH1aTQg51+MaoptrdvS7RFVcjRQvqzJQezLXnlCs0P2","/_nuxt/DWHnDOjo.js":"sha384-KIHCv+4WoapLC71mv2eEpiJ4bs1l+tPplcr0dbCldH/1sCfT1y47MDhlT6SF2tfW","/_nuxt/dyvfeWvf.js":"sha384-DvHYBVMxizQ0ZFBvLbYJdkkGkdNuihIspAuxboqBrXUGx/rmGVyNKv6uh8onlRBo","/_nuxt/entry.cSx7Udl0.css":"sha384-ijomkS8RHt2KONKhoeVud51xAtbaWKoLPp0/ShkvB8pjODIsowX2blorNnE5w5kr","/_nuxt/HtE2az7t.js":"sha384-ulD5aMzz0RbqbvTM2R3DtrWLI+VyuyudmI0SrImgV+eIOTLK78Kyn9P7a/uDf6iJ","/_nuxt/index.CBRcm73B.css":"sha384-/+NAO+yEtzq36Oj0byR4iVdNr72op7K8PT7WcjN/joGkQWmjNmAr+F7eLYQc8h6d","/_nuxt/index.CLipYO6P.css":"sha384-EUzl/0mrMZCKJv249CiQH7xRKAKTOTcj16K2rQsKRsQs/MO0cD1dSTMb/ipD8Uqf","/_nuxt/index.CUJ-uYMH.css":"sha384-AfgZmWW96QtSe0B30d0xr289E2cMhJ0tv67/+UJI4PLqUihvYWPO4iYdilzKfKJU","/_nuxt/index.DoLJrx8Y.css":"sha384-QZzHOYXADq234AZFoqbZH3CC8hgSsi/ZAjbHAnllqVdgivJxyCt0HAELj9mHMUHh","/_nuxt/LUiyGlWs.js":"sha384-qmCrLdaaefSNXaInQj2ifycdpxWXJwnZnUGc8iN9HyBIUqIgaj2Q85GVi13X7Ux0","/_nuxt/p9KV1CZt.js":"sha384-6nYX6Qq+/xEiuPHXEXp4sWYTVV0X98PgUCpaxZd92LD3wspw8YLja2RpMSMh0JOI","/_nuxt/rv5fpT0E.js":"sha384-bPBb72U2EeTXfeIZtM3rhJRtpizKnQXx0WIvs808qZX97iNi0UOPLBczmY1E82v2","/_nuxt/xcEGvHaR.js":"sha384-V/pjinYNkmkOOUu7gDBeV1mSuPPbK/XlIYBTAZctLI364kzCGXFnB8p2umdi8ScA","/apple-touch-icon.png":"sha384-HSYtoQfI/Z188j3YU48NpKzmbqOHE5mjaFdS9gQAk9ado0ks2iWQQfhDVNU1VVX5","/favicon.ico":"sha384-pqDBFZJTHIDKD0lZCWfYVJFIinKOwN6wEWpj9SBrPGdqWzEjAE4GBkBTKcdQRiYt","/icon.png":"sha384-rertrci8PJZcMA4JvFjtN38ZVVFxIaoK4PCUz2OwRBqt8P0koh3mGXauAd6qumhJ","/_robots.txt":"sha384-1+z+xOPZC0Y/sCZO3+nqXNQyRWi3tQkSmQE0iHdWv71QQCTPZPk9HyBTl6AWpC2R"};
+const sriHashes = {"/_nuxt/builds/meta/4bcdffd5-abd4-418b-86c8-736af857ee8e.json":"sha384-0qI7x4Pjqjj0AeE8dIhQUTfElUp/2IMx8Vl8X/cREdyAfHNwpbKCxtpUHFbt5p8w","/_nuxt/B-jvfPy0.js":"sha384-WVEXilo211wgn/f+Lk6sMst76qbgLFhXo1kwUGwS5YJ8EYEcVSV6I62jLepuh1pe","/_nuxt/B01ynBEU.js":"sha384-NIMBswXbkVwiPUsQjZHlnfgxkxTTxZ8hpjPWV+mH6CT+U1wvrvf6JYY2zF5mGiSi","/_nuxt/B1mK-zjd.js":"sha384-c/hpijYhNM/vtSqll97iG4+XRXThEo7W4LfTFVbRo1uy7zHQKl16qg8F9lkCMCJ6","/_nuxt/B9RLFzUu.js":"sha384-wjZtA6IVFSXkdknSF3fk6qh6xvcR43dJ3h/RIckhOizB/hS/FMy7uABMFpxy1yZt","/_nuxt/BAHelZc9.js":"sha384-K0S327xJ/W/PqmHopKAmgY0r/uJ6I7jDMQ7QEjyBmFR6zAYSJT+onQ0KFyLHricp","/_nuxt/BcVhJt2W.js":"sha384-IOZ0sSCz5lifK4qhoGeU5D3Fz+VsYHBItcb0nYFq5dXYhoSLQLZpszuKThZ/vget","/_nuxt/BcZUV1ju.js":"sha384-3svdCadv1vGiW8SfFd/8oAFdDUu7cqkHSBAqEtJO6S3V+QyxItYg0PpYuvx5j+AF","/_nuxt/Bh8hCQrd.js":"sha384-WZjU/Dc1R+lhrEJKbHQxYEtJhPigBgs3Mlkz1ud15bBANKnAqs5uQGLnSHGov0qP","/_nuxt/BMu-BY4t.js":"sha384-F/nnAcRbKGOkdw8Gj3cmJxK+km4iGWoT2JasF11AHpmq6EppGSJv6huvAo0zL2zA","/_nuxt/Bq-qAcWo.js":"sha384-D/0P0CSFmHPNm2kyXqoXlg8Ssu26kxLFROAamnE5g9E5VlnEkSxmaaho0XeG0j2C","/_nuxt/BqXHyZjl.js":"sha384-CyCkh8FFj/bFkikDyTER6n+WES5aAIbjqrfKCpgd2Dc+r4BLdBnSIdzUs/1bRBVe","/_nuxt/BsBUSmWv.js":"sha384-A/xheqF6nMU/b9iSUoteLrBpvbUiN895tweltInrmEVBXRcHiTqC62IpggA+ZpV6","/_nuxt/BV-Vw_Bd.js":"sha384-s5mPbQjh5y3+7V+w3Yx/iTTYav3Qoon6g532UimO1yAEQVtJWWhiDARiDnQ6hHv1","/_nuxt/BwvdnrsT.js":"sha384-NG+wLaBZ4CRkMjqFR187TiDTde74Ck+W1oHMMlxdN8z29rxuiBKVv+hyLEW1SLBU","/_nuxt/BwwTcE1-.js":"sha384-fNHUy6YLMrxDAeksf4CT49yaS9EWl3HOh1M7PxhQ9xPOBolXhtC95ODmHAvS9LQZ","/_nuxt/BYehxbkp.js":"sha384-tgYdSeoqNB20cCXKeAG7X9egL7FPcPTAoAXdwua4j5rLFZGrpmwqb9bPcBigIHzI","/_nuxt/BZwMq00U.js":"sha384-IWVNHyJ/WyEyh7Y5Nbeun7XdClpplZsIvaLRcvH9+XkGzMm7N4BWt0oJyEAfqZ5j","/_nuxt/BZXutiun.js":"sha384-dak4w7lDSKIbY4I/8jg59D8P/IWkuGvB1/3cWRyMGgOlfDj7fuGQYBgDcxDrio0m","/_nuxt/C0pjwUTG.js":"sha384-4M6nuE3dm8uOb+I2pBUEejiQANjuNHTVlaD8LnwfK4aa/k5qjWvg5f7bjqheivZF","/_nuxt/C6Jk5vk5.js":"sha384-S/g/l/W+4aKs8ZFi+2VUGHqCnjFbJUe8Ll7chNS2mp2IeNSEEEQDSHi0h+EF2kEZ","/_nuxt/CcwHfIcD.js":"sha384-atN1I2TKgiqcTmzZdUaflhpNOUwidPxcdIP5kZBHtndu0ezF1vTjEzUo3yD6CFqC","/_nuxt/CDZ_avxO.js":"sha384-feSARRMVfvryktOUqA05Fd7c5jPhXkNn5hx7QT6B+1HTNL+W6+5tZ3ggQ6H0kMeV","/_nuxt/CF83UeJk.js":"sha384-45ref3z4gvfx7nRphKeehfffx4DlfXp9RammSBxgg8br848Xg/vQkr/QOb77+ELM","/_nuxt/Cl5sXhK2.js":"sha384-Eip9gqeJbeh2LoEavSmX+MJymrMxufYVV1X+ljLx/fo/nSYKuEQpHuuxCE4deIxG","/_nuxt/ClizhHwV.js":"sha384-HyGEHdGo2Sp4N/3KAudvJjjcocA/5n94sNkrSo4aKzfOMN5dfST8dMeWiUad4mBR","/_nuxt/CqkG5vHS.js":"sha384-QOVrBmhXPOq8EsspsosYxKzRlKUdiaUGd2VvlfR5KRQVBytIhm2L8bCHlDYGSdwN","/_nuxt/D4eXZc34.js":"sha384-btT/kTLB7UTc0urgucwqi7Dr2iFzGkKk6loOViaGFhWTEpVqT3HN7Vm6H5cPUm8/","/_nuxt/D9KDMeDl.js":"sha384-g/cQ7qKOcAj+Iwf0PM4vqUYstfgPfk5BySxJ3WLefTtJiXrR1X8n1uwcLhoKgumB","/_nuxt/DcAtyZkD.js":"sha384-pdIykViW8dO79sJm/617SbV5dgaabZrlHEo8z9JTteMtOhUsINOGRwhkc0WW9U8k","/_nuxt/DHRIiBJf.js":"sha384-mExeVBFYp89GLg8yVjiytktAyEfe15+lJL8LQVds9MSWNgTI+yqanjppIfl3p+MV","/_nuxt/DoGW3rVk.js":"sha384-H+E76nGT5cXUED3ntpldNKmyMtlALcEwTkSIEZ2plUBkPkcyONKXrpwdyIT8Pndk","/_nuxt/DPneB9ID.js":"sha384-LPtFhfLrCReCK89vu0TpNDceHXkaKggjUelqpL5OYI3J7tsrjtk+K1sqCyKmqVOC","/_nuxt/DpX3xdFr.js":"sha384-lRdOVmPyIYs/LJCBecKMUPTvSLZbSEOV4KYezI+7RjFKbua8JEfYYcwq2yO+yXvd","/_nuxt/DUKWLABx.js":"sha384-0+AZ/fnmgrK+O7CmLid6o5uo4ADaDOQ0EMedBhJ+QJlsHPq6hPDN9CbPVipno5Au","/_nuxt/DYaS31WN.js":"sha384-DlGKcGetAS1bC3xbCFN+3Dxm1PfdEmeCDZHEO8ZplYGftaBj3Go4VeJjFb4he0F+","/_nuxt/entry.iHWSktEa.css":"sha384-qPuuLQt13tg4qVq3slor8C2nmkfVDHNcvqF61LFd0wZEjQDLqxjENnX4K3aW4DHA","/_nuxt/index.CBRcm73B.css":"sha384-/+NAO+yEtzq36Oj0byR4iVdNr72op7K8PT7WcjN/joGkQWmjNmAr+F7eLYQc8h6d","/_nuxt/index.CLipYO6P.css":"sha384-EUzl/0mrMZCKJv249CiQH7xRKAKTOTcj16K2rQsKRsQs/MO0cD1dSTMb/ipD8Uqf","/_nuxt/index.CUJ-uYMH.css":"sha384-AfgZmWW96QtSe0B30d0xr289E2cMhJ0tv67/+UJI4PLqUihvYWPO4iYdilzKfKJU","/_nuxt/index.DoLJrx8Y.css":"sha384-QZzHOYXADq234AZFoqbZH3CC8hgSsi/ZAjbHAnllqVdgivJxyCt0HAELj9mHMUHh","/_nuxt/LbNmkhyR.js":"sha384-e5q0gFuKOSXUAu8cd7aA7wy62XTxiJO1qWZCCHp4OlkTNP8XuEVKDq6VqkUaWV4v","/_nuxt/URGoBmfz.js":"sha384-O8mR+k+beP8uKZ9pOvDR43y4if5snE8iWbllNbgMmBRnprMJBUjCBR1dVfFJPwG4","/_nuxt/vMSL-OSC.js":"sha384-84sPupVQu0/Vsoc5KBoNfZHKsmHnEEIrhzqCdX9CcyyK9oQZmEdEaNyzPmuyVMyo","/_nuxt/W-Nh6ZGl.js":"sha384-P/DgBM+wExcyawmYaBMnBYnPUElWIZK+MJwoNTyrF1xxNCfjfYM17IN+E0oqMUQL","/_nuxt/ySGU1Z7u.js":"sha384-YZKCNsPQ+f3Obz54gW7yIriIXt6il08oO7g0NlUBDnQpZAvsvKT6+Rkov/iNouLA","/apple-touch-icon.png":"sha384-HSYtoQfI/Z188j3YU48NpKzmbqOHE5mjaFdS9gQAk9ado0ks2iWQQfhDVNU1VVX5","/favicon.ico":"sha384-pqDBFZJTHIDKD0lZCWfYVJFIinKOwN6wEWpj9SBrPGdqWzEjAE4GBkBTKcdQRiYt","/icon.png":"sha384-rertrci8PJZcMA4JvFjtN38ZVVFxIaoK4PCUz2OwRBqt8P0koh3mGXauAd6qumhJ","/_robots.txt":"sha384-1+z+xOPZC0Y/sCZO3+nqXNQyRWi3tQkSmQE0iHdWv71QQCTPZPk9HyBTl6AWpC2R"};
 
 const SCRIPT_RE$1 = /<script((?=[^>]+\bsrc="([^"]+)")(?![^>]+\bintegrity="[^"]+")[^>]+)(?:\/>|><\/script>)/g;
 const LINK_RE$1 = /<link((?=[^>]+\brel="(?:stylesheet|preload|modulepreload)")(?=[^>]+\bhref="([^"]+)")(?![^>]+\bintegrity="[\w\-+/=]+")[^>]+)>/g;
@@ -7315,7 +7036,6 @@ const plugins = [
   _vmnii0Ex2bStglUnAkhoDYTkbAGl01ys0FnuWUh2LFw,
 _pzO9RPDjXH4g3GnEFwk42jW8NK2_SN5o7C7heqgYYII,
 _n8pG9Cldx59vXV2j3YsAcqnofXNlfJU12VDj9scFDgo,
-_gX816O02ZQvvXJ38GFoCTSGCtOfUo1qV8hmIvlZZJDY,
 _wCdM9M6ONs2FGfURs1LSBkC_NO3p0VUz4mQwZ7D2Yk,
 _n08fvpJomDAosPIO1BWeLH5kwbe_LuBu1nMNjeF8EIE,
 _jpF3noDVfn8tEjUbq_vi4AJqXv3YGbs3kf33K8Z4YI,
@@ -7442,7 +7162,7 @@ const appHead = {"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ic
 
 const appRootTag = "div";
 
-const appRootAttrs = {"id":"__nuxt","class":"isolate"};
+const appRootAttrs = {"id":"__nuxt"};
 
 const appTeleportTag = "div";
 
@@ -7701,510 +7421,6 @@ async function getIslandContext(event) {
   };
   return ctx;
 }
-
-const _DRIVE_LETTER_START_RE = /^[A-Za-z]:\//;
-function normalizeWindowsPath(input = "") {
-  if (!input) {
-    return input;
-  }
-  return input.replace(/\\/g, "/").replace(_DRIVE_LETTER_START_RE, (r) => r.toUpperCase());
-}
-const basename = function(p, extension) {
-  const segments = normalizeWindowsPath(p).split("/");
-  let lastSegment = "";
-  for (let i = segments.length - 1; i >= 0; i--) {
-    const val = segments[i];
-    if (val) {
-      lastSegment = val;
-      break;
-    }
-  }
-  return extension && lastSegment.endsWith(extension) ? lastSegment.slice(0, -extension.length) : lastSegment;
-};
-
-function defineNitroPlugin(def) {
-  return def;
-}
-
-function defineRenderHandler(render) {
-  const runtimeConfig = useRuntimeConfig();
-  return eventHandler(async (event) => {
-    const nitroApp = useNitroApp();
-    const ctx = { event, render, response: void 0 };
-    await nitroApp.hooks.callHook("render:before", ctx);
-    if (!ctx.response) {
-      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
-        setResponseHeader(event, "Content-Type", "image/x-icon");
-        return send(
-          event,
-          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        );
-      }
-      ctx.response = await ctx.render(event);
-      if (!ctx.response) {
-        const _currentStatus = getResponseStatus(event);
-        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
-        return send(
-          event,
-          "No response returned from render handler: " + event.path
-        );
-      }
-    }
-    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
-    if (ctx.response.headers) {
-      setResponseHeaders(event, ctx.response.headers);
-    }
-    if (ctx.response.statusCode || ctx.response.statusMessage) {
-      setResponseStatus(
-        event,
-        ctx.response.statusCode,
-        ctx.response.statusMessage
-      );
-    }
-    return ctx.response.body;
-  });
-}
-
-function getSiteIndexable(e) {
-  const { env, indexable } = getSiteConfig(e);
-  if (typeof indexable !== "undefined")
-    return String(indexable) === "true";
-  return env === "production";
-}
-
-function useNitroOrigin(e) {
-  return getNitroOrigin(e);
-}
-
-const ROBOT_DIRECTIVE_VALUES = {
-  // Standard directives
-  enabled: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
-  disabled: "noindex, nofollow",
-  index: "index",
-  noindex: "noindex",
-  follow: "follow",
-  nofollow: "nofollow",
-  none: "none",
-  all: "all",
-  // Non-standard directives (not part of official robots spec)
-  noai: "noai",
-  noimageai: "noimageai"
-};
-function formatMaxImagePreview(value) {
-  return `max-image-preview:${value}`;
-}
-function formatMaxSnippet(value) {
-  return `max-snippet:${value}`;
-}
-function formatMaxVideoPreview(value) {
-  return `max-video-preview:${value}`;
-}
-
-function withoutQuery$1(path) {
-  return path.split("?")[0];
-}
-function createNitroRouteRuleMatcher$1(e) {
-  const { nitro, app } = useRuntimeConfig(e);
-  const _routeRulesMatcher = toRouteMatcher(
-    createRouter$1({
-      routes: Object.fromEntries(
-        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [withoutTrailingSlash(path), rules])
-      )
-    })
-  );
-  return (path) => {
-    return defu({}, ..._routeRulesMatcher.matchAll(
-      // radix3 does not support trailing slashes
-      withoutBase(withoutTrailingSlash(withoutQuery$1(path)), app.baseURL)
-    ).reverse());
-  };
-}
-
-function normaliseRobotsRouteRule(config) {
-  let allow;
-  if (typeof config.robots === "boolean")
-    allow = config.robots;
-  else if (typeof config.robots === "object" && "indexable" in config.robots && typeof config.robots.indexable !== "undefined")
-    allow = config.robots.indexable;
-  let rule;
-  if (typeof config.robots === "object" && config.robots !== null) {
-    if ("rule" in config.robots && typeof config.robots.rule !== "undefined") {
-      rule = config.robots.rule;
-    } else if (!("indexable" in config.robots)) {
-      const directives = [];
-      for (const [key, value] of Object.entries(config.robots)) {
-        if (value === false || value === null || value === void 0)
-          continue;
-        if (key in ROBOT_DIRECTIVE_VALUES && typeof value === "boolean" && value) {
-          directives.push(ROBOT_DIRECTIVE_VALUES[key]);
-        } else if (key === "max-image-preview" && typeof value === "string") {
-          directives.push(formatMaxImagePreview(value));
-        } else if (key === "max-snippet" && typeof value === "number") {
-          directives.push(formatMaxSnippet(value));
-        } else if (key === "max-video-preview" && typeof value === "number") {
-          directives.push(formatMaxVideoPreview(value));
-        }
-      }
-      if (directives.length > 0) {
-        rule = directives.join(", ");
-      }
-    }
-  } else if (typeof config.robots === "string") {
-    rule = config.robots;
-  }
-  if (rule && typeof allow === "undefined") {
-    const disallowIndicators = ["none", "noindex", "noai", "noimageai"];
-    allow = !disallowIndicators.some(
-      (indicator) => rule === indicator || rule.split(",").some((part) => part.trim() === indicator)
-    );
-  }
-  if (typeof allow === "undefined" && typeof rule === "undefined")
-    return;
-  return {
-    allow,
-    rule
-  };
-}
-
-function getSiteRobotConfig(e) {
-  const query = getQuery(e);
-  const hints = [];
-  const { groups, debug } = useRuntimeConfigNuxtRobots(e);
-  let indexable = getSiteIndexable(e);
-  const queryIndexableEnabled = String(query.mockProductionEnv) === "true" || query.mockProductionEnv === "";
-  if (debug || false) {
-    const { _context } = getSiteConfig(e, { debug: debug || false });
-    if (queryIndexableEnabled) {
-      indexable = true;
-      hints.push("You are mocking a production enviroment with ?mockProductionEnv query.");
-    } else if (!indexable && _context.indexable === "nuxt-robots:config") {
-      hints.push("You are blocking indexing with your Nuxt Robots config.");
-    } else if (!queryIndexableEnabled && !_context.indexable) {
-      hints.push(`Indexing is blocked in development. You can mock a production environment with ?mockProductionEnv query.`);
-    } else if (!indexable && !queryIndexableEnabled) {
-      hints.push(`Indexing is blocked by site config set by ${_context.indexable}.`);
-    } else if (indexable && !queryIndexableEnabled) {
-      hints.push(`Indexing is enabled from ${_context.indexable}.`);
-    }
-  }
-  if (groups.some((g) => g.userAgent.includes("*") && g.disallow.includes("/"))) {
-    indexable = false;
-    hints.push("You are blocking all user agents with a wildcard `Disallow /`.");
-  } else if (groups.some((g) => g.disallow.includes("/"))) {
-    hints.push("You are blocking specific user agents with `Disallow /`.");
-  }
-  return { indexable, hints };
-}
-
-function getPathRobotConfig(e, options) {
-  const runtimeConfig = useRuntimeConfig(e);
-  const { robotsDisabledValue, robotsEnabledValue, isNuxtContentV2 } = useRuntimeConfigNuxtRobots(e);
-  if (!options?.skipSiteIndexable) {
-    if (!getSiteRobotConfig(e).indexable) {
-      return {
-        rule: robotsDisabledValue,
-        indexable: false,
-        debug: {
-          source: "Site Config"
-        }
-      };
-    }
-  }
-  const path = options?.path || e.path;
-  let userAgent = options?.userAgent;
-  if (!userAgent) {
-    try {
-      userAgent = getRequestHeader(e, "User-Agent");
-    } catch {
-    }
-  }
-  const nitroApp = useNitroApp();
-  const groups = [
-    // run explicit user agent matching first
-    ...nitroApp._robots.ctx.groups.filter((g) => {
-      if (userAgent) {
-        return g.userAgent.some((ua) => ua.toLowerCase().includes(userAgent.toLowerCase()));
-      }
-      return false;
-    }),
-    // run wildcard matches second
-    ...nitroApp._robots.ctx.groups.filter((g) => g.userAgent.includes("*"))
-  ];
-  for (const group of groups) {
-    if (group._indexable === false) {
-      return {
-        indexable: false,
-        rule: robotsDisabledValue,
-        debug: {
-          source: "/robots.txt",
-          line: JSON.stringify(group)
-        }
-      };
-    }
-    const robotsTxtRule = matchPathToRule(path, group._rules || []);
-    if (robotsTxtRule) {
-      if (!robotsTxtRule.allow) {
-        return {
-          indexable: false,
-          rule: robotsDisabledValue,
-          debug: {
-            source: "/robots.txt",
-            line: `Disallow: ${robotsTxtRule.pattern}`
-          }
-        };
-      }
-      break;
-    }
-  }
-  if (isNuxtContentV2 && nitroApp._robots?.nuxtContentUrls?.has(withoutTrailingSlash(path))) {
-    return {
-      indexable: false,
-      rule: robotsDisabledValue,
-      debug: {
-        source: "Nuxt Content"
-      }
-    };
-  }
-  nitroApp._robotsRuleMatcher = nitroApp._robotsRuleMatcher || createNitroRouteRuleMatcher$1(e);
-  let robotRouteRules = nitroApp._robotsRuleMatcher(path);
-  let routeRulesPath = path;
-  if (runtimeConfig.public?.i18n?.locales && typeof robotRouteRules.robots === "undefined") {
-    const { locales } = runtimeConfig.public.i18n;
-    const locale = locales.find((l) => routeRulesPath.startsWith(`/${l.code}`));
-    if (locale) {
-      routeRulesPath = routeRulesPath.replace(`/${locale.code}`, "");
-      robotRouteRules = nitroApp._robotsRuleMatcher(routeRulesPath);
-    }
-  }
-  const routeRules = normaliseRobotsRouteRule(robotRouteRules);
-  if (routeRules && (typeof routeRules.allow !== "undefined" || typeof routeRules.rule !== "undefined")) {
-    return {
-      indexable: routeRules.allow ?? false,
-      rule: routeRules.rule || (routeRules.allow ? robotsEnabledValue : robotsDisabledValue),
-      debug: {
-        source: "Route Rules"
-      }
-    };
-  }
-  return {
-    indexable: true,
-    rule: robotsEnabledValue
-  };
-}
-
-const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-  role: text("role", { enum: ["user", "admin", "editor"] }).default("user").notNull()
-});
-const session = pgTable("session", {
-  id: text("id").primaryKey(),
-  expiresAt: timestamp("expires_at").notNull(),
-  token: text("token").notNull().unique(),
-  ipAddress: text("ip_address"),
-  userAgent: text("user_agent"),
-  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
-});
-const account = pgTable("account", {
-  id: text("id").primaryKey(),
-  accountId: text("account_id").notNull(),
-  providerId: text("provider_id").notNull(),
-  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
-  accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
-  idToken: text("id_token"),
-  expiresAt: timestamp("expires_at"),
-  password: text("password"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull()
-});
-const verification = pgTable("verification", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at")
-});
-const companies = pgTable("companies", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").unique().notNull(),
-  name: text("name").notNull(),
-  headline: text("headline"),
-  description: text("description"),
-  logo: text("logo"),
-  website: text("website"),
-  location: text("location"),
-  industry: text("industry"),
-  stage: text("stage"),
-  status: text("status", { enum: ["pending", "approved", "rejected"] }).default("pending"),
-  featured: boolean("featured").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow()
-});
-const people = pgTable("people", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").unique().notNull(),
-  name: text("name").notNull(),
-  role: text("role").notNull(),
-  bio: text("bio"),
-  avatar: text("avatar"),
-  location: text("location"),
-  // Contact Details
-  email: text("email"),
-  website: text("website"),
-  // Linked Company (Optional)
-  companyId: integer("company_id").references(() => companies.id, { onDelete: "set null" }),
-  status: text("status", { enum: ["pending", "approved", "rejected"] }).default("pending"),
-  featured: boolean("featured").default(false),
-  createdAt: timestamp("created_at").defaultNow()
-});
-const articles = pgTable("articles", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").unique().notNull(),
-  title: text("title").notNull(),
-  excerpt: text("excerpt"),
-  content: text("content"),
-  coverImage: text("cover_image"),
-  category: text("category"),
-  readTime: text("read_time"),
-  // Author Logic
-  authorName: text("author_name").default("OPS Admin"),
-  authorId: integer("author_id").references(() => people.id, { onDelete: "set null" }),
-  // NOTE: Featured columns removed here in favor of junction tables below
-  isPublished: boolean("is_published").default(false),
-  publishedAt: timestamp("published_at"),
-  createdAt: timestamp("created_at").defaultNow()
-});
-const technologies = pgTable("technologies", {
-  id: serial("id").primaryKey(),
-  name: text("name").unique().notNull(),
-  category: text("category")
-});
-const companyStack = pgTable("company_stack", {
-  companyId: integer("company_id").references(() => companies.id, { onDelete: "cascade" }).notNull(),
-  techId: integer("tech_id").references(() => technologies.id, { onDelete: "cascade" }).notNull()
-});
-const personStack = pgTable("person_stack", {
-  personId: integer("person_id").references(() => people.id, { onDelete: "cascade" }).notNull(),
-  techId: integer("tech_id").references(() => technologies.id, { onDelete: "cascade" }).notNull()
-});
-const articleCompanies = pgTable("article_companies", {
-  articleId: integer("article_id").references(() => articles.id, { onDelete: "cascade" }).notNull(),
-  companyId: integer("company_id").references(() => companies.id, { onDelete: "cascade" }).notNull()
-});
-const articlePeople = pgTable("article_people", {
-  articleId: integer("article_id").references(() => articles.id, { onDelete: "cascade" }).notNull(),
-  personId: integer("person_id").references(() => people.id, { onDelete: "cascade" }).notNull()
-});
-
-const schema = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  account: account,
-  articleCompanies: articleCompanies,
-  articlePeople: articlePeople,
-  articles: articles,
-  companies: companies,
-  companyStack: companyStack,
-  people: people,
-  personStack: personStack,
-  session: session,
-  technologies: technologies,
-  user: user,
-  verification: verification
-}, Symbol.toStringTag, { value: 'Module' }));
-
-const sql = neon(process.env.DATABASE_URL);
-const db = drizzle(sql, { schema });
-
-if (!process.env.BETTER_AUTH_URL) {
-  console.error("\u{1F6A8} ERROR: BETTER_AUTH_URL is missing in .env file!");
-}
-const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg"
-  }),
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
-  emailAndPassword: {
-    enabled: true
-  },
-  // 🚨 THIS IS THE FIX 🚨
-  // We must tell Better-Auth to read the 'role' column and send it to the client
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-        // It's already in DB schema, so false here prevents errors
-        input: false
-        // Security: Don't allow users to set this via API
-      }
-    }
-  },
-  trustedOrigins: ["http://localhost:3000"]
-});
-
-const collections = {
-  'lucide': () => import('./icons.mjs').then(m => m.default),
-};
-
-const DEFAULT_ENDPOINT = "https://api.iconify.design";
-const _AQwghf = defineCachedEventHandler(async (event) => {
-  const url = getRequestURL(event);
-  if (!url)
-    return createError$1({ status: 400, message: "Invalid icon request" });
-  const options = useAppConfig().icon;
-  const collectionName = event.context.params?.collection?.replace(/\.json$/, "");
-  const collection = collectionName ? await collections[collectionName]?.() : null;
-  const apiEndPoint = options.iconifyApiEndpoint || DEFAULT_ENDPOINT;
-  const icons = url.searchParams.get("icons")?.split(",");
-  if (collection) {
-    if (icons?.length) {
-      const data = getIcons(
-        collection,
-        icons
-      );
-      consola.debug(`[Icon] serving ${(icons || []).map((i) => "`" + collectionName + ":" + i + "`").join(",")} from bundled collection`);
-      return data;
-    }
-  }
-  if (options.fallbackToApi === true || options.fallbackToApi === "server-only") {
-    const apiUrl = new URL("./" + basename(url.pathname) + url.search, apiEndPoint);
-    consola.debug(`[Icon] fetching ${(icons || []).map((i) => "`" + collectionName + ":" + i + "`").join(",")} from iconify api`);
-    if (apiUrl.host !== new URL(apiEndPoint).host) {
-      return createError$1({ status: 400, message: "Invalid icon request" });
-    }
-    try {
-      const data = await $fetch(apiUrl.href);
-      return data;
-    } catch (e) {
-      consola.error(e);
-      if (e.status === 404)
-        return createError$1({ status: 404 });
-      else
-        return createError$1({ status: 500, message: "Failed to fetch fallback icon" });
-    }
-  }
-  return createError$1({ status: 404 });
-}, {
-  group: "nuxt",
-  name: "icon",
-  getKey(event) {
-    const collection = event.context.params?.collection?.replace(/\.json$/, "") || "unknown";
-    const icons = String(getQuery(event).icons || "");
-    return `${collection}_${icons.split(",")[0]}_${icons.length}_${hash$1(icons)}`;
-  },
-  swr: true,
-  maxAge: 60 * 60 * 24 * 7
-  // 1 week
-});
 
 const defaultThrowErrorValue = { throwError: true };
 const defaultSecurityConfig = (serverlUrl, strict) => {
@@ -8604,6 +7820,71 @@ const _RtuwSp = eventHandler(async (e) => {
   e.context._initedSiteConfig = true;
 });
 
+const ROBOT_DIRECTIVE_VALUES = {
+  // Standard directives
+  enabled: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+  disabled: "noindex, nofollow",
+  index: "index",
+  noindex: "noindex",
+  follow: "follow",
+  nofollow: "nofollow",
+  none: "none",
+  all: "all",
+  // Non-standard directives (not part of official robots spec)
+  noai: "noai",
+  noimageai: "noimageai"
+};
+function formatMaxImagePreview(value) {
+  return `max-image-preview:${value}`;
+}
+function formatMaxSnippet(value) {
+  return `max-snippet:${value}`;
+}
+function formatMaxVideoPreview(value) {
+  return `max-video-preview:${value}`;
+}
+
+function getSiteIndexable(e) {
+  const { env, indexable } = getSiteConfig(e);
+  if (typeof indexable !== "undefined")
+    return String(indexable) === "true";
+  return env === "production";
+}
+
+function useNitroOrigin(e) {
+  return getNitroOrigin(e);
+}
+
+function getSiteRobotConfig(e) {
+  const query = getQuery(e);
+  const hints = [];
+  const { groups, debug } = useRuntimeConfigNuxtRobots(e);
+  let indexable = getSiteIndexable(e);
+  const queryIndexableEnabled = String(query.mockProductionEnv) === "true" || query.mockProductionEnv === "";
+  if (debug || false) {
+    const { _context } = getSiteConfig(e, { debug: debug || false });
+    if (queryIndexableEnabled) {
+      indexable = true;
+      hints.push("You are mocking a production enviroment with ?mockProductionEnv query.");
+    } else if (!indexable && _context.indexable === "nuxt-robots:config") {
+      hints.push("You are blocking indexing with your Nuxt Robots config.");
+    } else if (!queryIndexableEnabled && !_context.indexable) {
+      hints.push(`Indexing is blocked in development. You can mock a production environment with ?mockProductionEnv query.`);
+    } else if (!indexable && !queryIndexableEnabled) {
+      hints.push(`Indexing is blocked by site config set by ${_context.indexable}.`);
+    } else if (indexable && !queryIndexableEnabled) {
+      hints.push(`Indexing is enabled from ${_context.indexable}.`);
+    }
+  }
+  if (groups.some((g) => g.userAgent.includes("*") && g.disallow.includes("/"))) {
+    indexable = false;
+    hints.push("You are blocking all user agents with a wildcard `Disallow /`.");
+  } else if (groups.some((g) => g.disallow.includes("/"))) {
+    hints.push("You are blocking specific user agents with `Disallow /`.");
+  }
+  return { indexable, hints };
+}
+
 const _kDz6Ml = defineEventHandler(async (e) => {
   const nitroApp = useNitroApp();
   const { indexable} = getSiteRobotConfig(e);
@@ -8656,6 +7937,168 @@ const _kDz6Ml = defineEventHandler(async (e) => {
   await nitroApp.hooks.callHook("robots:robots-txt", hookCtx);
   return hookCtx.robotsTxt;
 });
+
+function withoutQuery$1(path) {
+  return path.split("?")[0];
+}
+function createNitroRouteRuleMatcher$1(e) {
+  const { nitro, app } = useRuntimeConfig(e);
+  const _routeRulesMatcher = toRouteMatcher(
+    createRouter$1({
+      routes: Object.fromEntries(
+        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [withoutTrailingSlash(path), rules])
+      )
+    })
+  );
+  return (path) => {
+    return defu({}, ..._routeRulesMatcher.matchAll(
+      // radix3 does not support trailing slashes
+      withoutBase(withoutTrailingSlash(withoutQuery$1(path)), app.baseURL)
+    ).reverse());
+  };
+}
+
+function normaliseRobotsRouteRule(config) {
+  let allow;
+  if (typeof config.robots === "boolean")
+    allow = config.robots;
+  else if (typeof config.robots === "object" && "indexable" in config.robots && typeof config.robots.indexable !== "undefined")
+    allow = config.robots.indexable;
+  let rule;
+  if (typeof config.robots === "object" && config.robots !== null) {
+    if ("rule" in config.robots && typeof config.robots.rule !== "undefined") {
+      rule = config.robots.rule;
+    } else if (!("indexable" in config.robots)) {
+      const directives = [];
+      for (const [key, value] of Object.entries(config.robots)) {
+        if (value === false || value === null || value === void 0)
+          continue;
+        if (key in ROBOT_DIRECTIVE_VALUES && typeof value === "boolean" && value) {
+          directives.push(ROBOT_DIRECTIVE_VALUES[key]);
+        } else if (key === "max-image-preview" && typeof value === "string") {
+          directives.push(formatMaxImagePreview(value));
+        } else if (key === "max-snippet" && typeof value === "number") {
+          directives.push(formatMaxSnippet(value));
+        } else if (key === "max-video-preview" && typeof value === "number") {
+          directives.push(formatMaxVideoPreview(value));
+        }
+      }
+      if (directives.length > 0) {
+        rule = directives.join(", ");
+      }
+    }
+  } else if (typeof config.robots === "string") {
+    rule = config.robots;
+  }
+  if (rule && typeof allow === "undefined") {
+    const disallowIndicators = ["none", "noindex", "noai", "noimageai"];
+    allow = !disallowIndicators.some(
+      (indicator) => rule === indicator || rule.split(",").some((part) => part.trim() === indicator)
+    );
+  }
+  if (typeof allow === "undefined" && typeof rule === "undefined")
+    return;
+  return {
+    allow,
+    rule
+  };
+}
+
+function getPathRobotConfig(e, options) {
+  const runtimeConfig = useRuntimeConfig(e);
+  const { robotsDisabledValue, robotsEnabledValue, isNuxtContentV2 } = useRuntimeConfigNuxtRobots(e);
+  if (!options?.skipSiteIndexable) {
+    if (!getSiteRobotConfig(e).indexable) {
+      return {
+        rule: robotsDisabledValue,
+        indexable: false,
+        debug: {
+          source: "Site Config"
+        }
+      };
+    }
+  }
+  const path = options?.path || e.path;
+  let userAgent = options?.userAgent;
+  if (!userAgent) {
+    try {
+      userAgent = getRequestHeader(e, "User-Agent");
+    } catch {
+    }
+  }
+  const nitroApp = useNitroApp();
+  const groups = [
+    // run explicit user agent matching first
+    ...nitroApp._robots.ctx.groups.filter((g) => {
+      if (userAgent) {
+        return g.userAgent.some((ua) => ua.toLowerCase().includes(userAgent.toLowerCase()));
+      }
+      return false;
+    }),
+    // run wildcard matches second
+    ...nitroApp._robots.ctx.groups.filter((g) => g.userAgent.includes("*"))
+  ];
+  for (const group of groups) {
+    if (group._indexable === false) {
+      return {
+        indexable: false,
+        rule: robotsDisabledValue,
+        debug: {
+          source: "/robots.txt",
+          line: JSON.stringify(group)
+        }
+      };
+    }
+    const robotsTxtRule = matchPathToRule(path, group._rules || []);
+    if (robotsTxtRule) {
+      if (!robotsTxtRule.allow) {
+        return {
+          indexable: false,
+          rule: robotsDisabledValue,
+          debug: {
+            source: "/robots.txt",
+            line: `Disallow: ${robotsTxtRule.pattern}`
+          }
+        };
+      }
+      break;
+    }
+  }
+  if (isNuxtContentV2 && nitroApp._robots?.nuxtContentUrls?.has(withoutTrailingSlash(path))) {
+    return {
+      indexable: false,
+      rule: robotsDisabledValue,
+      debug: {
+        source: "Nuxt Content"
+      }
+    };
+  }
+  nitroApp._robotsRuleMatcher = nitroApp._robotsRuleMatcher || createNitroRouteRuleMatcher$1(e);
+  let robotRouteRules = nitroApp._robotsRuleMatcher(path);
+  let routeRulesPath = path;
+  if (runtimeConfig.public?.i18n?.locales && typeof robotRouteRules.robots === "undefined") {
+    const { locales } = runtimeConfig.public.i18n;
+    const locale = locales.find((l) => routeRulesPath.startsWith(`/${l.code}`));
+    if (locale) {
+      routeRulesPath = routeRulesPath.replace(`/${locale.code}`, "");
+      robotRouteRules = nitroApp._robotsRuleMatcher(routeRulesPath);
+    }
+  }
+  const routeRules = normaliseRobotsRouteRule(robotRouteRules);
+  if (routeRules && (typeof routeRules.allow !== "undefined" || typeof routeRules.rule !== "undefined")) {
+    return {
+      indexable: routeRules.allow ?? false,
+      rule: routeRules.rule || (routeRules.allow ? robotsEnabledValue : robotsDisabledValue),
+      debug: {
+        source: "Route Rules"
+      }
+    };
+  }
+  return {
+    indexable: true,
+    rule: robotsEnabledValue
+  };
+}
 
 const _WsZ7sS = defineEventHandler(async (e) => {
   if (e.path === "/robots.txt" || e.path.startsWith("/__") || e.path.startsWith("/api") || e.path.startsWith("/_nuxt"))
@@ -10347,7 +9790,6 @@ const handlers = [
   { route: '/api/submissions', handler: _lazy_kyv9ha, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_vyGdC5, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/api/_nuxt_icon/:collection', handler: _AQwghf, lazy: false, middleware: false, method: undefined },
   { route: '', handler: _vMj_sb, lazy: false, middleware: false, method: undefined },
   { route: '', handler: _aYOdOz, lazy: false, middleware: false, method: undefined },
   { route: '', handler: _UWGDnr, lazy: false, middleware: false, method: undefined },
@@ -10505,5 +9947,48 @@ function useNitroApp() {
 }
 runNitroPlugins(nitroApp);
 
-export { H3Error as $, appTeleportAttrs as A, createSSRContext as B, appHead as C, destr as D, setSSRError as E, getRouteRules as F, getRenderer as G, replaceIslandTeleports as H, prefixStorage as I, useStorage as J, useNitroOrigin as K, emojiCache as L, useOgImageRuntimeConfig as M, fetchIsland as N, createHeadCore as O, normaliseFontInput as P, theme as Q, withTrailingSlash as R, handleCacheHeaders as S, setHeaders as T, setHeader as U, hash$1 as V, parseURL as W, setResponseHeader as X, proxyRequest as Y, sendRedirect as Z, resolveContext as _, db as a, joinURL as a0, withQuery as a1, defu as a2, headSymbol as a3, getRequestHeaders as a4, hasProtocol as a5, isScriptProtocol as a6, klona as a7, defuFn as a8, useHead as a9, sanitizeStatusCode as aa, withoutTrailingSlash as ab, getContext as ac, $fetch$1 as ad, baseURL as ae, resolveUnrefHeadInput as af, createHooks as ag, executeAsync as ah, titleCase as ai, toRouteMatcher as aj, createRouter$1 as ak, camelCase as al, withoutBase as am, useSeoMeta as an, stringifyQuery as ao, withLeadingSlash as ap, withBase as aq, decodeHtml as ar, logger$1 as as, toBase64Image as at, htmlDecodeQuotes as au, sendError as av, fontCache as aw, encodePath as ax, people as b, companies as c, defineEventHandler as d, articles as e, technologies as f, auth as g, createError$1 as h, getRouterParam as i, companyStack as j, personStack as k, toWebRequest as l, articleCompanies as m, getQuery as n, articlePeople as o, parseQuery as p, getResponseStatusText as q, readBody as r, getResponseStatus as s, toNodeListener as t, useNitroApp as u, appId as v, defineRenderHandler as w, buildAssetsURL as x, publicAssetsURL as y, appTeleportTag as z };
+function defineNitroPlugin(def) {
+  return def;
+}
+
+function defineRenderHandler(render) {
+  const runtimeConfig = useRuntimeConfig();
+  return eventHandler(async (event) => {
+    const nitroApp = useNitroApp();
+    const ctx = { event, render, response: void 0 };
+    await nitroApp.hooks.callHook("render:before", ctx);
+    if (!ctx.response) {
+      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
+        setResponseHeader(event, "Content-Type", "image/x-icon");
+        return send(
+          event,
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        );
+      }
+      ctx.response = await ctx.render(event);
+      if (!ctx.response) {
+        const _currentStatus = getResponseStatus(event);
+        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
+        return send(
+          event,
+          "No response returned from render handler: " + event.path
+        );
+      }
+    }
+    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
+    if (ctx.response.headers) {
+      setResponseHeaders(event, ctx.response.headers);
+    }
+    if (ctx.response.statusCode || ctx.response.statusMessage) {
+      setResponseStatus(
+        event,
+        ctx.response.statusCode,
+        ctx.response.statusMessage
+      );
+    }
+    return ctx.response.body;
+  });
+}
+
+export { sanitizeStatusCode as $, useStorage as A, useNitroOrigin as B, emojiCache as C, useOgImageRuntimeConfig as D, fetchIsland as E, createHeadCore as F, normaliseFontInput as G, theme as H, withTrailingSlash as I, handleCacheHeaders as J, setHeaders as K, setHeader as L, hash$1 as M, parseURL as N, setResponseHeader as O, proxyRequest as P, sendRedirect as Q, resolveContext as R, H3Error as S, joinURL as T, withQuery as U, defu as V, headSymbol as W, getRequestHeaders as X, hasProtocol as Y, isScriptProtocol as Z, useHead as _, toWebRequest as a, withoutTrailingSlash as a0, getContext as a1, $fetch$1 as a2, baseURL as a3, resolveUnrefHeadInput as a4, createHooks as a5, executeAsync as a6, titleCase as a7, toRouteMatcher as a8, createRouter$1 as a9, camelCase as aa, withoutBase as ab, useSeoMeta as ac, stringifyQuery as ad, withLeadingSlash as ae, withBase as af, decodeHtml as ag, logger$1 as ah, toBase64Image as ai, htmlDecodeQuotes as aj, sendError as ak, fontCache as al, encodePath as am, getQuery as b, createError$1 as c, defineEventHandler as d, getResponseStatusText as e, getResponseStatus as f, getRouterParam as g, appId as h, defineRenderHandler as i, buildAssetsURL as j, publicAssetsURL as k, appTeleportTag as l, appTeleportAttrs as m, createSSRContext as n, appHead as o, parseQuery as p, destr as q, readBody as r, setSSRError as s, toNodeListener as t, useNitroApp as u, getRouteRules as v, getRenderer as w, renderInlineStyles as x, replaceIslandTeleports as y, prefixStorage as z };
 //# sourceMappingURL=nitro.mjs.map
