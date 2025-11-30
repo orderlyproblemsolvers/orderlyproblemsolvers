@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxt/ui', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
+  modules: ['@nuxt/image', '@nuxt/ui', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@unocss/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
