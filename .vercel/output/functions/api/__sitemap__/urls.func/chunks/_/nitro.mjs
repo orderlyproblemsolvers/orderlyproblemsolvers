@@ -1,5 +1,4 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { createGenerator } from '@unocss/core';
-import presetWind from '@unocss/preset-wind3';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};
 import { parse as parse$1 } from 'devalue';
 import { createConsola } from 'consola';
 import { createUnhead } from 'unhead';
@@ -6452,13 +6451,7 @@ async function resolveContext(e) {
       statusMessage: `[Nuxt OG Image] Renderer ${options.renderer} is not enabled.`
     });
   }
-  const unocss = await createGenerator({ theme }, {
-    presets: [
-      presetWind()
-    ]
-  });
   const ctx = {
-    unocss,
     e,
     key,
     renderer,
