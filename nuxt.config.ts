@@ -69,11 +69,10 @@ export default defineNuxtConfig({
     domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000']
   },
   unocss: {
-  uno: true,
+ uno: true,
   preflight: true,
-  // THIS IS IMPORTANT FOR VERCEL
   inspector: false,
-  mode: 'global',
+  mode: 'dist-chunk'
 },
   security: {
     headers: {
@@ -138,7 +137,16 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'vercel', 
   externals: {
-    inline: ['unocss', '@unocss/core', '@unocss/preset-uno']
+    inline: [ 'unocss',
+      '@unocss/core',
+      '@unocss/config',
+      '@unocss/preset-uno',
+      '@unocss/preset-attributify',
+      '@unocss/preset-icons',
+      '@unocss/transformer-directives',
+      '@unocss/transformer-variant-group',
+      '@unocss/transformer-compile-class',
+      '@unocss/rule-utils']
 }
   },
   routeRules: {
