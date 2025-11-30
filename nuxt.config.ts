@@ -130,6 +130,22 @@ export default defineNuxtConfig({
   // 7. NITRO
   nitro: {
     preset: 'vercel', 
+     esbuild: {
+      options: {
+        target: 'esnext',
+      },
+    },
+    // 🚨 THIS IS THE FIX 🚨
+    // We force these packages to be bundled into the server code
+    externals: {
+      inline: [
+        '@unocss/core',
+        '@unocss/config', 
+        '@unocss/shared', 
+        'unocss', 
+        '@iconify/utils'
+      ]
+    }
   },
   routeRules: {
     // Relax security for the Auth API (Better-Auth needs flexibility)
