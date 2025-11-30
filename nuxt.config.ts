@@ -69,6 +69,7 @@ export default defineNuxtConfig({
     domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000']
   },
   security: {
+    ui: false, // Disable the security dashboard in production
     headers: {
       // 1. Content Security Policy (The Firewall for your browser)
       contentSecurityPolicy: {
