@@ -68,8 +68,14 @@ export default defineNuxtConfig({
     // For now, defaults work fine with external URLs
     domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000']
   },
+  unocss: {
+  uno: true,
+  preflight: true,
+  // THIS IS IMPORTANT FOR VERCEL
+  inspector: false,
+  mode: 'global',
+},
   security: {
-    ui: false, // Disable the security dashboard in production
     headers: {
       // 1. Content Security Policy (The Firewall for your browser)
       contentSecurityPolicy: {
@@ -131,11 +137,9 @@ export default defineNuxtConfig({
   // 7. NITRO
   nitro: {
     preset: 'vercel', 
-     esbuild: {
-      options: {
-        target: 'esnext',
-      },
-    },
+  externals: {
+    inline: ['unocss', '@unocss/core', '@unocss/preset-uno']
+}
   },
   routeRules: {
     // Relax security for the Auth API (Better-Auth needs flexibility)
