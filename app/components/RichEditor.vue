@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
+import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
@@ -14,19 +14,20 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 const fileInput = ref<HTMLInputElement | null>(null)
 const isUploading = ref(false)
-const editor = ref()
 
-// CONFIG (Replace with your actual keys if different)
+// Use shallowRef for complex objects like the Editor instance to avoid Vue performance issues
+const editor = shallowRef<Editor>()
+
+// CONFIG
 const CLOUD_NAME = 'dmevyf7jt' 
 const UPLOAD_PRESET = 'ops_dir' 
 
-// STYLING CONSTANTS (No @apply)
 const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
 const btnActive = "bg-black text-white hover:bg-gray-800"
 
-// 1. MOUNT EDITOR ON CLIENT ONLY
 onMounted(() => {
-  editor.value = useEditor({
+  // Instantiate the editor manually on client mount
+  editor.value = new Editor({
     content: props.modelValue,
     extensions: [
       StarterKit.configure({
@@ -46,9 +47,10 @@ onMounted(() => {
     ],
     editorProps: {
       attributes: {
-        // Tailwind Typography (Prose) modifiers
+        // Force a min-height directly in style to ensure it's visible even if Tailwind fails
+        style: 'min-height: 400px;',
         class: `
-          prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6
+          prose prose-sm sm:prose lg:prose-lg focus:outline-none max-w-none p-6
           prose-h2:text-2xl prose-h2:font-black prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-gray-900 prose-h2:tracking-tight
           prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-gray-900
           prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-600
@@ -67,7 +69,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (editor.value) editor.value.destroy()
+  editor.value?.destroy()
 })
 
 watch(() => props.modelValue, (newValue) => {
@@ -130,26 +132,21 @@ const uploadAndInsertImage = async (file: File) => {
   <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
     
     <!-- TOOLBAR -->
-    <!-- Only rendered when editor is ready -->
     <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
       
-      <!-- History -->
       <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
       <button @click.prevent="editor.chain().focus().redo().run()" :class="btnBase" title="Redo">↪</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Formatting -->
       <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
       <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
       <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Structure -->
       <button @click.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[btnBase, editor.isActive('heading', { level: 2 }) ? btnActive : '']">H2</button>
       <button @click.prevent="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[btnBase, editor.isActive('heading', { level: 3 }) ? btnActive : '']">H3</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Lists -->
       <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
@@ -159,7 +156,6 @@ const uploadAndInsertImage = async (file: File) => {
       <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Media -->
       <button @click.prevent="setLink" :class="[btnBase, editor.isActive('link') ? btnActive : '']">Link</button>
       
       <button 
@@ -176,16 +172,14 @@ const uploadAndInsertImage = async (file: File) => {
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
     </div>
 
-    <!-- EDITOR AREA -->
-    <!-- Using ClientOnly to prevent SSR issues -->
-    <ClientOnly>
+    <!-- EDITOR CONTENT AREA -->
+    <div v-if="editor">
       <editor-content :editor="editor" />
-      <template #fallback>
-        <div class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
-          Loading Editor...
-        </div>
-      </template>
-    </ClientOnly>
+    </div>
+    <div v-else class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
+      Loading Editor...
+    </div>
+
   </div>
 </template>
 
