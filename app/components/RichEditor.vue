@@ -6,10 +6,6 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
-import 'tiptap-prosekit/styles/all.css'
-import 'tiptap-prosekit/styles/prose.css'
-import 'tiptap-prosekit/styles/scrollbar.css'
-import 'tiptap-prosekit/styles/selection.css'
 
 const config = useRuntimeConfig()
 
