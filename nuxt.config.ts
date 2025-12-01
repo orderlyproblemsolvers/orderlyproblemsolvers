@@ -86,7 +86,8 @@ export default defineNuxtConfig({
         // "https:" allows connecting to external APIs generally
         'connect-src': ["'self'", "https:", "ws:", "wss:"], 
       },
-      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
+      crossOriginEmbedderPolicy: 'unsafe-none',
+      crossOriginOpenerPolicy: 'same-origin-allow-popups',
     },
 
     // 3. Rate Limiting (Anti-Spam)
