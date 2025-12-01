@@ -35,28 +35,6 @@ const formatDate = (dateStr: string | Date | null) => {
 const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
-// 3. FOLLOW LOGIC (Local Storage)
-const isFollowing = ref(false)
-
-onMounted(() => {
-  if (import.meta.client) {
-    // Check if user already follows this company
-    const followed = localStorage.getItem(`ops-follow-${slug}`)
-    if (followed) isFollowing.value = true
-  }
-})
-
-const toggleFollow = () => {
-  isFollowing.value = !isFollowing.value
-  
-  if (import.meta.client) {
-    if (isFollowing.value) {
-      localStorage.setItem(`ops-follow-${slug}`, 'true')
-    } else {
-      localStorage.removeItem(`ops-follow-${slug}`)
-    }
-  }
-}
 
 
 useSeoMeta({
@@ -140,17 +118,7 @@ defineOgImageComponent('OpsTemplate', {
                      Visit Website
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
-                  <button 
-                    @click="toggleFollow"
-                    class="px-6 py-3 border text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
-                    :class="isFollowing 
-                      ? 'bg-green-600 border-green-600 text-white hover:bg-green-700' 
-                      : 'border-white/20 text-white hover:bg-white/10'"
-                  >
-                     <svg v-if="isFollowing" class="w-4 h-4 animate-in zoom-in duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                     <span v-if="isFollowing">Following</span>
-                     <span v-else>Follow Updates</span>
-                  </button>
+       
                </div>
             </div>
          </div>

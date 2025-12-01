@@ -117,7 +117,7 @@ const trendingStories = computed(() => {
           </div>
 
           <!-- Newsletter Box -->
-          <div class="mt-auto pt-12">
+          <!-- <div class="mt-auto pt-12">
             <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
               <p class="text-sm font-bold text-gray-900 mb-1">The OPS Brief.</p>
               <p class="text-xs text-gray-500 mb-4">Weekly insights on the ecosystem.</p>
@@ -126,7 +126,7 @@ const trendingStories = computed(() => {
                 <button class="bg-black text-white text-xs font-bold px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors">Go</button>
               </div>
             </div>
-          </div>
+          </div> -->
 
         </div>
 

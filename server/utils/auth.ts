@@ -27,5 +27,5 @@ export const auth = betterAuth({
     }
   },
 
-  trustedOrigins: ["http://localhost:3000"] 
+  trustedOrigins: ["http://localhost:3000", "https://orderlyproblemsolvers.netlify.app", process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com'] 
 });

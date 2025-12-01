@@ -83,7 +83,7 @@ const navMap = {
       <div class="flex h-20 items-center justify-between">
 
         <!-- LOGO -->
-        <NuxtLink to="/" class="flex-shrink-0 z-50">
+        <NuxtLink to="/" class="shrink-0 z-50">
            <img src="/img/logo.png" alt="OPS Logo" class="h-12 w-auto object-contain" />
         </NuxtLink>
 
@@ -168,15 +168,6 @@ const navMap = {
           >
             {{ navMap.about.label }}
           </NuxtLink>
-          <NuxtLink 
-  to="/feed" 
-  class="text-sm font-bold text-gray-800 hover:text-blue-600 transition tracking-wide flex items-center gap-1"
-  exact-active-class="text-blue-600"
->
-  My Feed
-  <!-- Optional: Small dot to indicate it's personal -->
-  <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-</NuxtLink>
 
         </nav>
 
@@ -215,7 +206,7 @@ const navMap = {
          leave-from-class="translate-x-0"
          leave-to-class="translate-x-full"
       >
-        <div v-if="isOpen" class="fixed inset-0 z-[100] bg-white md:hidden overflow-y-auto">
+        <div v-if="isOpen" class="fixed inset-0 z-100 bg-white md:hidden overflow-y-auto">
             <div class="p-6">
               <div class="flex items-center justify-between mb-8">
                  <img src="/img/logo.png" alt="OPS Logo" class="h-10 w-auto" />
