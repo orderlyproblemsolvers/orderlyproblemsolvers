@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@unocss/nuxt'],
+  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
@@ -37,19 +37,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'vercel',
-    externals: {
-     trace: {
-        include: [
-          'node_modules/@unocss/core',
-          'node_modules/@unocss/config',
-          'node_modules/@unocss/preset-wind',
-          'node_modules/@unocss/reset',
-          'node_modules/unocss',
-          'node_modules/@iconify/utils'
-        ]
-      }
-    }
+    preset: 'netlify',
   },
   sitemap: {
     // Fetch dynamic URLs from our API endpoint

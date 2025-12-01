@@ -1,1 +1,0 @@
-import{aj as s,ak as o,al as r}from"./B9RLFzUu.js";import{a as i}from"./DPneB9ID.js";function u(t){return{}}const m=s(async(t,d)=>{let e,a;const{data:n}=([e,a]=o(()=>i.getSession({fetchOptions:{headers:u()}})),e=await e,a(),e);if(!n)return r(`/auth/sign-in?redirect=${encodeURIComponent(t.fullPath)}`);if(n.user?.role!=="admin")return r("/")});export{m as default};
