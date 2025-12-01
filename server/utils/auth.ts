@@ -10,7 +10,7 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000", 
+  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
   emailAndPassword: {  
     enabled: true 
   },
@@ -27,5 +27,5 @@ export const auth = betterAuth({
     }
   },
 
-  trustedOrigins: ["http://localhost:3000", "https://orderlyproblemsolvers.netlify.app", process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com'] 
+  trustedOrigins: ["http://localhost:3000", "https://orderlyproblemsolvers.netlify.app", 'https://orderlyproblemsolvers.com'] 
 });

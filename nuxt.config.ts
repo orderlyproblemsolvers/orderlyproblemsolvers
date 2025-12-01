@@ -70,7 +70,7 @@ export default defineNuxtConfig({
     provider: 'cloudinary',
     cloudinary: { baseURL: 'https://res.cloudinary.com/...' },
     // For now, defaults work fine with external URLs
-    domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000', 'http://orderlyproblemsolvers.com', 'https://orderlyproblemsolvers.com', 'https://orderlyproblemsolvers.netlify.app',  process.env.NUXT_PUBLIC_SITE_URL || 'localhost'  ],
+    domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'https://orderlyproblemsolvers.com', 'https://orderlyproblemsolvers.netlify.app',  process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'  ],
   },
   security: {
    headers: {
