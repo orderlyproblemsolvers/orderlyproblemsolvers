@@ -91,7 +91,7 @@ const props = withDefaults(defineProps<{
       <div v-else style="display: flex; align-items: center; gap: 48px;">
         <!-- Logo -->
         <div v-if="image" style="display: flex;">
-           <NuxtImg 
+           <Img 
              :src="image" 
              width="200"
              height="200"

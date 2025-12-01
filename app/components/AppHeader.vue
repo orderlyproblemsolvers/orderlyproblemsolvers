@@ -37,10 +37,28 @@ const hideMenu = () => {
   }, 200)
 }
 
+useSeoMeta({
+  title: 'Services & Pricing - OPS Studio',
+  description: 'We build the engines. Elite software engineering, mobile development, and system design for ambitious brands in emerging markets.',
+  ogTitle: 'OPS Studio - Engineering & Design',
+  ogDescription: 'Custom software, cloud architecture, and system design. View our transparent pricing and packages.',
+  twitterCard: 'summary_large_image'
+})
+
+// 2. SOCIAL CARD GENERATION
+defineOgImageComponent('OpsTemplate', {
+  title: 'OPS Studio',
+  description: 'Elite engineering for high-growth companies.',
+  type: 'Company', // Uses the "Blue Tick" layout to imply authority
+  badge: 'Services',
+  image: '/img/logo.png'
+})
+
 // ORGANIZED NAVIGATION DATA
 const navMap = {
   stories: { label: 'Stories', to: '/stories' },
   about: { label: 'About', to: '/about' },
+  services: { label: 'Services', to: '/services' },
   
   discover: {
     label: 'Discover',
@@ -167,6 +185,13 @@ const navMap = {
             exact-active-class="text-blue-600"
           >
             {{ navMap.about.label }}
+          </NuxtLink>
+          <NuxtLink 
+            :to="navMap.services.to" 
+            class="text-sm font-bold text-gray-800 hover:text-blue-600 transition tracking-wide"
+            exact-active-class="text-blue-600"
+          >
+            {{ navMap.services.label }}
           </NuxtLink>
 
         </nav>

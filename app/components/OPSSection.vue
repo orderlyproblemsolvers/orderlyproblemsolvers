@@ -11,12 +11,12 @@ const services = [
   },
   {
     title: 'Full-Stack Engineering',
-    desc: 'Scalable Vue/Nuxt architectures.',
+    desc: 'Robust, scalable, and maintainable applications.',
     icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'
   },
   {
-    title: 'Brand Identity',
-    desc: 'Positioning innovators as authorities.',
+    title: 'Consultancy',
+    desc: 'Strategic guidance from ideation to launch.',
     icon: 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3'
   }
 ]
@@ -146,13 +146,7 @@ onUnmounted(() => {
               to="/services" 
               class="px-8 py-4 rounded-xl bg-white text-gray-900 font-bold hover:bg-blue-50 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] text-center"
             >
-              Hire OPS Studio
-            </NuxtLink>
-            <NuxtLink 
-              to="/work" 
-              class="px-8 py-4 rounded-xl border border-gray-700 text-white font-bold hover:bg-gray-800 transition-colors text-center"
-            >
-              View Our Work
+              Hire OPS
             </NuxtLink>
           </div>
         </div>
