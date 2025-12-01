@@ -104,7 +104,7 @@ const formatDate = (date: string | null) => {
     </div>
 
     <!-- Mobile Card View (visible on mobile only) -->
-    <div v-else class="md:hidden space-y-4">
+    <div class="md:hidden space-y-4">
       <div
         v-for="item in list"
         :key="item.id"
