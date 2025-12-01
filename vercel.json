@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "output/server/index.mjs": {
+      "includeFiles": "node_modules/@unocss/**"
+    }
+  }
+}
