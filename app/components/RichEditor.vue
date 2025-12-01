@@ -14,8 +14,6 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 const fileInput = ref<HTMLInputElement | null>(null)
 const isUploading = ref(false)
-
-// Use shallowRef for complex objects like the Editor instance to avoid Vue performance issues
 const editor = shallowRef<Editor>()
 
 // CONFIG
@@ -26,52 +24,46 @@ const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs u
 const btnActive = "bg-black text-white hover:bg-gray-800"
 
 onMounted(() => {
-  // Instantiate the editor manually on client mount
-  editor.value = new Editor({
-    content: props.modelValue,
-    extensions: [
-      StarterKit.configure({
-        heading: { levels: [2, 3] } 
-      }),
-      Underline,
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
-      }),
-      Image.configure({
-        HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
-      }),
-      Placeholder.configure({
-        placeholder: 'Start writing your story...'
-      })
-    ],
-    editorProps: {
-      attributes: {
-        // Force a min-height directly in style to ensure it's visible even if Tailwind fails
-        style: 'min-height: 400px;',
-        class: `
-          prose prose-sm sm:prose lg:prose-lg focus:outline-none max-w-none p-6
-          prose-h2:text-2xl prose-h2:font-black prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-gray-900 prose-h2:tracking-tight
-          prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-gray-900
-          prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-600
-          prose-ul:list-disc prose-ul:pl-5 prose-ul:mb-4 prose-ul:text-gray-600
-          prose-ol:list-decimal prose-ol:pl-5 prose-ol:mb-4 prose-ol:text-gray-600
-          prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:text-gray-800 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:pr-2 prose-blockquote:rounded-r
-          prose-img:rounded-xl prose-img:border prose-img:border-gray-100
-          prose-a:text-blue-600 prose-a:underline prose-a:decoration-blue-300 prose-a:underline-offset-2 hover:prose-a:text-blue-800
-        `
+  if (!import.meta.client) return
+
+  try {
+    editor.value = new Editor({
+      content: props.modelValue,
+      extensions: [
+        StarterKit.configure({
+          heading: { levels: [2, 3] } 
+        }),
+        Underline,
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
+        }),
+        Image.configure({
+          HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
+        }),
+        Placeholder.configure({
+          placeholder: 'Start writing your story...'
+        })
+      ],
+      editorProps: {
+        attributes: {
+          class: `prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6`
+        }
+      },
+      onUpdate: ({ editor }) => {
+        emit('update:modelValue', editor.getHTML())
       }
-    },
-    onUpdate: ({ editor }) => {
-      emit('update:modelValue', editor.getHTML())
-    }
-  })
+    })
+  } catch (e) {
+    console.error("Failed to initialize Tiptap:", e)
+  }
 })
 
 onBeforeUnmount(() => {
   editor.value?.destroy()
 })
 
+// Watch for external changes (e.g. loading draft)
 watch(() => props.modelValue, (newValue) => {
   if (!editor.value) return
   const isSame = editor.value.getHTML() === newValue
@@ -79,7 +71,7 @@ watch(() => props.modelValue, (newValue) => {
   editor.value.commands.setContent(newValue, false)
 })
 
-// ACTIONS
+// --- ACTIONS ---
 const setLink = () => {
   if (!editor.value) return
   const previousUrl = editor.value.getAttributes('link').href
@@ -118,7 +110,7 @@ const uploadAndInsertImage = async (file: File) => {
     if (data.secure_url) {
       editor.value.chain().focus().setImage({ src: data.secure_url }).run()
     } else {
-      alert('Image upload failed')
+      alert('Image upload failed: ' + (data.error?.message || 'Unknown error'))
     }
   } catch (e) {
     alert('Network error')
@@ -148,9 +140,11 @@ const uploadAndInsertImage = async (file: File) => {
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
       <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
+         <!-- List Icon -->
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
       <button @click.prevent="editor.chain().focus().toggleOrderedList().run()" :class="[btnBase, editor.isActive('orderedList') ? btnActive : '']">
+         <!-- Ordered List Icon -->
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h12M7 12h12M7 17h12M3 7h.01M3 12h.01M3 17h.01"></path></svg>
       </button>
       <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
@@ -172,19 +166,20 @@ const uploadAndInsertImage = async (file: File) => {
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
     </div>
 
-    <!-- EDITOR CONTENT AREA -->
-    <div v-if="editor">
-      <editor-content :editor="editor" />
+    <!-- EDITOR CONTENT -->
+    <div v-if="editor" class="min-h-[400px]">
+       <editor-content :editor="editor" />
     </div>
+    
     <div v-else class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
-      Loading Editor...
+      <span>Loading Editor...</span>
     </div>
 
   </div>
 </template>
 
 <style scoped>
-/* Placeholder styling */
+/* Tiptap Placeholder Styling */
 :deep(.tiptap p.is-editor-empty:first-child::before) {
   color: #9ca3af;
   content: attr(data-placeholder);
