@@ -1,34 +1,36 @@
 import { authClient } from "@/utils/auth-client";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    // 1. SKIP SERVER CHECK (The Fix)
-    // We let the server render the page shell immediately to avoid 500 errors
-    // caused by database connections or internal API resolution issues.
-    if (import.meta.server) return;
-
-    // 2. CLIENT-SIDE CHECK
-    // Now we are in the browser, where we know cookies and URLs work perfectly.
-    try {
-        const { data: session } = await authClient.useAuthSession(useFetch);
-
-        // 3. No Session? -> Bounce to Login
-        if (!session.value) {
-            // We encode the redirect so they come back after login
-            return navigateTo(`/auth/sign-in?redirect=${encodeURIComponent(to.fullPath)}`);
+    // 1. FORCE A FRESH SERVER CHECK
+    // We use 'getSession' directly instead of 'useAuthSession'. 
+    // This bypasses any stale local state and asks the backend "Who is this?"
+    const { data: session } = await authClient.getSession({
+        fetchOptions: {
+            headers: useRequestHeaders(['cookie']) // Pass cookies if running on server
         }
+    });
 
-        // 4. Check Role
-        // Using "any" casting to avoid TS errors on the custom 'role' field
-        const userRole = (session.value.user as any)?.role;
-        
-        if (userRole !== 'admin') {
-            console.log(`⛔ Access Denied: User is '${userRole}', needed 'admin'`);
-            return navigateTo('/'); 
-        }
-        
-    } catch (error) {
-        // Failsafe: If anything explodes, just go to login
-        console.error("Auth Middleware Error:", error);
-        return navigateTo('/auth/sign-in');
+    // DEBUG: See exactly what the server thinks you are
+    if (import.meta.client) {
+        console.log("🔍 Middleware Check:", session);
     }
+
+    // 2. CHECK 1: Are they logged in?
+    if (!session) {
+        if (import.meta.client) console.log("⛔ Access Denied: No Session");
+        // Send them to login, but remember where they wanted to go
+        return navigateTo(`/auth/sign-in?redirect=${encodeURIComponent(to.fullPath)}`);
+    }
+
+    // 3. CHECK 2: Are they an Admin?
+    // We accept 'admin' or 'editor' (if you add that later)
+    const role = (session.user as any)?.role;
+    
+    if (role !== 'admin') {
+        if (import.meta.client) console.log(`⛔ Access Denied: User is '${role}', needed 'admin'`);
+        return navigateTo('/'); // Kick regular users to homepage
+    }
+
+    // 4. Success
+    if (import.meta.client) console.log("✅ Admin Access Granted");
 });
