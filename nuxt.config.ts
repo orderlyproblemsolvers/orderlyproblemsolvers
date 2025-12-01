@@ -27,13 +27,29 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
+  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt', '@unocss/nuxt'],
   ssr: true,
    site: {
     url: 'https://orderlyproblemsolvers.com',
     name: 'Orderly Problem Solvers',
     description: 'The definitive index of the problem-solving economy in emerging markets.',
     defaultLocale: 'en',
+  },
+
+  nitro: {
+    preset: 'vercel',
+    externals: {
+     trace: {
+        include: [
+          'node_modules/@unocss/core',
+          'node_modules/@unocss/config',
+          'node_modules/@unocss/preset-wind',
+          'node_modules/@unocss/reset',
+          'node_modules/unocss',
+          'node_modules/@iconify/utils'
+        ]
+      }
+    }
   },
   sitemap: {
     // Fetch dynamic URLs from our API endpoint
