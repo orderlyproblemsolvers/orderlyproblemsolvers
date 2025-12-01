@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
-import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
-import { ref, watch, onBeforeUnmount } from 'vue'
+import Placeholder from '@tiptap/extension-placeholder'
 
 const props = defineProps<{
   modelValue: string
@@ -14,71 +14,82 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 const fileInput = ref<HTMLInputElement | null>(null)
 const isUploading = ref(false)
+const editor = ref()
 
-// CONFIG
+// CONFIG (Replace with your actual keys if different)
 const CLOUD_NAME = 'dmevyf7jt' 
 const UPLOAD_PRESET = 'ops_dir' 
 
-// --- STYLING CONSTANTS ---
-// Base button style to reuse without @apply
+// STYLING CONSTANTS (No @apply)
 const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
-// Active state style
 const btnActive = "bg-black text-white hover:bg-gray-800"
 
-// EDITOR SETUP
-const editor = useEditor({
-  content: props.modelValue,
-  extensions: [
-    StarterKit.configure({
-      heading: { levels: [2, 3] } 
-    }),
-    Underline,
-    Link.configure({
-      openOnClick: false,
-      HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
-    }),
-    Image.configure({
-      HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
-    }),
-    Placeholder.configure({
-      placeholder: 'Start writing your story...'
-    })
-  ],
-  editorProps: {
-    attributes: {
-      // We use 'prose-X' modifiers to style elements inside the editor using Tailwind directly
-      class: `
-        prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6
-        
-        prose-h2:text-2xl prose-h2:font-black prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-gray-900 prose-h2:tracking-tight
-        prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-gray-900
-        prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-600
-        prose-ul:list-disc prose-ul:pl-5 prose-ul:mb-4 prose-ul:text-gray-600
-        prose-ol:list-decimal prose-ol:pl-5 prose-ol:mb-4 prose-ol:text-gray-600
-        prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:text-gray-800 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:pr-2 prose-blockquote:rounded-r
-        prose-img:rounded-xl prose-img:border prose-img:border-gray-100
-        prose-a:text-blue-600 prose-a:underline prose-a:decoration-blue-300 prose-a:underline-offset-2 hover:prose-a:text-blue-800
-      `
+// 1. MOUNT EDITOR ON CLIENT ONLY
+onMounted(() => {
+  editor.value = useEditor({
+    content: props.modelValue,
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [2, 3] } 
+      }),
+      Underline,
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
+      }),
+      Image.configure({
+        HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
+      }),
+      Placeholder.configure({
+        placeholder: 'Start writing your story...'
+      })
+    ],
+    editorProps: {
+      attributes: {
+        // Tailwind Typography (Prose) modifiers
+        class: `
+          prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6
+          prose-h2:text-2xl prose-h2:font-black prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-gray-900 prose-h2:tracking-tight
+          prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-gray-900
+          prose-p:mb-4 prose-p:leading-relaxed prose-p:text-gray-600
+          prose-ul:list-disc prose-ul:pl-5 prose-ul:mb-4 prose-ul:text-gray-600
+          prose-ol:list-decimal prose-ol:pl-5 prose-ol:mb-4 prose-ol:text-gray-600
+          prose-blockquote:border-l-4 prose-blockquote:border-black prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-6 prose-blockquote:text-gray-800 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:pr-2 prose-blockquote:rounded-r
+          prose-img:rounded-xl prose-img:border prose-img:border-gray-100
+          prose-a:text-blue-600 prose-a:underline prose-a:decoration-blue-300 prose-a:underline-offset-2 hover:prose-a:text-blue-800
+        `
+      }
+    },
+    onUpdate: ({ editor }) => {
+      emit('update:modelValue', editor.getHTML())
     }
-  },
-  onUpdate: () => {
-    emit('update:modelValue', editor.value?.getHTML())
-  }
+  })
 })
 
-// LINK LOGIC
+onBeforeUnmount(() => {
+  if (editor.value) editor.value.destroy()
+})
+
+watch(() => props.modelValue, (newValue) => {
+  if (!editor.value) return
+  const isSame = editor.value.getHTML() === newValue
+  if (isSame) return
+  editor.value.commands.setContent(newValue, false)
+})
+
+// ACTIONS
 const setLink = () => {
-  const previousUrl = editor.value?.getAttributes('link').href
+  if (!editor.value) return
+  const previousUrl = editor.value.getAttributes('link').href
   const url = window.prompt('URL', previousUrl)
   if (url === null) return
   if (url === '') {
-    editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
     return
   }
-  editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 }
 
-// IMAGE LOGIC
 const triggerImageUpload = () => fileInput.value?.click()
 
 const handleFile = async (event: Event) => {
@@ -90,6 +101,7 @@ const handleFile = async (event: Event) => {
 }
 
 const uploadAndInsertImage = async (file: File) => {
+  if (!editor.value) return
   isUploading.value = true
   const formData = new FormData()
   formData.append('file', file)
@@ -102,7 +114,7 @@ const uploadAndInsertImage = async (file: File) => {
     })
     const data = await res.json()
     if (data.secure_url) {
-      editor.value?.chain().focus().setImage({ src: data.secure_url }).run()
+      editor.value.chain().focus().setImage({ src: data.secure_url }).run()
     } else {
       alert('Image upload failed')
     }
@@ -112,28 +124,21 @@ const uploadAndInsertImage = async (file: File) => {
     isUploading.value = false
   }
 }
-
-onBeforeUnmount(() => editor.value?.destroy())
-
-watch(() => props.modelValue, (newValue) => {
-  const isSame = editor.value?.getHTML() === newValue
-  if (isSame) return
-  editor.value?.commands.setContent(newValue, false)
-})
 </script>
 
 <template>
   <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
     
     <!-- TOOLBAR -->
-    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10" v-if="editor">
+    <!-- Only rendered when editor is ready -->
+    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
       
       <!-- History -->
       <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
       <button @click.prevent="editor.chain().focus().redo().run()" :class="btnBase" title="Redo">↪</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Text Style -->
+      <!-- Formatting -->
       <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
       <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
       <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
@@ -144,7 +149,7 @@ watch(() => props.modelValue, (newValue) => {
       <button @click.prevent="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[btnBase, editor.isActive('heading', { level: 3 }) ? btnActive : '']">H3</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <!-- Lists & Quotes -->
+      <!-- Lists -->
       <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
@@ -171,15 +176,23 @@ watch(() => props.modelValue, (newValue) => {
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
     </div>
 
-    <!-- EDITOR -->
-    <editor-content :editor="editor" />
+    <!-- EDITOR AREA -->
+    <!-- Using ClientOnly to prevent SSR issues -->
+    <ClientOnly>
+      <editor-content :editor="editor" />
+      <template #fallback>
+        <div class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
+          Loading Editor...
+        </div>
+      </template>
+    </ClientOnly>
   </div>
 </template>
 
 <style scoped>
-/* Placeholder styling using standard CSS */
+/* Placeholder styling */
 :deep(.tiptap p.is-editor-empty:first-child::before) {
-  color: #9ca3af; /* Tailwind gray-400 */
+  color: #9ca3af;
   content: attr(data-placeholder);
   float: left;
   height: 0;
