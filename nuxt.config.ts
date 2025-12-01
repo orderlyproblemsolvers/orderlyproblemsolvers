@@ -102,7 +102,12 @@ export default defineNuxtConfig({
     
     // 5. CORS (Strict for API)
     corsHandler: {
-      origin: process.env.NUXT_PUBLIC_SITE_URL || '*',
+      origin: [
+        'https://orderlyproblemsolvers.com', 
+        'https://www.orderlyproblemsolvers.com',
+        'https://orderlyproblemsolvers.netlify.app', // Keep as fallback
+        'http://localhost:3000'
+      ],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowHeaders: ['Content-Type', 'Authorization'],
       exposeHeaders: ['Content-Length']
