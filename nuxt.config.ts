@@ -70,36 +70,22 @@ export default defineNuxtConfig({
     provider: 'cloudinary',
     cloudinary: { baseURL: 'https://res.cloudinary.com/...' },
     // For now, defaults work fine with external URLs
-    domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000']
+    domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'http://localhost:3000', 'orderlyproblemsolvers.com',  process.env.NUXT_PUBLIC_SITE_URL || 'localhost'  ],
   },
   security: {
-    headers: {
-      // 1. Content Security Policy (The Firewall for your browser)
+   headers: {
       contentSecurityPolicy: {
-        'img-src': [
-          "'self'", 
-          "data:", 
-          "https://res.cloudinary.com", 
-          "https://images.unsplash.com", 
-          "https://i.pravatar.cc", 
-          "https://ui-avatars.com",
-          "https://upload.wikimedia.org" // For the ecosystem logos
-        ],
-        'script-src': [
-          "'self'", 
-          "'unsafe-inline'", // Needed for Nuxt hydration
-          "https:", // Allow external scripts if needed (e.g. Analytics)
-        ],
-        'style-src': [
-          "'self'", 
-          "'unsafe-inline'", // Needed for TipTap editor and Vue transitions
-        ],
-        'connect-src': [
-          "'self'", 
-          "https://api.cloudinary.com" // Allow uploading images directly
-        ],
+        // Allow images from anywhere (needed for user avatars/logos)
+        'img-src': ["'self'", "data:", "blob:", "https:"],
+        
+        // Allow scripts/styles (standard Nuxt needs)
+        'script-src': ["'self'", "'unsafe-inline'", "https:"],
+        'style-src': ["'self'", "'unsafe-inline'"],
+        
+        // 🚨 CRITICAL: Allow connection to Self AND Cloudinary
+        // "https:" allows connecting to external APIs generally
+        'connect-src': ["'self'", "https:", "ws:", "wss:"], 
       },
-      // 2. Cross Origin (Relax for images)
       crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
     },
 
@@ -115,7 +101,7 @@ export default defineNuxtConfig({
     
     // 5. CORS (Strict for API)
     corsHandler: {
-      origin: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      origin: process.env.NUXT_PUBLIC_SITE_URL || '*',
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowHeaders: ['Content-Type', 'Authorization'],
       exposeHeaders: ['Content-Length']
