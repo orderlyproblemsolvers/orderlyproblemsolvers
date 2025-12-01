@@ -6,6 +6,12 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
+import 'tiptap-prosekit/styles/all.css'
+import 'tiptap-prosekit/styles/prose.css'
+import 'tiptap-prosekit/styles/scrollbar.css'
+import 'tiptap-prosekit/styles/selection.css'
+
+const config = useRuntimeConfig()
 
 const props = defineProps<{
   modelValue: string
@@ -17,8 +23,8 @@ const isUploading = ref(false)
 const editor = shallowRef<Editor>()
 
 // CONFIG
-const CLOUD_NAME = 'dmevyf7jt' 
-const UPLOAD_PRESET = 'ops_dir' 
+const CLOUD_NAME = config.public.cloudinaryCloudName
+const UPLOAD_PRESET = config.public.cloudinaryUploadPreset
 
 const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
 const btnActive = "bg-black text-white hover:bg-gray-800"
