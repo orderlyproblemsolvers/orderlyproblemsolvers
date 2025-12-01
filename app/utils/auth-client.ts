@@ -1,6 +1,6 @@
 import { createAuthClient } from "better-auth/vue";
 const config = useRuntimeConfig();
-const baseURL = config.public.siteUrl || "http://localhost:3000";
+const baseURL = config.public.siteUrl || "http://localhost:3000" || "https://orderlyproblemsolvers.netlify.app";
 
 export const authClient = createAuthClient({
     
