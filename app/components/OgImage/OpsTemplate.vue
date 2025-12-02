@@ -91,8 +91,7 @@ const props = withDefaults(defineProps<{
       <div v-else style="display: flex; align-items: center; gap: 48px;">
         <!-- Logo -->
         <div v-if="image" style="display: flex;">
-           <Img 
-             :src="image" 
+           <img  :src="image" 
              width="200"
              height="200"
              :style="{
@@ -100,8 +99,7 @@ const props = withDefaults(defineProps<{
                borderRadius: '32px',
                border: '6px solid white',
                boxShadow: '0 20px 40px -5px rgba(0, 0, 0, 0.1)'
-             }"
-           />
+             }"/>
         </div>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 16px;">
