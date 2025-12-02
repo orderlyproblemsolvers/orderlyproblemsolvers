@@ -10,6 +10,9 @@ export default defineNuxtConfig({
       templateParams: {
         siteName: 'OPS',
         separator: '|',
+        meta: [
+        { name: 'color-scheme', content: 'light only' }
+      ]
       },
       // The Icons
       link: [
