@@ -166,9 +166,10 @@ defineOgImageComponent('OpsTemplate', {
             <!-- Bio -->
             <section>
               <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">About</h3>
-              <p class="text-lg text-gray-900 leading-relaxed font-serif whitespace-pre-line">
-                {{ person.bio || 'No biography provided yet.' }}
-              </p>
+              <div 
+              class="prose prose-lg prose-gray max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl prose-blockquote:border-l-black prose-blockquote:italic prose-blockquote:font-serif" 
+              v-html="person.bio || 'No bio available.'"
+            ></div>
             </section>
 
             <!-- TECH STACK -->

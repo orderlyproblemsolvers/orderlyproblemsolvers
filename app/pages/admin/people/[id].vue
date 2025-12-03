@@ -176,7 +176,7 @@ const handleUpdate = async () => {
       <!-- Bio -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Short Bio</label>
-        <textarea v-model="form.bio" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black outline-none transition-colors"></textarea>
+       <RichEditor v-model="form.bio" />
       </div>
 
       <!-- Meta Toggles -->

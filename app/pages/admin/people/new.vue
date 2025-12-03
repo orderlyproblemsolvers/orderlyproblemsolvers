@@ -144,7 +144,7 @@ const handleSubmit = async () => {
             @keydown.enter.prevent="addTag" 
             @keydown.backspace="form.stackInput === '' && form.stack.pop()"
             type="text" 
-            class="outline-none text-sm flex-grow min-w-[100px] bg-transparent" 
+            class="outline-none text-sm grow min-w-[100px] bg-transparent" 
             placeholder="Type & Enter (e.g. Rust)..." 
           />
         </div>
@@ -154,7 +154,8 @@ const handleSubmit = async () => {
       <!-- Bio -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Short Bio</label>
-        <textarea v-model="form.bio" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black outline-none transition-colors" placeholder="Brief professional summary..."></textarea>
+               
+               <RichEditor v-model="form.bio" />
       </div>
 
       <!-- Toggles -->
