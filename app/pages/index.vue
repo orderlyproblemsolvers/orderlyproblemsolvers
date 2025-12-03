@@ -30,6 +30,11 @@ useSeoMeta({
   twitterImage: '/img/logo.png',
 })
 
+definePageMeta({
+  title: 'Orderly Problem Solvers - The Ecosystem Index',
+  description: 'The definitive directory of verified agencies, experts, and technology driving emerging markets. Find the solution before you build the software.',
+})
+
 defineOgImageComponent('OpsTemplate', {
   title: 'Orderly Problem Solvers',
   description: 'The definitive index of the problem-solving economy. Discover verified agencies, experts, and the technology driving emerging markets.',
