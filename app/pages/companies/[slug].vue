@@ -90,7 +90,7 @@ defineOgImageComponent('OpsTemplate', {
       <!-- 1. HEADER HERO -->
       <div class="relative bg-gray-900 text-white pt-32 pb-16 overflow-hidden">
          <!-- Background Texture -->
-         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
+         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
          
          <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-start gap-8">
@@ -155,11 +155,9 @@ defineOgImageComponent('OpsTemplate', {
                <section>
                   <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">The Solution</h3>
                   <div 
-                    class="prose prose-gray max-w-none text-gray-900 leading-relaxed prose-headings:font-bold prose-a:text-blue-600" 
-                    v-if="company.description"
-                    v-html="company.description.includes('<') ? company.description : `<p>${company.description}</p>`"
-                  ></div>
-                  <p v-else class="text-gray-500 italic">No description provided.</p>
+              class="prose prose-lg prose-gray max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl prose-blockquote:border-l-black prose-blockquote:italic prose-blockquote:font-serif" 
+              v-html="company.description || 'No description available yet.'"
+            ></div>
                </section>
 
                <!-- TECH STACK (Dynamic) -->

@@ -201,7 +201,7 @@ const handleSubmit = async () => {
       <!-- Description -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Full Description</label>
-        <textarea v-model="form.description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black outline-none transition-colors" placeholder="Describe the company's mission and product..."></textarea>
+        <RichEditor v-model="form.description" />
       </div>
 
       <!-- Toggles -->
