@@ -38,6 +38,7 @@ export default defineNuxtConfig({
     description: 'The definitive index of the problem-solving economy in emerging markets.',
     defaultLocale: 'en',
   },
+  
 
   nitro: {
     preset: 'netlify',
@@ -61,6 +62,12 @@ export default defineNuxtConfig({
   },
   ogImage: {
     enabled: true,
+    host: process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com', 
+    
+    // Explicitly allow the OG Image server to fetch resources from Cloudinary
+    domains: [
+      'res.cloudinary.com',
+    ],
   },
   schemaOrg: {
     identity: {
