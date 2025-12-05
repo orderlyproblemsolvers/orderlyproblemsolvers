@@ -164,7 +164,7 @@ useSeoMeta({
   description: 'We are chronicling the Age of Solution. OPS is a media platform and directory filtering the signal from the noise in the tech ecosystem.',
   ogTitle: 'About Orderly Problem Solvers',
   ogDescription: 'Meet the editorial board and engineering team behind the definitive index of problem solvers.',
-  ogImage: '/img/logo-sm.png', // Or a specific team photo URL if you have one
+  ogImage: '/img/logo-sm.png',
   twitterCard: 'summary_large_image'
 })
 
@@ -179,49 +179,47 @@ defineOgImageComponent('OpsTemplate', {
 <template>
     
     <AppHeader/>
-  <div class="min-h-screen bg-white font-sans text-gray-900 selection:bg-black selection:text-white">
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
 
-    <!-- 1. HERO MANIFESTO -->
-    <section class="pt-20 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 border-b border-gray-900">
+    <section class="pt-20 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 border-b border-gray-900 dark:border-gray-700 transition-colors duration-300">
       <div class="max-w-7xl mx-auto">
-        <span class="block text-xs font-bold tracking-[0.2em] uppercase mb-6 sm:mb-8">The Manifesto</span>
+        <span class="block text-xs font-bold tracking-[0.2em] uppercase mb-6 sm:mb-8 text-gray-900 dark:text-gray-100">The Manifesto</span>
 
-        <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] mb-12 sm:mb-16">
+        <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] mb-12 sm:mb-16 text-gray-900 dark:text-white">
           WE CHRONICLE <br class="hidden sm:inline"/>
           THE AGE OF <br class="hidden sm:inline"/>
-          <span class="bg-linear-to-b from-gray-500 to-gray-900 bg-clip-text text-transparent">SOLUTION.</span>
+          <span class="bg-linear-to-b from-gray-500 to-gray-900 dark:from-gray-400 dark:to-gray-100 bg-clip-text text-transparent">SOLUTION.</span>
         </h1>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 border-t border-gray-200 pt-8 sm:pt-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 border-t border-gray-200 dark:border-gray-800 pt-8 sm:pt-12 transition-colors duration-300">
           <div class="lg:col-span-5">
-            <p class="text-lg sm:text-xl md:text-2xl font-serif leading-relaxed text-gray-800">
+            <p class="text-lg sm:text-xl md:text-2xl font-serif leading-relaxed text-gray-800 dark:text-gray-200">
               The tech world is drowning in noise. Vaporware, buzzwords, and wrappers. We exist to find the signal.
             </p>
           </div>
           <div class="lg:col-span-7 flex flex-col justify-between gap-6 sm:gap-8">
-            <p class="text-gray-500 text-base sm:text-lg leading-relaxed max-w-xl">
+            <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg leading-relaxed max-w-xl">
               OPS started as a simple observation: for every problem we tried to solve, there was already a brilliant team somewhere in the world solving it. The problem wasn't a lack of innovation; it was a lack of <strong>Order</strong>.
             </p>
-            <p class="text-xs sm:text-sm font-bold uppercase tracking-widest">Est. 2025 — Abuja / Global</p>
+            <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Est. 2025 — Abuja / Global</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. THE TRINITY -->
-    <section class="border-b border-gray-900">
+    <section class="border-b border-gray-900 dark:border-gray-700 transition-colors duration-300">
       <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-900">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-900 dark:divide-gray-700 transition-colors duration-300">
 
-          <div v-for="pillar in pillars" :key="pillar.number" class="group relative p-6 sm:p-8 lg:p-12 flex flex-col justify-between min-h-80 sm:min-h-[400px] hover:bg-gray-50 transition-colors cursor-pointer">
+          <div v-for="pillar in pillars" :key="pillar.number" class="group relative p-6 sm:p-8 lg:p-12 flex flex-col justify-between min-h-80 sm:min-h-[400px] hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors cursor-pointer">
             <div>
-              <span class="block text-5xl sm:text-6xl font-black text-gray-200 mb-6 sm:mb-8 group-hover:text-gray-900 transition-colors duration-500">{{ pillar.number }}</span>
-              <h3 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3 sm:mb-4">{{ pillar.title }}</h3>
-              <p class="text-gray-500 text-sm sm:text-base leading-relaxed">{{ pillar.desc }}</p>
+              <span class="block text-5xl sm:text-6xl font-black text-gray-200 dark:text-gray-800 mb-6 sm:mb-8 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-500">{{ pillar.number }}</span>
+              <h3 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3 sm:mb-4 text-gray-900 dark:text-white">{{ pillar.title }}</h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm sm:text-base leading-relaxed">{{ pillar.desc }}</p>
             </div>
 
-            <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100 group-hover:border-gray-900 transition-colors">
-              <NuxtLink :to="pillar.link" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+            <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100 dark:border-gray-800 group-hover:border-gray-900 dark:group-hover:border-gray-100 transition-colors">
+              <NuxtLink :to="pillar.link" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white group-hover:translate-x-2 transition-transform">
                 {{ pillar.label }} &rarr;
               </NuxtLink>
             </div>
@@ -231,13 +229,11 @@ defineOgImageComponent('OpsTemplate', {
       </div>
     </section>
 
-    <!-- 3. THE STUDIO UPSELL -->
     <section class="bg-black text-white py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
 
-          <!-- Text Content -->
           <div>
             <div class="inline-block px-3 py-1.5 border border-white/30 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 sm:mb-8">
               OPS Studio
@@ -250,18 +246,15 @@ defineOgImageComponent('OpsTemplate', {
             <p class="text-gray-400 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-md">
               We don't just curate the ecosystem; we build the infrastructure. OPS Studio applies our philosophy of "Radical Order" to build scalable platforms for enterprise and government clients.
             </p>
-            <NuxtLink to="/services" class="inline-block bg-white text-black  px-6 sm:px-8 py-3 sm:py-4 font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors">
+            <NuxtLink to="/services" class="inline-block bg-white text-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors">
               View Capabilities
             </NuxtLink>
           </div>
 
-          <!-- Three.js Canvas -->
           <div class="relative w-full aspect-square lg:aspect-4/5 border border-white/20 rounded-lg overflow-hidden bg-black/50">
 
-            <!-- Canvas Container -->
             <div ref="canvasContainer" class="absolute inset-0 z-0"></div>
 
-            <!-- Overlay Content -->
             <div class="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 pointer-events-none z-10">
               <div class="text-xs font-mono text-gray-500">
                 <p>ARCHITECTURE_V1.0</p>
@@ -280,38 +273,36 @@ defineOgImageComponent('OpsTemplate', {
       </div>
     </section>
 
-    <!-- 4. THE EDITORIAL BOARD -->
-    <section class="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-gray-200">
+    <section class="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-950 transition-colors duration-300">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 sm:mb-16 border-b border-gray-900 pb-4 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-          <h2 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase">The Editorial Board</h2>
-          <p class="hidden sm:block text-xs font-bold uppercase tracking-widest whitespace-nowrap">Curators of Order</p>
+        <div class="mb-12 sm:mb-16 border-b border-gray-900 dark:border-gray-700 pb-4 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase text-gray-900 dark:text-white">The Editorial Board</h2>
+          <p class="hidden sm:block text-xs font-bold uppercase tracking-widest whitespace-nowrap text-gray-900 dark:text-gray-300">Curators of Order</p>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           <div v-for="member in team" :key="member.name" class="group">
-            <div class="aspect-3/4 overflow-hidden bg-gray-100 mb-3 sm:mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">
+            <div class="aspect-3/4 overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 sm:mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">
               <img :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
             </div>
-            <h3 class="text-sm sm:text-base md:text-lg font-bold uppercase tracking-tight">{{ member.name }}</h3>
-            <p class="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">{{ member.role }}</p>
+            <h3 class="text-sm sm:text-base md:text-lg font-bold uppercase tracking-tight text-gray-900 dark:text-white">{{ member.name }}</h3>
+            <p class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ member.role }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 5. FOOTER CTA -->
-    <section class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-8 text-center">
-      <p class="text-gray-500 text-xs sm:text-sm font-bold uppercase tracking-widest mb-4 sm:mb-6">The Ecosystem is waiting</p>
-      <h2 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 sm:mb-12 hover:text-blue-600 transition-colors cursor-default">
+    <section class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-8 text-center bg-white dark:bg-slate-950 transition-colors duration-300">
+      <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-4 sm:mb-6">The Ecosystem is waiting</p>
+      <h2 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 sm:mb-12 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-default text-gray-900 dark:text-white">
         JOIN THE<br/>
         ORDER.
       </h2>
       <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-        <NuxtLink to="/submit-solution" class="px-6 sm:px-10 py-3 sm:py-4 bg-black text-white font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-blue-600 transition-colors">
+        <NuxtLink to="/submit-solution" class="px-6 sm:px-10 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-gray-200 transition-colors">
           Submit Solution
         </NuxtLink>
-        <NuxtLink to="/stories" class="px-6 sm:px-10 py-3 sm:py-4 border border-gray-200 font-bold text-xs sm:text-sm uppercase tracking-widest hover:border-black transition-colors">
+        <NuxtLink to="/stories" class="px-6 sm:px-10 py-3 sm:py-4 border border-gray-200 dark:border-gray-700 font-bold text-xs sm:text-sm uppercase tracking-widest hover:border-black dark:hover:border-white text-gray-900 dark:text-white transition-colors">
           Read The Journal
         </NuxtLink>
       </div>

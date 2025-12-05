@@ -2,13 +2,10 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-
 const route = useRoute()
 const slug = route.params.slug as string
 
 // 1. FETCH REAL DATA
-// Calls: server/api/companies/[slug].get.ts
-// Expects return: { ...company, team: [], stories: [], stack: [] }
 const { data: company, error, status } = await useFetch(`/api/companies/${slug}`)
 
 // 2. HANDLE 404
@@ -31,28 +28,23 @@ const formatDate = (dateStr: string | Date | null) => {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 }
 
-// Convert "Vue.js" -> "vue-js" for the URL linking
 const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
-
 useSeoMeta({
   title: () => `${company.value?.name} - Verified`,
   description: () => company.value?.headline || `Learn about ${company.value?.name}, a ${company.value?.industry} company in ${company.value?.location}.`,
-  // Open Graph (Facebook, WhatsApp, LinkedIn)
   ogTitle: () => company.value?.name,
   ogDescription: () => company.value?.headline,
-  ogImage: () => company.value?.logo, // Ensure this is a full URL (http...)
+  ogImage: () => company.value?.logo,
   ogType: 'profile',
-  // Twitter
   twitterCard: 'summary_large_image',
   twitterTitle: () => company.value?.name,
   twitterDescription: () => company.value?.headline,
   twitterImage: () => company.value?.logo,
 })
 
-// 2. JSON-LD (Structured Data for Google)
 useJsonld(() => ({
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -70,25 +62,25 @@ useJsonld(() => ({
 defineOgImageComponent('OpsTemplate', {
   title: company.value?.name,
   description: company.value?.headline || `Verified ${company.value?.industry} Solution`,
-  image: company.value?.logo, // Passes the logo URL to the bottom-right or center depending on layout
+  image: company.value?.logo,
   type: 'Company',
-  badge: company.value?.industry // e.g. "FinTech"
+  badge: company.value?.industry
 })
 </script>
 
 <template>
-   <AppHeader/>
-  <div class="min-h-screen bg-white font-sans text-gray-900">
+  <AppHeader/>
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <!-- LOADING STATE -->
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
-       <div class="w-12 h-12 border-4 border-gray-100 border-t-black rounded-full animate-spin"></div>
+       <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
     </div>
 
     <div v-else-if="company">
       
       <!-- 1. HEADER HERO -->
-      <div class="relative bg-gray-900 text-white pt-32 pb-16 overflow-hidden">
+      <div class="relative bg-gray-900 dark:bg-black text-white pt-32 pb-16 overflow-hidden transition-colors duration-300">
          <!-- Background Texture -->
          <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
          
@@ -118,27 +110,29 @@ defineOgImageComponent('OpsTemplate', {
                      Visit Website
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
-       
+                  <button class="px-6 py-3 border border-white/20 text-white text-sm font-bold rounded-lg hover:bg-white/10 transition-colors">
+                     Follow Updates
+                  </button>
                </div>
             </div>
          </div>
       </div>
 
       <!-- 2. STATS BAR -->
-      <div class="border-b border-gray-200 bg-gray-50">
+      <div class="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
          <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap divide-x divide-gray-200">
+            <div class="flex flex-wrap divide-x divide-gray-200 dark:divide-slate-800">
                <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Location</p>
-                  <p class="text-lg font-black text-gray-900">{{ company.location }}</p>
+                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Location</p>
+                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ company.location }}</p>
                </div>
                <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Added On</p>
-                  <p class="text-lg font-black text-gray-900">{{ formatDate(company.createdAt) }}</p>
+                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Added On</p>
+                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ formatDate(company.createdAt) }}</p>
                </div>
                <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Team Size</p>
-                  <p class="text-lg font-black text-gray-900">{{ company.team?.length > 0 ? company.team.length + '+' : 'N/A' }}</p>
+                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Team Size</p>
+                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ company.team?.length > 0 ? company.team.length + '+' : 'N/A' }}</p>
                </div>
             </div>
          </div>
@@ -153,31 +147,33 @@ defineOgImageComponent('OpsTemplate', {
                
                <!-- About -->
                <section>
-                  <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">The Solution</h3>
+                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">The Solution</h3>
                   <div 
-              class="prose prose-lg prose-gray max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:leading-relaxed prose-a:text-blue-600 hover:prose-a:text-blue-800 prose-img:rounded-xl prose-blockquote:border-l-black prose-blockquote:italic prose-blockquote:font-serif" 
-              v-html="company.description || 'No description available yet.'"
-            ></div>
+                    class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-900 dark:text-gray-100 leading-relaxed prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400" 
+                    v-if="company.description"
+                    v-html="company.description.includes('<') ? company.description : `<p>${company.description}</p>`"
+                  ></div>
+                  <p v-else class="text-gray-500 dark:text-gray-400 italic">No description provided.</p>
                </section>
 
-               <!-- TECH STACK (Dynamic) -->
+               <!-- TECH STACK -->
                <section v-if="company.stack && company.stack.length > 0">
-                  <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Tech Stack</h3>
+                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Tech Stack</h3>
                   <div class="flex flex-wrap gap-3">
                      <NuxtLink 
                        v-for="tech in company.stack" 
                        :key="tech.name" 
                        :to="`/solutions/${toSolutionSlug(tech.name)}`"
-                       class="group flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:border-black hover:shadow-sm transition-all"
+                       class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-black dark:hover:border-white hover:shadow-sm transition-all"
                      >
-                        <span class="text-sm font-bold text-gray-700 group-hover:text-black">{{ tech.name }}</span>
-                        <span class="text-[10px] text-gray-400 uppercase group-hover:text-gray-600">{{ tech.category }}</span>
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{{ tech.name }}</span>
+                        <span class="text-[10px] text-gray-400 dark:text-gray-500 uppercase group-hover:text-gray-600 dark:group-hover:text-gray-400">{{ tech.category }}</span>
                      </NuxtLink>
                   </div>
                </section>
                <section v-else>
-                  <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Tech Stack</h3>
-                  <p class="text-sm text-gray-400 italic">No technologies listed yet.</p>
+                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Tech Stack</h3>
+                  <p class="text-sm text-gray-400 dark:text-gray-500 italic">No technologies listed yet.</p>
                </section>
 
             </div>
@@ -186,10 +182,10 @@ defineOgImageComponent('OpsTemplate', {
             <div class="lg:col-span-4 space-y-12">
                
                <!-- Key People -->
-               <div class="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
+               <div class="p-6 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm">
                   <div class="flex items-center justify-between mb-6">
-                     <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Team</h3>
-                     <NuxtLink to="/people" class="text-xs text-blue-600 font-bold hover:underline">View Directory</NuxtLink>
+                     <h3 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">Team</h3>
+                     <NuxtLink to="/people" class="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline">View Directory</NuxtLink>
                   </div>
                   
                   <div v-if="company.team && company.team.length > 0" class="space-y-4">
@@ -199,27 +195,27 @@ defineOgImageComponent('OpsTemplate', {
                         :to="`/people/${person.slug}`" 
                         class="flex items-center gap-3 group cursor-pointer"
                      >
-                        <img :src="person.image || `https://ui-avatars.com/api/?name=${person.name}&background=random`" class="w-10 h-10 rounded-full object-cover border border-gray-100" />
+                        <img :src="person.image || `https://ui-avatars.com/api/?name=${person.name}&background=random`" class="w-10 h-10 rounded-full object-cover border border-gray-100 dark:border-slate-700" />
                         <div>
-                           <p class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ person.name }}</p>
-                           <p class="text-xs text-gray-500">{{ person.role }}</p>
+                           <p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ person.name }}</p>
+                           <p class="text-xs text-gray-500 dark:text-gray-400">{{ person.role }}</p>
                         </div>
                      </NuxtLink>
                   </div>
                   <div v-else class="text-center py-6">
-                     <p class="text-xs text-gray-400">No verified team members linked yet.</p>
+                     <p class="text-xs text-gray-400 dark:text-gray-500">No verified team members linked yet.</p>
                   </div>
                </div>
 
                <!-- Related News -->
                <div v-if="company.stories && company.stories.length > 0">
-                  <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">In The Journal</h3>
+                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In The Journal</h3>
                   <div class="space-y-4">
-                     <NuxtLink v-for="story in company.stories" :key="story.slug" :to="`/stories/${story.slug}`" class="block group p-4 border border-gray-100 rounded-xl hover:border-blue-200 transition-colors bg-gray-50">
-                        <h4 class="text-sm font-bold text-gray-900 group-hover:text-blue-600 leading-snug mb-1">
+                     <NuxtLink v-for="story in company.stories" :key="story.slug" :to="`/stories/${story.slug}`" class="block group p-4 border border-gray-100 dark:border-slate-800 rounded-xl hover:border-blue-200 dark:hover:border-blue-800 transition-colors bg-gray-50 dark:bg-slate-900/50">
+                        <h4 class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 leading-snug mb-1">
                            {{ story.title }}
                         </h4>
-                        <span class="text-xs text-gray-400">{{ story.category }} • {{ formatDate(story.date) }}</span>
+                        <span class="text-xs text-gray-400 dark:text-gray-500">{{ story.category }} • {{ formatDate(story.date) }}</span>
                      </NuxtLink>
                   </div>
                </div>

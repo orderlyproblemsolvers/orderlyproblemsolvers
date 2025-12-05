@@ -17,74 +17,67 @@ const getCategoryIcon = (category: string) => {
 </script>
 
 <template>
-   <AppHeader/>
-  <div class="min-h-screen bg-white font-sans text-gray-900">
+  <AppHeader/>
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
-    <!-- HERO -->
-    <div class="bg-gray-50 border-b border-gray-200 pt-32 pb-16">
+    <div class="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-16 transition-colors duration-300">
        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
              <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">The Solutions Index</p>
-                <h1 class="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter mb-4">
+                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">The Solutions Index</p>
+                <h1 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-white tracking-tighter mb-4">
                   Systems & Tools.
                 </h1>
-                <p class="text-lg text-gray-500 max-w-xl">
+                <p class="text-lg text-gray-500 dark:text-gray-400 max-w-xl">
                   Explore the methodologies, hardware, and software stacks powering the ecosystem.
                 </p>
              </div>
              
-             <!-- Visual Decoration -->
              <div class="hidden md:flex items-center gap-2 opacity-50">
-                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                <div class="w-2 h-2 bg-gray-300 dark:bg-slate-700 rounded-full"></div>
+                <div class="w-2 h-2 bg-gray-300 dark:bg-slate-700 rounded-full"></div>
+                <div class="w-2 h-2 bg-gray-300 dark:bg-slate-700 rounded-full"></div>
              </div>
           </div>
        </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
        
-       <!-- LOADING STATE -->
        <div v-if="status === 'pending'" class="space-y-12">
           <div v-for="i in 3" :key="i">
-             <div class="h-8 w-32 bg-gray-100 rounded mb-6 animate-pulse"></div>
+             <div class="h-8 w-32 bg-gray-100 dark:bg-slate-800 rounded mb-6 animate-pulse"></div>
              <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div v-for="j in 4" :key="j" class="h-24 bg-gray-100 rounded-xl animate-pulse"></div>
+                <div v-for="j in 4" :key="j" class="h-24 bg-gray-100 dark:bg-slate-800 rounded-xl animate-pulse"></div>
              </div>
           </div>
        </div>
 
-       <!-- DYNAMIC CATEGORIES -->
        <div v-else-if="solutionsGroups && Object.keys(solutionsGroups).length > 0">
           
           <div v-for="(items, category) in solutionsGroups" :key="category" class="mb-20 last:mb-0">
              
-             <!-- Category Header -->
-             <div class="flex items-center gap-4 mb-8 border-b border-gray-100 pb-4">
-                <div class="p-2 bg-black text-white rounded-lg shadow-sm">
+             <div class="flex items-center gap-4 mb-8 border-b border-gray-100 dark:border-slate-800 pb-4">
+                <div class="p-2 bg-black dark:bg-white text-white dark:text-black rounded-lg shadow-sm">
                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="getCategoryIcon(category)"></path></svg>
                 </div>
-                <h3 class="text-2xl font-black text-gray-900 uppercase tracking-tight">
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
                    {{ category }}
                 </h3>
              </div>
              
-             <!-- Items Grid -->
              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <NuxtLink 
                   v-for="item in items" 
                   :key="item.name" 
                   :to="`/solutions/${item.slug}`"
-                  class="group flex items-center justify-between p-5 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer bg-white shadow-sm hover:shadow-md"
+                  class="group flex items-center justify-between p-5 rounded-xl border border-gray-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/30 dark:hover:bg-blue-900/20 transition-all duration-200 cursor-pointer bg-white dark:bg-slate-900 shadow-sm hover:shadow-md"
                 >
                    <div>
-                      <h4 class="font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{ item.name }}</h4>
-                      <p class="text-xs text-gray-500 mt-1 font-medium">{{ item.count }} Verified Users</p>
+                      <h4 class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{{ item.name }}</h4>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">{{ item.count }} Verified Users</p>
                    </div>
-                   <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors border border-gray-100">
+                   <div class="w-8 h-8 rounded-full bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-gray-400 dark:text-gray-500 group-hover:bg-white dark:group-hover:bg-slate-700 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors border border-gray-100 dark:border-slate-700">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                    </div>
                 </NuxtLink>
@@ -93,14 +86,13 @@ const getCategoryIcon = (category: string) => {
 
        </div>
 
-       <!-- EMPTY STATE -->
-       <div v-else class="mt-10 p-16 bg-gray-900 rounded-2xl text-center text-white border border-gray-800">
+       <div v-else class="mt-10 p-16 bg-gray-900 dark:bg-black rounded-2xl text-center text-white border border-gray-800 dark:border-slate-800">
           <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6 text-white/50">
              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
           </div>
           <h3 class="text-2xl font-bold mb-2">The Index is Empty</h3>
           <p class="text-gray-400 text-sm mb-8">No solutions have been categorized in the database yet.</p>
-          <NuxtLink to="/submit-solution" class="px-8 py-4 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors uppercase tracking-widest">
+          <NuxtLink to="/submit-solution" class="px-8 py-4 bg-white text-black font-bold text-sm rounded-lg hover:bg-gray-200 transition-colors uppercase tracking-widest">
              Add First Solution
           </NuxtLink>
        </div>

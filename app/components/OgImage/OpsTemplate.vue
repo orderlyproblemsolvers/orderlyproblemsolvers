@@ -14,15 +14,15 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #ffffff; position: relative; overflow: hidden;">
+  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #ffffff; color: #000000; position: relative; overflow: hidden;" class="bg-white dark:bg-slate-950 text-black dark:text-white transition-colors duration-300">
     
     <!-- BACKGROUND EFFECTS -->
     <!-- Grid -->
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 40px 40px; opacity: 0.8;"></div>
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 40px 40px; opacity: 0.8;" class="dark:opacity-20 dark:invert"></div>
     <!-- Blue Glow (Top Right) -->
-    <div style="position: absolute; top: -150px; right: -150px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
+    <div style="position: absolute; top: -150px; right: -150px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;" class="dark:from-blue-900/20 dark:to-transparent"></div>
     <!-- Purple Glow (Bottom Left) -->
-    <div style="position: absolute; bottom: -150px; left: -150px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(147, 51, 234, 0.05) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;"></div>
+    <div style="position: absolute; bottom: -150px; left: -150px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(147, 51, 234, 0.05) 0%, rgba(255,255,255,0) 70%); border-radius: 50%;" class="dark:from-purple-900/20 dark:to-transparent"></div>
 
 
     <!-- MAIN CONTENT (Centered) -->
@@ -30,12 +30,12 @@ const props = withDefaults(defineProps<{
       
       <!-- 1. STORY VARIANT -->
       <div v-if="type === 'Story'" style="display: flex; flex-direction: column; gap: 24px;">
-        <h1 style="font-size: 70px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; color: #000000; margin: 0;">
+        <h1 style="font-size: 70px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin: 0;" class="text-black dark:text-white">
           {{ title }}
         </h1>
         <div style="display: flex; align-items: center; gap: 20px;">
           <div style="width: 6px; height: 60px; background-color: #2563eb;"></div>
-          <p style="font-size: 32px; font-weight: 500; color: #4b5563; line-height: 1.4; max-width: 900px; margin: 0;">
+          <p style="font-size: 32px; font-weight: 500; line-height: 1.4; max-width: 900px; margin: 0;" class="text-gray-600 dark:text-gray-300">
             {{ description }}
           </p>
         </div>
@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<{
                border: '6px solid white',
                boxShadow: '0 20px 40px -5px rgba(0, 0, 0, 0.1)'
              }"
+             class="dark:border-slate-800 dark:shadow-black/50"
            />
         </div>
 
@@ -62,7 +63,7 @@ const props = withDefaults(defineProps<{
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <!-- Name + Blue Tick -->
           <div style="display: flex; align-items: center; gap: 16px;">
-            <h1 style="font-size: 72px; font-weight: 900; letter-spacing: -0.04em; color: #000000; margin: 0; line-height: 1;">
+            <h1 style="font-size: 72px; font-weight: 900; letter-spacing: -0.04em; margin: 0; line-height: 1;" class="text-black dark:text-white">
               {{ title }}
             </h1>
             <!-- The Blue Tick -->
@@ -74,14 +75,14 @@ const props = withDefaults(defineProps<{
           
           <!-- Role Logic -->
           <div style="display: flex; align-items: center; gap: 16px;">
-             <p style="font-size: 32px; font-weight: 600; color: #4b5563; margin: 0;">
+             <p style="font-size: 32px; font-weight: 600; margin: 0;" class="text-gray-600 dark:text-gray-300">
                {{ role }}
              </p>
-             <p v-if="companyName" style="font-size: 32px; font-weight: 400; color: #9ca3af; margin: 0;">
+             <p v-if="companyName" style="font-size: 32px; font-weight: 400; margin: 0;" class="text-gray-400 dark:text-gray-500">
                at <span style="color: #2563eb; font-weight: 600;">{{ companyName }}</span>
              </p>
-             <div v-else style="padding: 6px 16px; background-color: #f3f4f6; border-radius: 8px; display: flex;">
-               <span style="font-size: 20px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Freelance</span>
+             <div v-else style="padding: 6px 16px; border-radius: 8px; display: flex;" class="bg-gray-100 dark:bg-slate-800">
+               <span style="font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;" class="text-gray-500 dark:text-gray-400">Freelance</span>
              </div>
           </div>
         </div>
@@ -91,7 +92,8 @@ const props = withDefaults(defineProps<{
       <div v-else style="display: flex; align-items: center; gap: 48px;">
         <!-- Logo -->
         <div v-if="image" style="display: flex;">
-           <img  :src="image" 
+           <NuxtImg 
+             :src="image" 
              width="200"
              height="200"
              :style="{
@@ -99,11 +101,13 @@ const props = withDefaults(defineProps<{
                borderRadius: '32px',
                border: '6px solid white',
                boxShadow: '0 20px 40px -5px rgba(0, 0, 0, 0.1)'
-             }"/>
+             }"
+             class="dark:border-slate-800 dark:shadow-black/50"
+           />
         </div>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="display: flex; align-items: center; gap: 16px;">
-            <h1 style="font-size: 72px; font-weight: 900; letter-spacing: -0.04em; color: #000000; margin: 0; line-height: 1;">
+            <h1 style="font-size: 72px; font-weight: 900; letter-spacing: -0.04em; margin: 0; line-height: 1;" class="text-black dark:text-white">
               {{ title }}
             </h1>
             <!-- Blue Tick -->
@@ -112,7 +116,7 @@ const props = withDefaults(defineProps<{
                <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
-          <p style="font-size: 32px; font-weight: 500; color: #6b7280; margin: 0; max-width: 800px; line-height: 1.3;">
+          <p style="font-size: 32px; font-weight: 500; margin: 0; max-width: 800px; line-height: 1.3;" class="text-gray-600 dark:text-gray-300">
              {{ description }}
           </p>
         </div>
@@ -124,18 +128,19 @@ const props = withDefaults(defineProps<{
     <div style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 80px 60px 80px; margin-top: auto;">
       
       <!-- Left: URL -->
-      <span style="font-size: 28px; color: #9ca3af; font-weight: 600; letter-spacing: -0.02em;">
+      <span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em;" class="text-gray-400 dark:text-gray-500">
         orderlyproblemsolvers.com
       </span>
 
       <!-- Right: Brand Logo + Text -->
       <div style="display: flex; align-items: center; gap: 16px;">
-        <span style="font-size: 32px; font-weight: 900; letter-spacing: -0.05em; color: #111827; text-transform: uppercase;">OPS Index.</span>
+        <span style="font-size: 32px; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase;" class="text-slate-900 dark:text-white">OPS Index.</span>
         <img 
           src="/img/logo-sm.png" 
           width="80" 
           height="80" 
           style="object-fit: contain;" 
+          class="dark:invert"
         />
       </div>
 

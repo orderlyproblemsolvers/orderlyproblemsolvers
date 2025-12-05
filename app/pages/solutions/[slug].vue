@@ -15,19 +15,20 @@ if (error.value) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white font-sans text-gray-900">
+   <AppHeader/>
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <!-- LOADING STATE -->
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
-       <div class="w-12 h-12 border-4 border-gray-100 border-t-black rounded-full animate-spin"></div>
+       <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
     </div>
 
     <div v-else-if="solution">
       
       <!-- HERO SECTION -->
-      <div class="bg-gray-900 text-white pt-32 pb-20 relative overflow-hidden">
+      <div class="bg-gray-900 dark:bg-black text-white pt-32 pb-20 relative overflow-hidden transition-colors duration-300">
         <!-- Abstract Background Pattern -->
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
            <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
@@ -66,8 +67,8 @@ if (error.value) {
             
             <!-- LEFT: COMPANIES LIST -->
             <div>
-               <h3 class="text-xl font-black text-gray-900 mb-8 flex items-center gap-2 border-b border-gray-100 pb-4">
-                  <span class="w-2 h-2 bg-blue-600 rounded-full"></span>
+               <h3 class="text-xl font-black text-gray-900 dark:text-white mb-8 flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-4 transition-colors duration-300">
+                  <span class="w-2 h-2 bg-blue-600 dark:bg-blue-500 rounded-full"></span>
                   Implemented By
                </h3>
                
@@ -76,28 +77,28 @@ if (error.value) {
                     v-for="comp in solution.companies" 
                     :key="comp.slug" 
                     :to="`/companies/${comp.slug}`"
-                    class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-md transition-all bg-white group"
+                    class="flex items-center gap-4 p-4 border border-gray-200 dark:border-slate-800 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 group"
                   >
-                     <div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center font-bold text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors overflow-hidden shrink-0">
+                     <div class="w-12 h-12 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center font-bold text-gray-500 dark:text-gray-400 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors overflow-hidden shrink-0">
                         <img v-if="comp.logo && comp.logo.startsWith('http')" :src="comp.logo" class="w-full h-full object-cover" />
                         <span v-else class="text-sm uppercase">{{ comp.name.charAt(0) }}</span>
                      </div>
                      <div>
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-700 transition-colors">{{ comp.name }}</h4>
-                        <p class="text-xs text-gray-500">{{ comp.industry }} • {{ comp.location }}</p>
+                        <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{{ comp.name }}</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ comp.industry }} • {{ comp.location }}</p>
                      </div>
                   </NuxtLink>
                </div>
                
-               <div v-else class="p-8 bg-gray-50 rounded-xl text-center border border-dashed border-gray-200">
-                  <p class="text-sm font-bold text-gray-400">No organizations verified yet.</p>
+               <div v-else class="p-8 bg-gray-50 dark:bg-slate-900 rounded-xl text-center border border-dashed border-gray-200 dark:border-slate-800 transition-colors duration-300">
+                  <p class="text-sm font-bold text-gray-400 dark:text-gray-500">No organizations verified yet.</p>
                </div>
             </div>
 
             <!-- RIGHT: EXPERTS LIST -->
             <div>
-               <h3 class="text-xl font-black text-gray-900 mb-8 flex items-center gap-2 border-b border-gray-100 pb-4">
-                  <span class="w-2 h-2 bg-purple-600 rounded-full"></span>
+               <h3 class="text-xl font-black text-gray-900 dark:text-white mb-8 flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-4 transition-colors duration-300">
+                  <span class="w-2 h-2 bg-purple-600 dark:bg-purple-500 rounded-full"></span>
                   Domain Experts
                </h3>
                
@@ -106,31 +107,31 @@ if (error.value) {
                     v-for="person in solution.experts" 
                     :key="person.slug" 
                     :to="`/people/${person.slug}`"
-                    class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-purple-500 hover:shadow-md transition-all bg-white group"
+                    class="flex items-center gap-4 p-4 border border-gray-200 dark:border-slate-800 rounded-xl hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 group"
                   >
                      <img 
                        :src="person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`" 
-                       class="w-12 h-12 rounded-full object-cover border border-gray-100 bg-gray-50 shrink-0"
+                       class="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 shrink-0"
                      />
                      <div>
-                        <h4 class="font-bold text-gray-900 group-hover:text-purple-700 transition-colors">{{ person.name }}</h4>
-                        <p class="text-xs text-gray-500">{{ person.role }}</p>
+                        <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors">{{ person.name }}</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ person.role }}</p>
                      </div>
                   </NuxtLink>
                </div>
                
-               <div v-else class="p-8 bg-gray-50 rounded-xl text-center border border-dashed border-gray-200">
-                  <p class="text-sm font-bold text-gray-400">No experts listed yet.</p>
+               <div v-else class="p-8 bg-gray-50 dark:bg-slate-900 rounded-xl text-center border border-dashed border-gray-200 dark:border-slate-800 transition-colors duration-300">
+                  <p class="text-sm font-bold text-gray-400 dark:text-gray-500">No experts listed yet.</p>
                </div>
             </div>
 
          </div>
 
          <!-- CTA FOOTER -->
-         <div class="mt-24 p-10 bg-gray-100 rounded-3xl text-center border border-gray-200">
-            <h3 class="text-2xl font-black mb-4">Do you work with {{ solution.name }}?</h3>
-            <p class="text-gray-600 mb-8 max-w-md mx-auto">Add your profile to the index to be discovered by partners and clients looking for this expertise.</p>
-            <NuxtLink to="/submit-solution" class="inline-block px-8 py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors shadow-lg">
+         <div class="mt-24 p-10 bg-gray-100 dark:bg-slate-900 rounded-3xl text-center border border-gray-200 dark:border-slate-800 transition-colors duration-300">
+            <h3 class="text-2xl font-black mb-4 text-gray-900 dark:text-white">Do you work with {{ solution.name }}?</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">Add your profile to the index to be discovered by partners and clients looking for this expertise.</p>
+            <NuxtLink to="/submit-solution" class="inline-block px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors shadow-lg">
                Join the Index
             </NuxtLink>
          </div>
@@ -139,4 +140,5 @@ if (error.value) {
 
     </div>
   </div>
+  <AppFooter/>
 </template>
