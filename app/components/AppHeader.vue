@@ -38,14 +38,6 @@ const hideMenu = () => {
   }, 200);
 };
 
-defineOgImageComponent("OpsTemplate", {
-  title: "OPS Studio",
-  description: "Elite engineering for high-growth companies.",
-  type: "Company",
-  badge: "Services",
-  image: "/img/logo.png",
-});
-
 const navMap = {
   stories: { label: "Stories", to: "/stories" },
   about: { label: "About", to: "/about" },

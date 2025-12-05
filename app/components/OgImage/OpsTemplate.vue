@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<{
       <div v-else-if="type === 'Person'" style="display: flex; align-items: center; gap: 48px;">
         <!-- Avatar -->
         <div v-if="image" style="display: flex; position: relative;">
-           <NuxtImg 
+           <img 
              :src="image" 
              width="220"
              height="220"
@@ -92,7 +92,7 @@ const props = withDefaults(defineProps<{
       <div v-else style="display: flex; align-items: center; gap: 48px;">
         <!-- Logo -->
         <div v-if="image" style="display: flex;">
-           <NuxtImg 
+           <img 
              :src="image" 
              width="200"
              height="200"
