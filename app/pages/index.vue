@@ -1,7 +1,7 @@
 <template>
    <div>
     <AppHeader/>
-    <HeroSection class="bg-gray-50"/>
+    <LazyHeroSection/>
     <FeatureDrop/>
     <EcosystemGrid/>
     <SolversStream/>
