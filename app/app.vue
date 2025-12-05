@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useColorMode } from '@vueuse/nuxt'
 // Access the color mode state (provided by @nuxtjs/color-mode or @vueuse/nuxt)
 const colorMode = useColorMode()
 
