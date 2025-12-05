@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// definePageMeta({
-//   title: 'Services & Pricing - OPS Studio',
-//   description: 'Custom software development, cloud consultancy, and system design for high-growth companies.'
-// })
+definePageMeta({
+  title: 'Services & Pricing - OPS Studio',
+  description: 'Custom software development, cloud consultancy, and system design for high-growth companies.'
+})
+
+useSeoMeta({
+  title: "Services & Pricing - OPS Studio",
+  description:
+    "We build the engines. Elite software engineering, mobile development, and system design for ambitious brands in emerging markets.",
+  ogTitle: "OPS Studio - Engineering & Design",
+  ogDescription:
+    "Custom software, cloud architecture, and system design. View our transparent pricing and packages.",
+  twitterCard: "summary_large_image",
+});
 
 const billingCycle = ref('project')
 const activeFaq = ref<number | null>(null)

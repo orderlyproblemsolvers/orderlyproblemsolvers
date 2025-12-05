@@ -41,6 +41,8 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'netlify',
+    compressPublicAssets: true,
+    minify: true
   },
   sitemap: {
     // Fetch dynamic URLs from our API endpoint
@@ -152,5 +154,14 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+     build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['vue', 'vue-router']
+          }
+        }
+      }
+    },
   },
 })
