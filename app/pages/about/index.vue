@@ -4,10 +4,10 @@ import * as THREE from 'three'
 
 // TEAM DATA
 const team = [
-  { name: 'Inikori Efe', role: 'CEO & Founder', image: '/public/img/efe.png' },
-  { name: 'Anita Olaleye', role: 'Head of Research & Curation', image: '/public/img/anita.jpg' },
-  { name: 'Antony Idiata', role: 'Technical Director', image: '/public/img/anton.jpg' },
-  { name: 'Marvella Nwaka', role: 'Design Lead', image: '/public/marvella.jpg' }
+  { name: 'Inikori Efe', role: 'CEO & Founder', image: '/img/efe.png' },
+  { name: 'Anita Olaleye', role: 'Head of Research & Curation', image: '/img/anita.jpg' },
+  { name: 'Antony Idiata', role: 'Technical Director', image: '/img/anton.jpg' },
+  { name: 'Marvella Nwaka', role: 'Design Lead', image: '/marvella.jpg' }
 ]
 
 // TRINITY DATA

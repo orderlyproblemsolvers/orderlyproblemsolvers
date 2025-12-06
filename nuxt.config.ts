@@ -10,9 +10,6 @@ export default defineNuxtConfig({
       templateParams: {
         siteName: 'OPS',
         separator: '|',
-        meta: [
-        { name: 'color-scheme', content: 'light only' }
-      ]
       },
       // The Icons
       link: [
@@ -25,6 +22,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'theme-color', content: '#ffffff' },
         { name: 'msapplication-TileColor', content: '#2563eb' } // Your brand Blue
+        { name: 'color-scheme', content: 'light only' }
       ]
     }
   },
