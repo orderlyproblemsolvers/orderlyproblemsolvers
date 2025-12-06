@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       // Browser Colors
       meta: [
         { name: 'theme-color', content: '#ffffff' },
-        { name: 'msapplication-TileColor', content: '#2563eb' } // Your brand Blue
+        { name: 'msapplication-TileColor', content: '#2563eb' },// Your brand Blue
         { name: 'color-scheme', content: 'light only' }
       ]
     }
