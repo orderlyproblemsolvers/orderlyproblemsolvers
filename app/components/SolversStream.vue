@@ -14,7 +14,7 @@ const solvers = computed(() => {
     role: person.role,
     company: person.companyName || 'Freelance',
     image: person.image || person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`,
-    superpower: person.bio ? person.bio.substring(0, 60) + '...' : 'Building the future.',
+    superpower: person.bio ? person.bio.substring(0, 70) + '...' : 'Building the future.',
     link: `/people/${person.slug}`
   }))
 
@@ -106,7 +106,7 @@ const scroll = (direction: 'left' | 'right') => {
               <div class="bg-blue-50/50 dark:bg-blue-900/20 rounded-lg p-3">
                  <p class="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase mb-1">About</p>
                  <div v-if="item.superpower"
-                    v-html="item.superpower.includes('<') ? item.superpower : `<p>${item.superpower}</p>`"  class="text-xs font-medium text-gray-700 dark:text-gray-300 leading-snug line-clamp-2"></div>
+                    v-html="item.superpower.includes('<') ? item.superpower : `<p>${item.superpower}</p>`"  class="text-xs font-medium text-gray-700 dark:text-gray-300 leading-snug line-clamp-3"></div>
               </div>
             </div>
           </div>
