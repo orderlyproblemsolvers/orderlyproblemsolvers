@@ -195,9 +195,8 @@ const clearFilters = () => {
                      </span>
                   </div>
 
-                     <div v-if="person.bio"
-                    v-html="person.bio.includes('<') ? person.bio : `<p>${person.bio}</p>`"  class="text-sm  text-gray-500 dark:text-gray-400 leading-relaxed mb-6 line-clamp-2 grow"></div>
-              </div>
+                  <div v-html="person.bio || 'No bio available'" class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 line-clamp-2 grow">
+                  </div>
 
                   <div class="mt-auto pt-4 border-t border-gray-50 dark:border-slate-800 flex items-center justify-between">
                      <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
