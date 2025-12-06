@@ -105,7 +105,7 @@ const scroll = (direction: 'left' | 'right') => {
               </div>
               <div class="bg-blue-50/50 dark:bg-blue-900/20 rounded-lg p-3">
                  <p class="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase mb-1">About</p>
-                 <p class="text-xs font-medium text-gray-700 dark:text-gray-300 leading-snug line-clamp-2">"{{ item.superpower }}"</p>
+                 <p v-html="item.superpower" class="text-xs font-medium text-gray-700 dark:text-gray-300 leading-snug line-clamp-2"></p>
               </div>
             </div>
           </div>
