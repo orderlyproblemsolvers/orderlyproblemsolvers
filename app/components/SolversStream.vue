@@ -14,7 +14,7 @@ const solvers = computed(() => {
     role: person.role,
     company: person.companyName || 'Freelance',
     image: person.image || person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`,
-    superpower: person.bio ? person.bio.substring(0, 70) + '...' : 'Building the future.',
+    superpower: person.bio ? person.bio.substring(0, 110) + '...' : 'Building the future.',
     link: `/people/${person.slug}`
   }))
 
