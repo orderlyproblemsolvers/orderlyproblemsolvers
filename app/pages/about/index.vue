@@ -7,7 +7,7 @@ const team = [
   { name: 'Inikori Efe', role: 'CEO & Founder', image: '/img/efe.png' },
   { name: 'Anita Olaleye', role: 'Head of Research & Curation', image: '/img/anita.jpg' },
   { name: 'Antony Idiata', role: 'Technical Director', image: '/img/anton.jpg' },
-  { name: 'Marvella Nwaka', role: 'Design Lead', image: '/marvella.jpg' }
+  { name: 'Marvella Nwaka', role: 'Design Lead', image: '/img/marvella.jpg' }
 ]
 
 // TRINITY DATA
