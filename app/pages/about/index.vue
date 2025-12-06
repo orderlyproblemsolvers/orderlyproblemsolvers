@@ -283,7 +283,7 @@ defineOgImageComponent('OpsTemplate', {
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           <div v-for="member in team" :key="member.name" class="group">
             <div class="aspect-3/4 overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 sm:mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">
-              <NuxtImg :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
+              <img :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
             </div>
             <h3 class="text-sm sm:text-base md:text-lg font-bold uppercase tracking-tight text-gray-900 dark:text-white">{{ member.name }}</h3>
             <p class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ member.role }}</p>
