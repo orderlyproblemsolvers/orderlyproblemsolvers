@@ -4,10 +4,10 @@ import * as THREE from 'three'
 
 // TEAM DATA
 const team = [
-  { name: 'David O.', role: 'Editor in Chief', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80' },
-  { name: 'Sarah J.', role: 'Head of Curation', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80' },
-  { name: 'Michael K.', role: 'Technical Director', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80' },
-  { name: 'Amara U.', role: 'Design Lead', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80' }
+  { name: 'Inikori Efe', role: 'CEO & Founder', image: '/img/efe.png' },
+  { name: 'Anita Olaleye', role: 'Head of Research & Curation', image: '/img/anita.jpg' },
+  { name: 'Antony Idiata', role: 'Technical Director', image: '/img/anton.jpg' },
+  { name: 'Marvella Nwaka', role: 'Design Lead', image: '/marvella.jpg' }
 ]
 
 // TRINITY DATA
@@ -283,7 +283,7 @@ defineOgImageComponent('OpsTemplate', {
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           <div v-for="member in team" :key="member.name" class="group">
             <div class="aspect-3/4 overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 sm:mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">
-              <img :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
+              <NuxtImg :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
             </div>
             <h3 class="text-sm sm:text-base md:text-lg font-bold uppercase tracking-tight text-gray-900 dark:text-white">{{ member.name }}</h3>
             <p class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ member.role }}</p>

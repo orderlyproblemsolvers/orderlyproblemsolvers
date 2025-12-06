@@ -116,7 +116,7 @@ const sections = [
               Depending on your location (e.g., GDPR for Europe, NDPR for Nigeria), you may have the right to access, correct, or delete the personal information we collect.
             </p>
             <p>
-              To request a deletion of your Directory Profile, please email <a href="mailto:privacy@ops.com" class="text-blue-600 dark:text-blue-400 underline decoration-blue-300 dark:decoration-blue-900">privacy@ops.com</a>.
+              To request a deletion of your Directory Profile, please email <a href="mailto:orderlyproblemsolvers@gmail.com" class="text-blue-600 dark:text-blue-400 underline decoration-blue-300 dark:decoration-blue-900">orderlyproblemsolvers@gmail.com</a>.
             </p>
           </section>
 
@@ -124,11 +124,10 @@ const sections = [
           <section id="contact" class="scroll-mt-32">
             <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">7. Contact Us</h2>
             <p class="mb-4">
-              If you have questions or comments about this policy, you may email us at <a href="mailto:legal@ops.com" class="text-blue-600 dark:text-blue-400 underline decoration-blue-300 dark:decoration-blue-900">legal@ops.com</a> or by post to:
+              If you have questions or comments about this policy, you may email us at <a href="mailto:orderlyproblemsolvers@gmail.com" class="text-blue-600 dark:text-blue-400 underline decoration-blue-300 dark:decoration-blue-900">orderlyproblemsolvers@gmail.com</a> or by post to:
             </p>
             <address class="not-italic bg-gray-900 dark:bg-white text-white dark:text-slate-900 p-6 rounded-xl inline-block transition-colors duration-300">
-              <strong>Orderly Problem Solvers</strong><br>
-              123 Innovation Way,<br>
+              <strong>Orderly Problem Solvers</strong>,<br>
               Abuja, Nigeria.
             </address>
           </section>
