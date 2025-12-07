@@ -159,7 +159,8 @@ defineOgImageComponent('OpsTemplate', {
                  <div v-for="(videoUrl, index) in person.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
                    
                    <template v-if="getYoutubeId(videoUrl)">
-                     <iframe 
+                    <ClientOnly>
+                       <iframe 
                        class="w-full h-full"
                        :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1`" 
                        title="YouTube video player" 
@@ -167,6 +168,7 @@ defineOgImageComponent('OpsTemplate', {
                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                        loading="lazy"
                      ></iframe>
+                    </ClientOnly>
                    </template>
 
                    <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">

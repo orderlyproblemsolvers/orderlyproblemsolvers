@@ -3,130 +3,152 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+
   app: {
     head: {
-      // The Tab Title template (e.g. "About | OPS")
       titleTemplate: '%s %separator %siteName',
       templateParams: {
         siteName: 'OPS',
         separator: '|',
       },
-      // The Icons
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/icon.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/icon.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
       ],
-      // Browser Colors
       meta: [
         { name: 'theme-color', content: '#ffffff' },
-        { name: 'msapplication-TileColor', content: '#2563eb' },// Your brand Blue
-        { name: 'color-scheme', content: 'light only' }
-      ]
-    }
+        { name: 'msapplication-TileColor', content: '#2563eb' },
+        { name: 'color-scheme', content: 'light only' },
+      ],
+    },
   },
+
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxtjs/seo', 'nuxt-jsonld', 'nuxt-security', 'nuxt-gtag', '@vueuse/nuxt'],
+
+  modules: [
+    '@nuxt/image',
+    '@nuxtjs/seo',
+    'nuxt-jsonld',
+    'nuxt-security',
+    'nuxt-gtag',
+    '@vueuse/nuxt'
+  ],
+
   ssr: true,
-   site: {
+
+  site: {
     url: 'https://orderlyproblemsolvers.com',
     name: 'Orderly Problem Solvers',
     description: 'The definitive index of the problem-solving economy in emerging markets.',
     defaultLocale: 'en',
   },
-  
 
   nitro: {
     preset: 'netlify',
     compressPublicAssets: true,
     minify: true
   },
+
   sitemap: {
-    // Fetch dynamic URLs from our API endpoint
     sources: [
       '/api/__sitemap__/urls'
     ],
-    // Hide private/utility pages from Google
     exclude: [
       '/admin/**',
       '/auth/**',
       '/submit-solution',
       '/dashboard'
     ],
-    // Cache sitemap for 1 hour to reduce database load
     cacheMaxAgeSeconds: 3600,
   },
+
   ogImage: {
     enabled: true,
-    host: process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com', 
-    
-    // Explicitly allow the OG Image server to fetch resources from Cloudinary
+    host: process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com',
     domains: [
       'res.cloudinary.com',
     ],
   },
+
   schemaOrg: {
     identity: {
       type: 'Organization',
       name: 'Orderly Problem Solvers',
-      url: 'https://orderlyproblemsolvers.com',
+      url: 'https://orderlyproblemssolvers.com',
       logo: 'https://orderlyproblemsolvers.com/img/logo.png'
     }
   },
+
   image: {
-    // If using Cloudinary, you can configure the provider here
     provider: 'cloudinary',
     cloudinary: { baseURL: 'https://res.cloudinary.com/...' },
-    // For now, defaults work fine with external URLs
-    domains: ['images.unsplash.com', 'i.pravatar.cc', 'res.cloudinary.com', 'https://orderlyproblemsolvers.com', 'https://orderlyproblemsolvers.netlify.app',  process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'  ],
+    domains: [
+      'images.unsplash.com',
+      'i.pravatar.cc',
+      'res.cloudinary.com',
+      'orderlyproblemsolvers.com',
+      'orderlyproblemsolvers.netlify.app',
+      process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    ],
   },
+
+  // ✅ FIXED SECURITY CONFIG (YouTube embeddable)
   security: {
-   headers: {
+    headers: {
       contentSecurityPolicy: {
-        // Allow images from anywhere (needed for user avatars/logos)
         'img-src': ["'self'", "data:", "blob:", "https:"],
-        
-        // Allow scripts/styles (standard Nuxt needs)
+
         'script-src': ["'self'", "'unsafe-inline'", "https:"],
         'style-src': ["'self'", "'unsafe-inline'"],
-        
-        // 🚨 CRITICAL: Allow connection to Self AND Cloudinary
-        // "https:" allows connecting to external APIs generally
-        'connect-src': ["'self'", "https:", "ws:", "wss:"], 
 
-        'frame-src': ["'self'", "https://www.youtube.com", "https://youtube.com"],
+        // 🔥 FIXED — FULL YouTube embed chain
+        'frame-src': [
+          "'self'",
+          "https://www.youtube.com",
+          "https://youtube.com",
+          "https://www.youtube-nocookie.com",
+          "https://www.google.com"
+        ],
+
+        'child-src': [
+          "'self'",
+          "https://www.youtube.com",
+          "https://www.google.com"
+        ],
+
+        'connect-src': ["'self'", "https:", "ws:", "wss:"],
       },
+
       crossOriginEmbedderPolicy: 'unsafe-none',
       crossOriginOpenerPolicy: 'same-origin-allow-popups',
 
+      // 🔥 FIXED — Correct syntax (no broken quotes)
       permissionsPolicy: {
-fullscreen: ["self", '"https://www.youtube.com"'],
-        accelerometer: ["self", '"https://www.youtube.com"'],
-        autoplay: ["self", '"https://www.youtube.com"'],
-        gyroscope: ["self", '"https://www.youtube.com"'],
-        'encrypted-media': ["self", '"https://www.youtube.com"'],
-        'picture-in-picture': ["self", '"https://www.youtube.com"'],
-      }
+        fullscreen: ["self", "https://www.youtube.com"],
+        autoplay: ["self", "https://www.youtube.com"],
+        accelerometer: ["self", "https://www.youtube.com"],
+        gyroscope: ["self", "https://www.youtube.com"],
+        "encrypted-media": ["self", "https://www.youtube.com"],
+        "picture-in-picture": ["self", "https://www.youtube.com"]
+      },
     },
 
-    // 3. Rate Limiting (Anti-Spam)
+    // Rate limiting
     rateLimiter: {
-      tokensPerInterval: 150, // Allow 150 requests...
-      interval: 300000,       // ...every 5 minutes
-      headers: false,         // Don't expose limit headers to hackers
-      driver: {
-        name: 'lruCache'      // In-memory cache (fastest for single server)
-      }
+      tokensPerInterval: 150,
+      interval: 300000,
+      headers: false,
+      driver: { name: 'lruCache' }
     },
-    
-    // 5. CORS (Strict for API)
+
     corsHandler: {
       origin: [
-        'https://orderlyproblemsolvers.com', 
+        'https://orderlyproblemsolvers.com',
         'https://www.orderlyproblemsolvers.com',
-        'https://orderlyproblemsolvers.netlify.app', // Keep as fallback
+        'https://orderlyproblemsolvers.netlify.app',
         'http://localhost:3000'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -134,43 +156,41 @@ fullscreen: ["self", '"https://www.youtube.com"'],
       exposeHeaders: ['Content-Length']
     }
   },
-    runtimeConfig: {
+
+  runtimeConfig: {
     databaseUrl: process.env.DATABASE_URL,
     betterAuthSecret: process.env.BETTER_AUTH_SECRET,
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000' || 'https://orderlyproblemsolvers.netlify.app',
-        cloudinaryUploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
-    cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      cloudinaryUploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
+      cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
     }
   },
 
-  // 7. NITRO
+  // Nitro route rules
   routeRules: {
-    // Relax security for the Auth API (Better-Auth needs flexibility)
     '/api/auth/**': {
       security: {
-        csrf: false, // Better-Auth manages its own CSRF tokens
+        csrf: false,
         rateLimiter: {
-          tokensPerInterval: 20, // Stricter limits for login (20 attempts/min)
+          tokensPerInterval: 20,
           interval: 60000,
         }
       },
     },
-    // Stricter limits for Submission API
     '/api/submissions': {
       security: {
         rateLimiter: {
-          tokensPerInterval: 5, // Only 5 submissions per 10 mins per IP
+          tokensPerInterval: 5,
           interval: 600000
         }
       }
     }
   },
+
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
-     build: {
+    plugins: [tailwindcss()],
+    build: {
       rollupOptions: {
         output: {
           manualChunks: {
@@ -180,4 +200,4 @@ fullscreen: ["self", '"https://www.youtube.com"'],
       }
     },
   },
-})
+});
