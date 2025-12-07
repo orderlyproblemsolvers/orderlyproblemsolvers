@@ -26,10 +26,10 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
-// ✅ NEW: Robust YouTube ID Extractor
+// ✅ NEW: Robust YouTube ID Extractor (Handles Shorts/Share/Standard)
 const getYoutubeId = (url: string) => {
   if (!url) return null
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : null;
 }
@@ -165,7 +165,6 @@ defineOgImageComponent('OpsTemplate', {
                        title="YouTube video player" 
                        frameborder="0" 
                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                       allowfullscreen
                        loading="lazy"
                      ></iframe>
                    </template>
