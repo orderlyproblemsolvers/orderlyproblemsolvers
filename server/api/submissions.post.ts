@@ -28,9 +28,7 @@ export default defineEventHandler(async (event) => {
         industry: body.industry,
         location: body.location,
         website: body.website,
-        // Note: Ensure your 'companies' table actually has an email column if you want to store it. 
-        // If not, remove this line to avoid SQL errors.
-        // email: body.email, 
+        // email: body.email, // Uncomment if you added the email column to companies schema
         status: 'pending',
         featured: false
       });
@@ -43,17 +41,17 @@ export default defineEventHandler(async (event) => {
         role: body.role,
         bio: body.description,
         location: body.location,
-        email: body.email, // 'people' table definitely has this
+        email: body.email, 
         status: 'pending',
       });
     }
 
     // 4. ✅ SEND CONFIRMATION EMAIL
-    // We wrap this in a try/catch so email failures don't block the user's success message
     try {
+      const currentYear = new Date().getFullYear();
+      
       const data = await resend.emails.send({
-        // Make sure this matches the domain you verified in Resend
-        from: 'Orderly Problem Solvers <onboarding@orderlyproblemsolvers.com>', 
+        from: 'OPS <onboarding@orderlyproblemsolvers.com>', 
         to: [body.email],
         subject: 'Submission Received: Verification Pending',
         html: `
@@ -86,9 +84,25 @@ export default defineEventHandler(async (event) => {
               You will receive a final confirmation once your profile is verified and published (usually within 48 hours).
             </p>
 
-            <div style="border-top: 1px solid #e5e7eb; margin-top: 40px; padding-top: 20px; font-size: 12px; color: #6b7280;">
-              <p>Celebrating solutions</p>
-              <a href="https://orderlyproblemsolvers.com" style="color: #000; text-decoration: none; font-weight: bold;">orderlyproblemsolvers.com</a>
+            <div style="border-top: 1px solid #e5e7eb; margin-top: 60px; padding-top: 40px; font-size: 12px; color: #6b7280; text-align: center;">
+              
+              <div style="margin-bottom: 20px;">
+                <img src="https://orderlyproblemsolvers.com/img/logo.png" alt="OPS Logo" style="height: 30px; width: auto;" />
+              </div>
+
+              <p style="font-style: italic; margin-bottom: 20px; font-size: 14px; color: #111;">
+                "Because every great solution deserves to be found."
+              </p>
+
+              <p style="margin-bottom: 20px;">
+                <a href="https://orderlyproblemsolvers.com/legal/privacy" style="color: #6b7280; text-decoration: none; margin: 0 10px; border-bottom: 1px solid #d1d5db;">Privacy Policy</a>
+                <a href="https://orderlyproblemsolvers.com/legal/terms" style="color: #6b7280; text-decoration: none; margin: 0 10px; border-bottom: 1px solid #d1d5db;">Terms of Service</a>
+              </p>
+
+              <p>
+                &copy; ${currentYear} Orderly Problem Solvers&trade;. All rights reserved.
+              </p>
+              
             </div>
 
           </div>
@@ -97,7 +111,6 @@ export default defineEventHandler(async (event) => {
       console.log('📧 Email sent successfully:', data.id);
     } catch (emailError) {
       console.error('❌ Resend Error:', emailError);
-      // We log the error but do NOT throw it, so the frontend still gets a "success" response
     }
 
     return { success: true, message: 'Submission received' };
