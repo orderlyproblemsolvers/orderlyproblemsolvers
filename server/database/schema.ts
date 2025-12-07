@@ -63,6 +63,9 @@ export const companies = pgTable('companies', {
   industry: text('industry'),
   stage: text('stage'),
   
+  // ✅ NEW FIELD: Videos for Companies
+  videos: json('videos').$type<string[]>().default([]),
+  
   status: text('status', { enum: ['pending', 'approved', 'rejected'] }).default('pending'),
   featured: boolean('featured').default(false),
   
@@ -83,7 +86,7 @@ export const people = pgTable('people', {
   email: text('email'),
   website: text('website'),
   
-  // ✅ NEW FIELD: Videos (Array of YouTube URLs)
+  // ✅ NEW FIELD: Videos for People
   videos: json('videos').$type<string[]>().default([]),
 
   // Linked Company (Optional)
@@ -110,8 +113,6 @@ export const articles = pgTable('articles', {
   authorName: text('author_name').default('OPS Admin'),
   authorId: integer('author_id').references(() => people.id, { onDelete: 'set null' }),
   
-  // NOTE: Featured columns removed here in favor of junction tables below
-  
   isPublished: boolean('is_published').default(false),
   publishedAt: timestamp('published_at'),
   createdAt: timestamp('created_at').defaultNow(),
@@ -137,13 +138,13 @@ export const personStack = pgTable('person_stack', {
   techId: integer('tech_id').references(() => technologies.id, { onDelete: 'cascade' }).notNull(),
 });
 
-// Article <-> Companies (NEW: Many-to-Many)
+// Article <-> Companies (Many-to-Many)
 export const articleCompanies = pgTable('article_companies', {
   articleId: integer('article_id').references(() => articles.id, { onDelete: 'cascade' }).notNull(),
   companyId: integer('company_id').references(() => companies.id, { onDelete: 'cascade' }).notNull(),
 });
 
-// Article <-> People (NEW: Many-to-Many)
+// Article <-> People (Many-to-Many)
 export const articlePeople = pgTable('article_people', {
   articleId: integer('article_id').references(() => articles.id, { onDelete: 'cascade' }).notNull(),
   personId: integer('person_id').references(() => people.id, { onDelete: 'cascade' }).notNull(),

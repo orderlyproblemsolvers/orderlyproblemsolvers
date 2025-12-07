@@ -15,8 +15,12 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event);
 
+  // 2. SANITIZATION (Fix Image Paths)
+  // Ensure we strip '/public' if a new logo was uploaded
+  const cleanLogo = body.logo ? body.logo.replace('/public', '') : null;
+
   try {
-    // 2. Update Company Fields
+    // 3. Update Company Fields
     await db.update(companies).set({
         name: body.name,
         slug: body.slug,
@@ -26,13 +30,17 @@ export default defineEventHandler(async (event) => {
         location: body.location,
         website: body.website,
         stage: body.stage,
-        logo: body.logo,
+        logo: cleanLogo, // ✅ Use sanitized path
+        
+        // ✅ NEW FIELD: Videos Array
+        videos: body.videos || [],
+
         status: body.status, // Allow changing status back to pending/rejected
         featured: body.featured,
         updatedAt: new Date()
     }).where(eq(companies.id, id));
 
-    // 3. Sync Tech Stack (Delete All -> Re-insert)
+    // 4. Sync Tech Stack (Delete All -> Re-insert)
     // This is the safest way to handle "updates" to a many-to-many relationship
     if (Array.isArray(body.stack)) {
         

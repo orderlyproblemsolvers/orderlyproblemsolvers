@@ -32,6 +32,14 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
+// ✅ NEW: Robust YouTube ID Extractor
+const getYoutubeId = (url: string) => {
+  if (!url) return null
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 useSeoMeta({
   title: () => `${company.value?.name} - Verified`,
   description: () => company.value?.headline || `Learn about ${company.value?.name}, a ${company.value?.industry} company in ${company.value?.location}.`,
@@ -72,22 +80,18 @@ defineOgImageComponent('OpsTemplate', {
   <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
-    <!-- LOADING STATE -->
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
        <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
     </div>
 
     <div v-else-if="company">
       
-      <!-- 1. HEADER HERO -->
       <div class="relative bg-gray-900 dark:bg-black text-white pt-32 pb-16 overflow-hidden transition-colors duration-300">
-         <!-- Background Texture -->
          <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
          
          <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-start gap-8">
                
-               <!-- Logo Block -->
                <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0">
                   <img v-if="logoUrl" :src="logoUrl" class="w-full h-full object-cover" alt="Company Logo" />
                   <span v-else>{{ fallbackInitial }}</span>
@@ -104,7 +108,6 @@ defineOgImageComponent('OpsTemplate', {
                   </p>
                </div>
 
-               <!-- Actions -->
                <div class="flex flex-col gap-3 w-full md:w-auto mt-4 md:mt-0">
                   <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2">
                      Visit Website
@@ -115,7 +118,6 @@ defineOgImageComponent('OpsTemplate', {
          </div>
       </div>
 
-      <!-- 2. STATS BAR -->
       <div class="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
          <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-wrap divide-x divide-gray-200 dark:divide-slate-800">
@@ -135,14 +137,11 @@ defineOgImageComponent('OpsTemplate', {
          </div>
       </div>
 
-      <!-- 3. MAIN CONTENT -->
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
          <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
             
-            <!-- LEFT: DETAILS (Span 8) -->
             <div class="lg:col-span-8 space-y-16">
                
-               <!-- About -->
                <section>
                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">The Solution</h3>
                   <div 
@@ -153,7 +152,34 @@ defineOgImageComponent('OpsTemplate', {
                   <p v-else class="text-gray-500 dark:text-gray-400 italic">No description provided.</p>
                </section>
 
-               <!-- TECH STACK -->
+               <section v-if="company.videos && company.videos.length > 0">
+                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
+                   <div class="grid grid-cols-1 gap-8">
+                     <div v-for="(videoUrl, index) in company.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
+                       
+                       <template v-if="getYoutubeId(videoUrl)">
+                         <ClientOnly>
+                            <iframe 
+                            class="w-full h-full"
+                            :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&loop=1&playlist=${getYoutubeId(videoUrl)}&origin=https://orderlyproblemsolvers.com`" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            loading="lazy"
+                          ></iframe>
+                         </ClientOnly>
+                        </template>
+
+                        <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                          <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                          <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
+                        </div>
+
+                      </div>
+                    </div>
+                </section>
+
                <section v-if="company.stack && company.stack.length > 0">
                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Tech Stack</h3>
                   <div class="flex flex-wrap gap-3">
@@ -175,10 +201,8 @@ defineOgImageComponent('OpsTemplate', {
 
             </div>
 
-            <!-- RIGHT: PEOPLE & META (Span 4) -->
             <div class="lg:col-span-4 space-y-12">
                
-               <!-- Key People -->
                <div class="p-6 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm">
                   <div class="flex items-center justify-between mb-6">
                      <h3 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">Team</h3>
@@ -204,7 +228,6 @@ defineOgImageComponent('OpsTemplate', {
                   </div>
                </div>
 
-               <!-- Related News -->
                <div v-if="company.stories && company.stories.length > 0">
                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In The Journal</h3>
                   <div class="space-y-4">

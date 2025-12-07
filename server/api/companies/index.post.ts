@@ -18,8 +18,12 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Name and Slug are required' });
   }
 
+  // 3. SANITIZATION (Fix Image Paths)
+  // Ensure we strip '/public' if a new logo was uploaded
+  const cleanLogo = body.logo ? body.logo.replace('/public', '') : null;
+
   try {
-    // 3. INSERT COMPANY
+    // 4. INSERT COMPANY
     const newCompany = await db.insert(companies).values({
         name: body.name,
         slug: body.slug,
@@ -29,14 +33,18 @@ export default defineEventHandler(async (event) => {
         location: body.location,
         website: body.website,
         stage: body.stage,
-        logo: body.logo,
+        logo: cleanLogo, // ✅ Use sanitized path
+        
+        // ✅ NEW FIELD: Videos Array
+        videos: body.videos || [],
+
         status: 'approved', // Admin creations are auto-approved
         featured: body.featured || false
     }).returning();
 
     const companyId = newCompany[0].id;
 
-    // 4. PROCESS TECH STACK (The Logic we were missing)
+    // 5. PROCESS TECH STACK
     // Expects body.stack to be an array of strings: ["Vue", "Nuxt", "Stripe"]
     if (body.stack && Array.isArray(body.stack) && body.stack.length > 0) {
         

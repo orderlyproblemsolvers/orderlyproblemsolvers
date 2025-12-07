@@ -10,8 +10,29 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // 1. Fetch Company Details
-    const result = await db.select().from(companies).where(eq(companies.slug, slug)).limit(1);
+    // 1. Fetch Company Details (Explicit Selection)
+    const result = await db.select({
+      id: companies.id,
+      name: companies.name,
+      slug: companies.slug,
+      headline: companies.headline,
+      description: companies.description,
+      logo: companies.logo,
+      website: companies.website,
+      location: companies.location,
+      industry: companies.industry,
+      stage: companies.stage,
+      
+      // ✅ NEW FIELD: Videos Array
+      videos: companies.videos,
+
+      status: companies.status,
+      featured: companies.featured,
+      createdAt: companies.createdAt
+    })
+    .from(companies)
+    .where(eq(companies.slug, slug))
+    .limit(1);
 
     if (!result.length) {
       throw createError({ statusCode: 404, statusMessage: 'Company not found' });
@@ -31,8 +52,7 @@ export default defineEventHandler(async (event) => {
     .orderBy(desc(people.createdAt))
     .limit(6);
 
-    // 3. Fetch Related Stories (UPDATED to use Junction Table)
-    // We join articleCompanies -> articles
+    // 3. Fetch Related Stories (via Junction Table)
     const relatedStories = await db.select({
       title: articles.title,
       slug: articles.slug,
