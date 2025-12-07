@@ -1,6 +1,28 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+useSeoMeta({
+  title: 'Submit Your Solution - Orderly Problem Solvers',
+  description: 'Join the definitive index of problem solvers. Submit your profile for verification and gain visibility to investors, partners, and talent.',
+  ogTitle: 'Submit Your Solution - Orderly Problem Solvers',
+  ogDescription: 'Join the definitive index of problem solvers. Submit your profile for verification and gain visibility to investors, partners, and talent.',
+  twitterCard: 'summary_large_image',
+  ogUrl: 'https://orderlyproblemsolvers.com/submit-solution',
+  canonical: 'https://orderlyproblemsolvers.com/submit-solution'
+})
+
+definePageMeta({
+  title: 'Submit Your Solution - Orderly Problem Solvers',
+  description: 'Join the definitive index of problem solvers. Submit your profile for verification and gain visibility to investors, partners, and talent.'
+})
+
+defineOgImageComponent('OpsTemplate', {
+  title: 'Submit Your Solution - Orderly Problem Solvers',
+  description: 'Join the definitive index of problem solvers. Submit your profile for verification and gain visibility to investors, partners, and talent.',
+  image: '/img/logo-sm.png',
+  type: 'Submission'
+})
+
 // WIZARD CONFIG
 const currentStep = ref(1)
 const totalSteps = 4 // Added 'Impact' step

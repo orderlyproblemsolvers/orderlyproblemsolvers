@@ -1,5 +1,27 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+useSeoMeta({
+  title: 'Stories - Orderly Problem Solvers',
+  description: 'In-depth articles and insights on problem solvers shaping the future.',
+  ogTitle: 'Stories - Orderly Problem Solvers',
+  ogDescription: 'In-depth articles and insights on problem solvers shaping the future.',
+  ogImage: '/img/logo-sm.png',
+  twitterCard: 'summary_large_image',
+  ogUrl: 'https://orderlyproblemsolvers.com/stories',
+  canonical: 'https://orderlyproblemsolvers.com/stories'
+})
+
+definePageMeta({
+  title: 'Stories - Orderly Problem Solvers',
+  description: 'In-depth articles and insights on problem solvers shaping the future.'
+})
+
+defineOgImageComponent('OpsTemplate', {
+  title: 'Stories - Orderly Problem Solvers',
+  description: 'In-depth articles and insights on problem solvers shaping the future.',
+  image: '/img/logo-sm.png',
+  type: 'Story'
+})
 
 const categories = ['All', 'Spotlight', 'Engineering', 'Market Watch', 'Opinion']
 const activeCategory = ref('All')

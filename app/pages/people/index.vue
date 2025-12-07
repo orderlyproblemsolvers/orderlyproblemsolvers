@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+useSeoMeta({
+  title: 'People Directory - Orderly Problem Solvers',
+  description: 'Discover talented problem solvers from around the world. Search and filter by role, location, and expertise to find your next collaborator or hire.',
+  
+  // Open Graph
+  ogTitle: 'People Directory - Orderly Problem Solvers',
+  ogDescription: 'Discover talented problem solvers from around the world. Search and filter by role, location, and expertise to find your next collaborator or hire.',
+  ogImage: '/img/logo-sm.png',
+  ogUrl: 'https://orderlyproblemsolvers.com/people',
+  ogType: 'website',
+
+  // Twitter
+  twitterCard: 'summary_large_image',
+  canonical: 'https://orderlyproblemsolvers.com/people'
+})
+
 // --- FILTER STATE ---
 const search = ref('')
 const selectedRole = ref('')

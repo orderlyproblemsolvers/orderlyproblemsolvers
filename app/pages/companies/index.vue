@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+useSeoMeta({
+  title: 'Companies Directory - Orderly Problem Solvers',
+  description: 'Discover innovative companies solving real-world problems across various industries. Explore our curated directory of solution-driven enterprises.',
+  
+  // Open Graph
+  ogTitle: 'Companies Directory - Orderly Problem Solvers',
+  ogDescription: 'Discover innovative companies solving real-world problems across various industries. Explore our curated directory of solution-driven enterprises.',
+  ogImage: '/img/logo-sm.png',
+  ogUrl: 'https://orderlyproblemsolvers.com/companies',
+  ogType: 'website',
+
+  // Twitter
+  twitterCard: 'summary_large_image',
+  canonical: 'https://orderlyproblemsolvers.com/companies'
+})
+
 // --- FILTER STATE ---
 const search = ref('')
 const selectedIndustry = ref('')

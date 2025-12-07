@@ -22,6 +22,8 @@ useSeoMeta({
   ogImage: '/img/logo.png', // Fallback to logo if dynamic image fails
   ogUrl: 'https://orderlyproblemsolvers.com',
   ogType: 'website',
+  canonical: 'https://orderlyproblemsolvers.com',
+
 
   // Twitter
   twitterCard: 'summary_large_image',
