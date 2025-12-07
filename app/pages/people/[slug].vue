@@ -26,8 +26,10 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
-// ✅ NEW: Extract YouTube ID for Embeds
+// ✅ NEW: Robust YouTube ID Extractor
 const getYoutubeId = (url: string) => {
+  if (!url) return null
+  // Handles: Standard, Share, Mobile, and Embed formats
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : null;
@@ -156,15 +158,24 @@ defineOgImageComponent('OpsTemplate', {
                <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
                <div class="grid grid-cols-1 gap-8">
                  <div v-for="(videoUrl, index) in person.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
-                   <iframe 
-                     class="w-full h-full"
-                     :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}`" 
-                     title="YouTube video player" 
-                     frameborder="0" 
-                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                     allowfullscreen
-                     loading="lazy"
-                   ></iframe>
+                   
+                   <template v-if="getYoutubeId(videoUrl)">
+                     <iframe 
+                       class="w-full h-full"
+                       :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1`" 
+                       title="YouTube video player" 
+                       frameborder="0" 
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                       allowfullscreen
+                       loading="lazy"
+                     ></iframe>
+                   </template>
+
+                   <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                     <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                     <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
+                   </div>
+
                  </div>
                </div>
             </section>
