@@ -57,7 +57,7 @@ const projectPlans = [
   {
     name: 'MVP Build',
     description: 'For startups verifying an idea. We build core features fast.',
-    price: '$5k',
+    price: '₦150k',
     priceNote: 'Starts at',
     features: [
       'Web or Mobile App',
@@ -70,7 +70,7 @@ const projectPlans = [
   {
     name: 'Business Scale',
     description: 'For established businesses digitizing operations.',
-    price: '$15k',
+    price: '₦250k',
     priceNote: 'Starts at',
     featured: true,
     features: [
@@ -85,7 +85,7 @@ const projectPlans = [
   {
     name: 'System Design',
     description: 'Pure architectural consultancy before you build.',
-    price: '$2,500',
+    price: '₦100k',
     priceNote: 'Fixed Fee',
     features: [
       'Requirement Analysis',
@@ -101,7 +101,7 @@ const retainerPlans = [
   {
     name: 'Maintenance',
     description: 'Keep your lights on and software secure.',
-    price: '$500',
+    price: '₦50k',
     priceNote: '/ month',
     features: [
       'Security Patching',
@@ -114,7 +114,7 @@ const retainerPlans = [
   {
     name: 'Dev Team',
     description: 'A dedicated engineer for ongoing features.',
-    price: '$2,500',
+    price: '₦150k',
     priceNote: '/ month',
     featured: true,
     features: [
@@ -129,7 +129,7 @@ const retainerPlans = [
   {
     name: 'CTO Service',
     description: 'Strategic leadership for your technical team.',
-    price: '$4,000',
+    price: '₦200k',
     priceNote: '/ month',
     features: [
       'Technical Strategy',
@@ -302,7 +302,7 @@ const pricingFaqs = [
 
     <div class="py-24 bg-black dark:bg-white text-white dark:text-black text-center px-6">
        <div class="max-w-2xl mx-auto">
-          <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-6">Ready to Build?</h2>
+          <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-6">Want a custom solution?</h2>
           <p class="text-gray-400 dark:text-gray-600 mb-10 text-lg">Let's discuss your project and find the perfect solution.</p>
           <a 
             href="mailto:orderlyproblemsolvers@gmail.com?subject=New Project Discussion" 

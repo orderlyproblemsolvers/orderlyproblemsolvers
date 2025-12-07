@@ -194,7 +194,7 @@ defineOgImageComponent('OpsTemplate', {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 border-t border-gray-200 dark:border-gray-800 pt-8 sm:pt-12 transition-colors duration-300">
           <div class="lg:col-span-5">
             <p class="text-lg sm:text-xl md:text-2xl font-serif leading-relaxed text-gray-800 dark:text-gray-200">
-              The tech world is drowning in noise. Vaporware, buzzwords, and wrappers. We exist to find the signal.
+              In an industry saturated with hype and ephemeral trends, our mission is to distinguish genuine innovation from mere noise.
             </p>
           </div>
           <div class="lg:col-span-7 flex flex-col justify-between gap-6 sm:gap-8">
