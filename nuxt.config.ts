@@ -126,14 +126,14 @@ export default defineNuxtConfig({
       crossOriginOpenerPolicy: 'same-origin-allow-popups',
 
       // 🔥 FIXED — Correct syntax (no broken quotes)
-      permissionsPolicy: {
-        fullscreen: ["self", "https://www.youtube.com"],
-        autoplay: ["self", "https://www.youtube.com"],
-        accelerometer: ["self", "https://www.youtube.com"],
-        gyroscope: ["self", "https://www.youtube.com"],
-        "encrypted-media": ["self", "https://www.youtube.com"],
-        "picture-in-picture": ["self", "https://www.youtube.com"]
-      },
+     permissionsPolicy: {
+  fullscreen: ["self", '"https://www.youtube.com"'],
+  accelerometer: ["self", '"https://www.youtube.com"'],
+  autoplay: ["self", '"https://www.youtube.com"'],
+  gyroscope: ["self", '"https://www.youtube.com"'],
+  'encrypted-media': ["self", '"https://www.youtube.com"'],
+  'picture-in-picture': ["self", '"https://www.youtube.com"'],
+}
     },
 
     // Rate limiting
