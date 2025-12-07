@@ -159,25 +159,25 @@ defineOgImageComponent('OpsTemplate', {
                  <div v-for="(videoUrl, index) in person.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
                    
                    <template v-if="getYoutubeId(videoUrl)">
-                    <ClientOnly>
-                       <iframe 
-                       class="w-full h-full"
-                       :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1`" 
-                       title="YouTube video player" 
-                       frameborder="0" 
-                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                       loading="lazy"
-                     ></iframe>
-                    </ClientOnly>
-                   </template>
+                     <ClientOnly>
+                        <iframe 
+                        class="w-full h-full"
+                        :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&origin=https://orderlyproblemsolvers.com`" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                        loading="lazy"
+                      ></iframe>
+                     </ClientOnly>
+                    </template>
 
-                   <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
-                     <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                     <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
-                   </div>
+                    <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                      <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                      <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
+                    </div>
 
-                 </div>
-               </div>
+                  </div>
+                </div>
             </section>
 
             <section v-if="person.stack && person.stack.length > 0">
