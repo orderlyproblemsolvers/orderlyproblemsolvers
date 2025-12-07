@@ -17,26 +17,33 @@ export default defineEventHandler(async (event) => {
   // 3. Get Data
   const body = await readBody(event);
 
+  // 4. SANITIZATION (Fix Image Paths)
+  // Ensure we strip '/public' if a new image was uploaded during the edit
+  const cleanAvatar = body.avatar ? body.avatar.replace('/public', '') : null;
+
   try {
-    // 4. Update Person Fields
+    // 5. Update Person Fields
     await db.update(people).set({
         name: body.name,
         slug: body.slug,
         role: body.role,
         bio: body.bio,
-        avatar: body.avatar,
+        avatar: cleanAvatar, // ✅ Use sanitized path
         location: body.location,
         
         // Contact Info
         email: body.email,
         website: body.website,
 
+        // ✅ NEW FIELD: Videos Array
+        videos: body.videos || [],
+
         companyId: body.companyId || null, // Handle Unlinking
         status: body.status,
         featured: body.featured
     }).where(eq(people.id, id));
 
-    // 5. Sync Tech Stack (Delete All -> Re-insert)
+    // 6. Sync Tech Stack (Delete All -> Re-insert)
     // This ensures the DB exactly matches the form, handling removals and additions
     if (Array.isArray(body.stack)) {
         

@@ -1,4 +1,4 @@
-import { eq, desc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { db } from '../../utils/db';
 import { people, companies, articles, personStack, technologies, articlePeople } from '../../database/schema';
 
@@ -23,6 +23,9 @@ export default defineEventHandler(async (event) => {
       // Contact Info
       email: people.email,
       website: people.website,
+      
+      // ✅ NEW FIELD: Fetch the array of YouTube links
+      videos: people.videos,
       
       status: people.status,
       
@@ -86,7 +89,10 @@ export default defineEventHandler(async (event) => {
 
     // Convert back to array and sort by date (newest first)
     const allStories = Array.from(storyMap.values()).sort((a, b) => {
-      return new Date(b.date!).getTime() - new Date(a.date!).getTime();
+      // Handle potential null dates safely
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      return dateB - dateA;
     });
 
     // 4. Return Data

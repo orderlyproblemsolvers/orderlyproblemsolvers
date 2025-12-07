@@ -31,7 +31,10 @@ const form = ref({
   status: 'approved',
   // Stack
   stack: [] as string[],
-  stackInput: ''
+  stackInput: '',
+  // ✅ NEW: Video Array
+  videos: [] as string[],
+  videoInput: ''
 })
 
 // 2. POPULATE FORM
@@ -44,12 +47,15 @@ watch(existingData, (newData) => {
       email: newData.email || '',
       website: newData.website || '',
       stack: newData.stack || [],
-      stackInput: ''
+      // ✅ Ensure videos array is populated
+      videos: newData.videos || [], 
+      stackInput: '',
+      videoInput: ''
     }
   }
 }, { immediate: true })
 
-// 3. TAGGING LOGIC
+// 3. TAGGING LOGIC (Tech Stack)
 const addTag = () => {
   const val = form.value.stackInput.trim()
   if (val && !form.value.stack.includes(val)) {
@@ -62,6 +68,24 @@ const removeTag = (index: number) => {
   form.value.stack.splice(index, 1)
 }
 
+// 4. VIDEO LOGIC (YouTube)
+const addVideo = () => {
+  const val = form.value.videoInput.trim()
+  if (val) {
+    if (val.includes('youtube.com') || val.includes('youtu.be')) {
+      form.value.videos.push(val)
+      form.value.videoInput = ''
+    } else {
+      alert('Please enter a valid YouTube URL')
+    }
+  }
+}
+
+const removeVideo = (index: number) => {
+  form.value.videos.splice(index, 1)
+}
+
+// 5. UPDATE
 const handleUpdate = async () => {
   isLoading.value = true
   try {
@@ -102,7 +126,6 @@ const handleUpdate = async () => {
 
     <form v-else @submit.prevent="handleUpdate" class="space-y-6 bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
       
-      <!-- Name & Slug -->
       <div class="grid grid-cols-2 gap-6">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Full Name</label>
@@ -114,12 +137,10 @@ const handleUpdate = async () => {
         </div>
       </div>
 
-      <!-- AVATAR UPLOAD -->
       <div>
          <ImageUpload v-model="form.avatar" label="Profile Picture" />
       </div>
 
-      <!-- Role & Company -->
       <div class="grid grid-cols-2 gap-6">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Role / Title</label>
@@ -136,7 +157,6 @@ const handleUpdate = async () => {
         </div>
       </div>
 
-      <!-- CONTACT DETAILS -->
       <div class="grid grid-cols-2 gap-6">
         <div>
           <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Email (Public)</label>
@@ -148,13 +168,11 @@ const handleUpdate = async () => {
         </div>
       </div>
 
-      <!-- Location -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Location</label>
         <input v-model="form.location" type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black outline-none transition-colors" />
       </div>
 
-      <!-- TECH STACK INPUT -->
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-2">Skills / Stack</label>
         <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white flex flex-wrap gap-2 items-center focus-within:border-black transition-all min-h-[46px]">
@@ -173,13 +191,42 @@ const handleUpdate = async () => {
         </div>
       </div>
 
-      <!-- Bio -->
+      <div>
+        <label class="block text-xs font-bold uppercase text-gray-500 mb-2">YouTube Videos</label>
+        
+        <div class="flex gap-2 mb-3">
+          <input 
+            v-model="form.videoInput" 
+            @keydown.enter.prevent="addVideo"
+            type="url" 
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-black outline-none transition-colors" 
+            placeholder="Paste YouTube URL..." 
+          />
+          <button 
+            @click.prevent="addVideo"
+            type="button"
+            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-black font-bold rounded-lg text-xs uppercase transition-colors"
+          >
+            Add
+          </button>
+        </div>
+
+        <div v-if="form.videos.length > 0" class="space-y-2">
+          <div v-for="(vid, i) in form.videos" :key="i" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 animate-in fade-in slide-in-from-top-2">
+            <div class="flex items-center gap-2 overflow-hidden">
+              <svg class="w-4 h-4 text-red-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span class="text-xs text-gray-600 truncate">{{ vid }}</span>
+            </div>
+            <button @click="removeVideo(i)" type="button" class="text-red-500 hover:text-red-700 font-bold text-xs transition-colors">Remove</button>
+          </div>
+        </div>
+      </div>
+
       <div>
         <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Short Bio</label>
        <RichEditor v-model="form.bio" />
       </div>
 
-      <!-- Meta Toggles -->
       <div class="border-t border-gray-100 pt-4 space-y-3">
          <div class="flex items-center gap-3">
            <input v-model="form.featured" type="checkbox" id="feat" class="w-4 h-4 text-black rounded border-gray-300 focus:ring-black accent-black" />

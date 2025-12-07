@@ -1,4 +1,4 @@
-import { pgTable, text, integer, boolean, timestamp, serial } from 'drizzle-orm/pg-core';
+import { pgTable, text, integer, boolean, timestamp, serial, json } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 // --- 1. AUTHENTICATION TABLES (Better-Auth) ---
@@ -83,6 +83,9 @@ export const people = pgTable('people', {
   email: text('email'),
   website: text('website'),
   
+  // ✅ NEW FIELD: Videos (Array of YouTube URLs)
+  videos: json('videos').$type<string[]>().default([]),
+
   // Linked Company (Optional)
   companyId: integer('company_id').references(() => companies.id, { onDelete: 'set null' }),
   

@@ -18,19 +18,28 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Name, Slug, and Role are required' });
   }
 
+  // 3. SANITIZATION (Fix Image Paths)
+  // If the admin uploads an image, it might come back as "/public/img/file.png".
+  // Browsers need "/img/file.png". We fix that here.
+  const cleanAvatar = body.avatar ? body.avatar.replace('/public', '') : null;
+
   try {
-    // 3. INSERT PERSON
+    // 4. INSERT PERSON
     const newPerson = await db.insert(people).values({
         name: body.name,
         slug: body.slug,
         role: body.role,
         bio: body.bio,
-        avatar: body.avatar,
+        avatar: cleanAvatar, // ✅ Use the sanitized path
         location: body.location,
         
         // Contact Info
         email: body.email,
         website: body.website,
+
+        // ✅ NEW FIELD: Videos Array
+        // Ensure it defaults to an empty array if undefined
+        videos: body.videos || [], 
 
         companyId: body.companyId || null, // Link to existing company
         status: 'approved', // Admin creations are auto-approved
@@ -39,7 +48,7 @@ export default defineEventHandler(async (event) => {
 
     const personId = newPerson[0].id;
 
-    // 4. PROCESS TECH STACK
+    // 5. PROCESS TECH STACK
     // Expects body.stack to be an array of strings: ["Vue", "Rust", "AWS"]
     if (body.stack && Array.isArray(body.stack) && body.stack.length > 0) {
         

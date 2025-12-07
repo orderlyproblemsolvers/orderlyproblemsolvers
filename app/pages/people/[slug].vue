@@ -26,6 +26,13 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
+// ✅ NEW: Extract YouTube ID for Embeds
+const getYoutubeId = (url: string) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 // 4. BUTTON ACTIONS
 const openEmail = () => {
   if (person.value?.email) window.location.href = `mailto:${person.value.email}`
@@ -62,30 +69,25 @@ defineOgImageComponent('OpsTemplate', {
   <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
-    <!-- LOADING STATE -->
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
        <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
     </div>
 
     <div v-else-if="person">
       
-      <!-- 1. HEADER PROFILE -->
       <div class="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-12 transition-colors duration-300">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
-            <!-- Avatar -->
             <div class="relative group shrink-0">
               <div class="w-32 h-32 rounded-2xl overflow-hidden border-4 border-white dark:border-slate-800 shadow-sm bg-white dark:bg-slate-800">
                 <img :src="avatarUrl" class="w-full h-full object-cover" alt="Profile Picture" />
               </div>
-              <!-- Verified Badge -->
               <div class="absolute -bottom-3 -right-3 bg-blue-600 text-white p-1.5 rounded-full border-4 border-gray-50 dark:border-slate-900">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
               </div>
             </div>
 
-            <!-- Info -->
             <div class="flex-1 w-full">
               <div class="flex items-center gap-3 mb-2">
                 <h1 class="text-3xl md:text-4xl font-black tracking-tight text-gray-900 dark:text-white">{{ person.name }}</h1>
@@ -111,10 +113,8 @@ defineOgImageComponent('OpsTemplate', {
               </div>
             </div>
 
-            <!-- CTA Buttons (Conditional) -->
             <div class="flex flex-wrap gap-3 w-full md:w-auto">
                
-               <!-- Email Button -->
                <button 
                  v-if="person.email"
                  @click="openEmail"
@@ -124,7 +124,6 @@ defineOgImageComponent('OpsTemplate', {
                  Send Email
                </button>
 
-               <!-- Website Button -->
                <button 
                  v-if="person.website"
                  @click="openWebsite"
@@ -140,24 +139,36 @@ defineOgImageComponent('OpsTemplate', {
         </div>
       </div>
 
-      <!-- 2. MAIN CONTENT GRID -->
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
           
-          <!-- LEFT COLUMN (Bio & Content) -->
           <div class="lg:col-span-8 space-y-16">
             
-            <!-- Bio -->
             <section>
               <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">About</h3>
-              <!-- dark:prose-invert makes text white in dark mode -->
               <div 
                 class="prose prose-lg prose-gray dark:prose-invert max-w-none prose-headings:font-black prose-headings:tracking-tight prose-p:leading-relaxed prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:text-blue-800 dark:hover:prose-a:text-blue-300 prose-img:rounded-xl prose-blockquote:border-l-black dark:prose-blockquote:border-l-white prose-blockquote:italic prose-blockquote:font-serif" 
                 v-html="person.bio || 'No bio available.'"
               ></div>
             </section>
 
-            <!-- TECH STACK -->
+            <section v-if="person.videos && person.videos.length > 0">
+               <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
+               <div class="grid grid-cols-1 gap-8">
+                 <div v-for="(videoUrl, index) in person.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
+                   <iframe 
+                     class="w-full h-full"
+                     :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}`" 
+                     title="YouTube video player" 
+                     frameborder="0" 
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                     allowfullscreen
+                     loading="lazy"
+                   ></iframe>
+                 </div>
+               </div>
+            </section>
+
             <section v-if="person.stack && person.stack.length > 0">
                <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Expertise</h3>
                <div class="flex flex-wrap gap-3">
@@ -173,7 +184,6 @@ defineOgImageComponent('OpsTemplate', {
                </div>
             </section>
 
-            <!-- Recent Writing -->
             <section v-if="person.articles && person.articles.length > 0">
               <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Recent Writing</h3>
               <div class="space-y-4">
@@ -196,10 +206,8 @@ defineOgImageComponent('OpsTemplate', {
 
           </div>
 
-          <!-- RIGHT COLUMN (Context) -->
           <div class="lg:col-span-4 space-y-12">
              
-             <!-- Directory Link -->
              <div class="p-6 border-t border-gray-100 dark:border-slate-800">
                 <NuxtLink to="/people" class="flex items-center gap-3 group cursor-pointer hover:opacity-70 transition-opacity">
                    <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-gray-400 group-hover:text-black dark:group-hover:text-white">
