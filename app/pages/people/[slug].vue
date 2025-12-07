@@ -29,7 +29,6 @@ const toSolutionSlug = (name: string) => {
 // ✅ NEW: Robust YouTube ID Extractor
 const getYoutubeId = (url: string) => {
   if (!url) return null
-  // Handles: Standard, Share, Mobile, and Embed formats
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : null;
@@ -165,7 +164,7 @@ defineOgImageComponent('OpsTemplate', {
                        :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1`" 
                        title="YouTube video player" 
                        frameborder="0" 
-                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                        allowfullscreen
                        loading="lazy"
                      ></iframe>

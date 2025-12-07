@@ -84,6 +84,9 @@ export default defineNuxtConfig({
   },
   security: {
    headers: {
+    permissionsPolicy: {
+      fullscreen: '*', // Explicitly allow fullscreen
+    },
       contentSecurityPolicy: {
         // Allow images from anywhere (needed for user avatars/logos)
         'img-src': ["'self'", "data:", "blob:", "https:"],
