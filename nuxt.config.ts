@@ -84,9 +84,6 @@ export default defineNuxtConfig({
   },
   security: {
    headers: {
-    permissionsPolicy: {
-      fullscreen: '*', // Explicitly allow fullscreen
-    },
       contentSecurityPolicy: {
         // Allow images from anywhere (needed for user avatars/logos)
         'img-src': ["'self'", "data:", "blob:", "https:"],
@@ -98,9 +95,20 @@ export default defineNuxtConfig({
         // 🚨 CRITICAL: Allow connection to Self AND Cloudinary
         // "https:" allows connecting to external APIs generally
         'connect-src': ["'self'", "https:", "ws:", "wss:"], 
+
+        'frame-src': ["'self'", "https://www.youtube.com", "https://youtube.com"],
       },
       crossOriginEmbedderPolicy: 'unsafe-none',
       crossOriginOpenerPolicy: 'same-origin-allow-popups',
+
+      permissionsPolicy: {
+        fullscreen: ['self', 'https://www.youtube.com'],
+        accelerometer: ['self', 'https://www.youtube.com'],
+        autoplay: ['self', 'https://www.youtube.com'],
+        gyroscope: ['self', 'https://www.youtube.com'],
+        'encrypted-media': ['self', 'https://www.youtube.com'],
+        'picture-in-picture': ['self', 'https://www.youtube.com'],
+      }
     },
 
     // 3. Rate Limiting (Anti-Spam)
