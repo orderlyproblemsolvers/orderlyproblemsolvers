@@ -162,11 +162,13 @@ defineOgImageComponent('OpsTemplate', {
                      <ClientOnly>
                         <iframe 
                         class="w-full h-full"
-                        :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&origin=https://orderlyproblemsolvers.com`" 
+                        :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}`" 
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                         loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="strict-origin-when-cross-origin"
                       ></iframe>
                      </ClientOnly>
                     </template>
