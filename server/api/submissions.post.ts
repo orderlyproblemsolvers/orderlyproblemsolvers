@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
             <div style="border-top: 1px solid #e5e7eb; margin-top: 60px; padding-top: 40px; font-size: 12px; color: #6b7280; text-align: center;">
               
               <div style="margin-bottom: 20px;">
-                <img src="https://orderlyproblemsolvers.com/img/logo.png" alt="OPS Logo" style="height: 30px; width: auto;" />
+                <img src="https://res.cloudinary.com/dmevyf7jt/image/upload/v1765146948/Asset_1_hczevt.png" alt="OPS Logo" style="height: 30px; width: auto;" />
               </div>
 
               <p style="font-style: italic; margin-bottom: 20px; font-size: 14px; color: #111;">
