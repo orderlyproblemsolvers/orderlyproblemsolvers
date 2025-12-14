@@ -40,7 +40,7 @@ const getYoutubeId = (url: string) => {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-// SEO & Meta (Unchanged)
+// SEO & Meta
 useSeoMeta({
   title: () => `${company.value?.name} - Verified`,
   description: () => company.value?.headline || `Learn about ${company.value?.name}, a ${company.value?.industry} company in ${company.value?.location}.`,
@@ -248,10 +248,7 @@ defineOgImageComponent('OpsTemplate', {
 </template>
 
 <style scoped>
-/* ✅ OPTIMIZED WYSIWYG STYLING
-   We use :global(.dark) to correctly target the user's dark mode toggle 
-   even when using scoped styles.
-*/
+/* ✅ OPTIMIZED WYSIWYG STYLING */
 
 :deep(.rich-text-content) {
   font-size: 1.125rem; /* text-lg */
@@ -259,9 +256,9 @@ defineOgImageComponent('OpsTemplate', {
   color: #374151; /* text-gray-700 */
 }
 
-/* Dark Mode Text Base */
+/* Dark Mode Text Base - FORCED WHITE */
 :global(.dark) :deep(.rich-text-content) {
-  color: #cbd5e1; /* slate-300 - lighter than gray-300 for contrast on slate bg */
+  color: #ffffff; /* Pure white for maximum contrast */
 }
 
 /* Headers */
@@ -273,7 +270,7 @@ defineOgImageComponent('OpsTemplate', {
   color: #111827; /* text-gray-900 */
 }
 :global(.dark) :deep(.rich-text-content h2) {
-  color: #f8fafc; /* slate-50 */
+  color: #ffffff; /* Pure white */
 }
 
 :deep(.rich-text-content h3) {
@@ -328,7 +325,7 @@ defineOgImageComponent('OpsTemplate', {
 }
 :global(.dark) :deep(.rich-text-content blockquote) {
   border-color: #334155; /* slate-700 */
-  color: #94a3b8; /* slate-400 */
+  color: #cbd5e1; /* slate-300 */
 }
 
 /* Code Blocks */
