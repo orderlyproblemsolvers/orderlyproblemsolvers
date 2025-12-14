@@ -180,8 +180,6 @@ defineOgImageComponent('OpsTemplate', {
 </script>
 
 <template>
-    
-    <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
 
     <section class="pt-20 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 border-b border-gray-900 dark:border-gray-700 transition-colors duration-300">
@@ -312,5 +310,4 @@ defineOgImageComponent('OpsTemplate', {
     </section>
 
   </div>
-  <AppFooter/>
 </template>

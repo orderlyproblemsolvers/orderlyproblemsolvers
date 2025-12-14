@@ -1,13 +1,11 @@
 <template>
    <div>
-    <AppHeader/>
     <LazyHeroSection/>
     <FeatureDrop/>
     <EcosystemGrid/>
     <SolversStream/>
     <OPSSection/>
     <SubmissionCTA/>
-    <AppFooter/>
    </div>
 </template>
 

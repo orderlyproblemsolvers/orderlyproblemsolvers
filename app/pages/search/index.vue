@@ -68,7 +68,6 @@ useSeoMeta({
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <!-- SEARCH HEADER -->
@@ -162,7 +161,6 @@ useSeoMeta({
     </div>
 
   </div>
-  <AppFooter/>
 </template>
 
 <style scoped>

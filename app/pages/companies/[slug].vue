@@ -51,7 +51,6 @@ useSeoMeta({
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
     
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
@@ -177,7 +176,6 @@ useSeoMeta({
       </div>
     </div>
   </div>
-  <AppFooter/>
 </template>
 
 <style>

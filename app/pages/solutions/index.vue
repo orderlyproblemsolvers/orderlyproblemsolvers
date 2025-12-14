@@ -17,7 +17,6 @@ const getCategoryIcon = (category: string) => {
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <div class="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-16 transition-colors duration-300">
@@ -100,5 +99,4 @@ const getCategoryIcon = (category: string) => {
     </div>
 
   </div>
-  <AppFooter/>
 </template>

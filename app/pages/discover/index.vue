@@ -82,7 +82,6 @@ const tags = ['Vue.js', 'FinTech', 'Nuxt', 'Python', 'Logistics', 'HealthTech', 
 </script>
 
 <template>
-    <AppHeader/>
   <div class="min-h-screen bg-white font-sans text-gray-900 selection:bg-black selection:text-white">
     
     <!-- 1. HERO: COMMAND CENTER -->
@@ -245,5 +244,4 @@ const tags = ['Vue.js', 'FinTech', 'Nuxt', 'Python', 'Logistics', 'HealthTech', 
     </div>
 
   </div>
-  <AppFooter/>
 </template>

@@ -166,7 +166,6 @@ const pricingFaqs = [
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-blue-100 dark:selection:bg-blue-900 transition-colors duration-300">
     
     <div class="relative border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 pt-32 pb-20 lg:pb-32 overflow-hidden transition-colors duration-300">
@@ -317,5 +316,4 @@ const pricingFaqs = [
     </div>
 
   </div>
-  <AppFooter/>
 </template>

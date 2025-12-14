@@ -67,7 +67,6 @@ defineOgImageComponent('OpsTemplate', {
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
@@ -240,7 +239,6 @@ defineOgImageComponent('OpsTemplate', {
 
     </div>
   </div>
-  <AppFooter/>
 </template>
 
 <style scoped>

@@ -76,7 +76,6 @@ const clearFilters = () => {
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
     
     <div class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-8 transition-colors duration-300">
@@ -228,7 +227,6 @@ const clearFilters = () => {
       </div>
     </div>
   </div>
-  <AppFooter/>
 </template>
 
 <style scoped>

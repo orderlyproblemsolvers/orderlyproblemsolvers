@@ -50,7 +50,6 @@ defineOgImageComponent('OpsTemplate', {
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-gray-50/50">
     
     <!-- HERO -->
@@ -123,5 +122,4 @@ defineOgImageComponent('OpsTemplate', {
     </div>
 
   </div>
-  <AppFooter/>
 </template>

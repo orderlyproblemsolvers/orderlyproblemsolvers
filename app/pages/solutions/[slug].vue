@@ -15,7 +15,6 @@ if (error.value) {
 </script>
 
 <template>
-   <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <!-- LOADING STATE -->
@@ -140,5 +139,4 @@ if (error.value) {
 
     </div>
   </div>
-  <AppFooter/>
 </template>

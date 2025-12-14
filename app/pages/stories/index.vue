@@ -41,7 +41,6 @@ const feedStories = computed(() => {
 </script>
 
 <template>
-   <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans selection:bg-blue-100 dark:selection:bg-blue-900 transition-colors duration-300">
     
     <div class="sticky top-20 z-30 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-gray-100 dark:border-white/10 transition-colors duration-300">
@@ -139,5 +138,4 @@ const feedStories = computed(() => {
 
     </div>
   </div>
-  <AppFooter/>
 </template>

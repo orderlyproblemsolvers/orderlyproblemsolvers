@@ -126,7 +126,6 @@ ${form.value.metric}
 </script>
 
 <template>
-  <AppHeader/>
   <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
     
     <div class="sticky top-20 z-20 bg-white/90 dark:bg-slate-950/90 backdrop-blur border-b border-gray-100 dark:border-slate-800 transition-colors">
@@ -334,5 +333,4 @@ ${form.value.metric}
       </div>
     </div>
   </div>
-  <AppFooter/>
 </template>
