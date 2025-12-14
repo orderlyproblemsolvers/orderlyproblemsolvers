@@ -128,7 +128,15 @@ useSeoMeta({
                      <div v-for="(videoUrl, index) in company.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
                        <template v-if="getYoutubeId(videoUrl)">
                          <ClientOnly>
-                            <iframe class="w-full h-full" :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&loop=1&playlist=${getYoutubeId(videoUrl)}`" title="YouTube video" frameborder="0" allowfullscreen loading="lazy"></iframe>
+<iframe 
+                            class="w-full h-full"
+                            :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&loop=1&playlist=${getYoutubeId(videoUrl)}&origin=https://orderlyproblemsolvers.com`" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            loading="lazy"
+                          ></iframe>
                          </ClientOnly>
                         </template>
                         <div v-else class="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-slate-900 text-gray-400"><span class="text-xs font-bold">Video Unavailable</span></div>

@@ -141,12 +141,7 @@ defineOgImageComponent('OpsTemplate', {
             </div>
 
             <div 
-              class="prose prose-lg prose-gray dark:prose-invert max-w-none 
-              prose-headings:font-black prose-headings:tracking-tight 
-              prose-p:leading-relaxed 
-              prose-a:text-blue-600 hover:prose-a:text-blue-800 dark:hover:prose-a:text-blue-400
-              prose-img:rounded-xl 
-              prose-blockquote:border-l-black dark:prose-blockquote:border-l-white prose-blockquote:italic prose-blockquote:font-serif" 
+              class="tiptap-content max-w-none" 
               v-html="article.content"
             ></div>
           </div>
@@ -228,3 +223,96 @@ defineOgImageComponent('OpsTemplate', {
   </div>
   <AppFooter/>
 </template>
+
+<style scoped>
+/* 1. Base Styles for Tiptap Content */
+.tiptap-content {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.8;
+  color: #374151; /* gray-700 */
+}
+
+/* Headers */
+.tiptap-content h2 { font-size: 1.75rem; font-weight: 800; color: #111827; margin-top: 2rem; margin-bottom: 1rem; }
+.tiptap-content h3 { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+
+/* Links */
+.tiptap-content a { color: #2563eb; text-decoration: underline; font-weight: 600; cursor: pointer; }
+
+/* Lists */
+.tiptap-content ul { list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0; }
+.tiptap-content ol { list-style-type: decimal; padding-left: 1.5rem; margin: 1rem 0; }
+
+/* Blockquotes */
+.tiptap-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280;
+  margin: 1.5rem 0;
+}
+
+/* Images */
+.tiptap-content img {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+  max-width: 100%;
+}
+
+/* 2. CODE BLOCKS (Dark Terminal Look) */
+.tiptap-content pre {
+  background: #0d0d0d;
+  color: #FFF;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.tiptap-content code {
+  color: inherit;
+  background: none;
+  font-size: 0.875rem;
+}
+
+/* 3. DARK MODE OVERRIDES (The "Nuclear" Fix) */
+/* We target 'html.dark' to ensure this only applies when dark mode is active */
+
+html.dark .tiptap-content {
+  color: #f1f5f9 !important; /* Slate-100 */
+}
+
+/* Force standard text elements to white */
+html.dark .tiptap-content p, 
+html.dark .tiptap-content span:not([style*="color"]), /* Don't override spans that have specific color styles from the picker */
+html.dark .tiptap-content li {
+  color: #f1f5f9; 
+}
+
+/* Headers - Bright White */
+html.dark .tiptap-content h1,
+html.dark .tiptap-content h2,
+html.dark .tiptap-content h3,
+html.dark .tiptap-content strong,
+html.dark .tiptap-content b {
+  color: #ffffff !important;
+}
+
+/* Links - Keep Blue */
+html.dark .tiptap-content a {
+  color: #60a5fa !important; /* Blue-400 */
+}
+
+/* Blockquotes */
+html.dark .tiptap-content blockquote {
+  border-color: #334155; /* Slate-700 */
+  color: #cbd5e1; /* Slate-300 */
+}
+
+/* Code Blocks - Ensure they stay dark */
+html.dark .tiptap-content pre {
+  background: #020617; /* Slate-950 */
+  border: 1px solid #1e293b;
+}
+</style>
