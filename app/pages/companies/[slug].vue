@@ -145,7 +145,7 @@ defineOgImageComponent('OpsTemplate', {
                <section>
                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">The Solution</h3>
                   <div 
-                    class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-900 dark:text-gray-100 leading-relaxed prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400" 
+                    class="rich-text-content" 
                     v-if="company.description"
                     v-html="company.description.includes('<') ? company.description : `<p>${company.description}</p>`"
                   ></div>
@@ -249,3 +249,105 @@ defineOgImageComponent('OpsTemplate', {
   </div>
   <AppFooter/>
 </template>
+
+<style>
+:deep(.rich-text-content) {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  color: #374151; /* text-gray-700 */
+}
+
+/* Dark Mode Text */
+:deep(.dark .rich-text-content) {
+  color: #d1d5db; /* text-gray-300 */
+}
+
+/* Headers */
+:deep(.rich-text-content h2) {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #111827; /* text-gray-900 */
+}
+:deep(.dark .rich-text-content h2) {
+  color: #ffffff;
+}
+
+:deep(.rich-text-content h3) {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #111827;
+}
+:deep(.dark .rich-text-content h3) {
+  color: #ffffff;
+}
+
+/* Links */
+:deep(.rich-text-content a) {
+  color: #2563eb; /* blue-600 */
+  text-decoration: underline;
+  font-weight: 600;
+}
+:deep(.dark .rich-text-content a) {
+  color: #60a5fa; /* blue-400 */
+}
+
+/* Lists */
+:deep(.rich-text-content ul) {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+:deep(.rich-text-content ol) {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+:deep(.rich-text-content li) {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquotes */
+:deep(.rich-text-content blockquote) {
+  border-left-width: 4px;
+  border-color: #e5e7eb; /* gray-200 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280; /* gray-500 */
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+:deep(.dark .rich-text-content blockquote) {
+  border-color: #374151; /* gray-700 */
+  color: #9ca3af; /* gray-400 */
+}
+
+/* Code Blocks */
+:deep(.rich-text-content pre) {
+  background-color: #111827; /* gray-900 */
+  color: #f3f4f6; /* gray-100 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  overflow-x: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Images */
+:deep(.rich-text-content img) {
+  border-radius: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+</style>>
