@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Link from '@tiptap/extension-link'
-import Image from '@tiptap/extension-image'
-import Underline from '@tiptap/extension-underline'
-import Placeholder from '@tiptap/extension-placeholder'
+import { ref, onMounted, watch, nextTick } from 'vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const config = useRuntimeConfig()
 
@@ -16,76 +12,106 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue'])
 const fileInput = ref<HTMLInputElement | null>(null)
 const isUploading = ref(false)
-const editor = shallowRef<Editor>()
+const quillRef = ref<any>(null) // Reference to the Quill wrapper
+const editor = ref<any>(null)   // Reference to the internal Quill instance
+
+// TRACK FORMATS (Replaces Tiptap's editor.isActive)
+const activeFormats = ref<Record<string, boolean>>({
+  bold: false,
+  italic: false,
+  underline: false,
+  header2: false,
+  header3: false,
+  blockquote: false,
+  listOrdered: false,
+  listBullet: false,
+  link: false
+})
 
 // CONFIG
 const CLOUD_NAME = config.public.cloudinaryCloudName
 const UPLOAD_PRESET = config.public.cloudinaryUploadPreset
 
+// STYLING
 const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
 const btnActive = "bg-black text-white hover:bg-gray-800"
 
+// INIT
 onMounted(() => {
-  if (!import.meta.client) return
-
-  try {
-    editor.value = new Editor({
-      content: props.modelValue,
-      extensions: [
-        StarterKit.configure({
-          heading: { levels: [2, 3] } 
-        }),
-        Underline,
-        Link.configure({
-          openOnClick: false,
-          HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
-        }),
-        Image.configure({
-          HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
-        }),
-        Placeholder.configure({
-          placeholder: 'Start writing your story...'
-        })
-      ],
-      editorProps: {
-        attributes: {
-          class: `prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6`
-        }
-      },
-      onUpdate: ({ editor }) => {
-        emit('update:modelValue', editor.getHTML())
+  if (quillRef.value) {
+    editor.value = quillRef.value.getQuill()
+    
+    // Listen for selection changes to update toolbar active states
+    editor.value.on('editor-change', (eventName: string, ...args: any[]) => {
+      if (eventName === 'selection-change') {
+        updateActiveFormats()
+      }
+      if (eventName === 'text-change') {
+        emit('update:modelValue', quillRef.value.getHTML())
       }
     })
-  } catch (e) {
-    console.error("Failed to initialize Tiptap:", e)
   }
 })
 
-onBeforeUnmount(() => {
-  editor.value?.destroy()
-})
-
-// Watch for external changes (e.g. loading draft)
-watch(() => props.modelValue, (newValue) => {
+// SYNC FORMATS
+const updateActiveFormats = () => {
   if (!editor.value) return
-  const isSame = editor.value.getHTML() === newValue
-  if (isSame) return
-  editor.value.commands.setContent(newValue, false)
-})
-
-// --- ACTIONS ---
-const setLink = () => {
-  if (!editor.value) return
-  const previousUrl = editor.value.getAttributes('link').href
-  const url = window.prompt('URL', previousUrl)
-  if (url === null) return
-  if (url === '') {
-    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
-    return
+  const range = editor.value.getSelection()
+  if (!range) return
+  
+  const formats = editor.value.getFormat(range)
+  
+  activeFormats.value = {
+    bold: !!formats.bold,
+    italic: !!formats.italic,
+    underline: !!formats.underline,
+    header2: formats.header === 2,
+    header3: formats.header === 3,
+    blockquote: !!formats.blockquote,
+    listOrdered: formats.list === 'ordered',
+    listBullet: formats.list === 'bullet',
+    link: !!formats.link
   }
-  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 }
 
+// --- ACTIONS ---
+
+const toggleFormat = (format: string, value: any = true) => {
+  if (!editor.value) return
+  
+  const currentFormat = editor.value.getFormat()
+  // Toggle logic: If strictly equal to current value, turn off (clean), else set
+  if (currentFormat[format] === value) {
+    editor.value.format(format, false)
+  } else {
+    editor.value.format(format, value)
+  }
+  updateActiveFormats()
+}
+
+const toggleHeader = (level: number) => {
+  if (!editor.value) return
+  const current = editor.value.getFormat().header
+  editor.value.format('header', current === level ? false : level)
+  updateActiveFormats()
+}
+
+const setLink = () => {
+  if (!editor.value) return
+  const currentLink = editor.value.getFormat().link
+  const url = window.prompt('URL', currentLink || '')
+  
+  if (url === null) return
+  
+  if (url === '') {
+    editor.value.format('link', false)
+  } else {
+    editor.value.format('link', url)
+  }
+  updateActiveFormats()
+}
+
+// IMAGE UPLOAD
 const triggerImageUpload = () => fileInput.value?.click()
 
 const handleFile = async (event: Event) => {
@@ -109,50 +135,54 @@ const uploadAndInsertImage = async (file: File) => {
       body: formData
     })
     const data = await res.json()
+    
     if (data.secure_url) {
-      editor.value.chain().focus().setImage({ src: data.secure_url }).run()
+      // Insert image at current cursor position
+      const range = editor.value.getSelection(true)
+      editor.value.insertEmbed(range.index, 'image', data.secure_url)
+      editor.value.setSelection(range.index + 1)
     } else {
       alert('Image upload failed: ' + (data.error?.message || 'Unknown error'))
     }
   } catch (e) {
-    alert('Network error')
+    alert('Network error during upload')
   } finally {
     isUploading.value = false
   }
 }
+
+// External v-model Sync (if needed when loading data initially)
+watch(() => props.modelValue, (newVal) => {
+  if (quillRef.value && quillRef.value.getHTML() !== newVal) {
+    quillRef.value.setHTML(newVal)
+  }
+})
 </script>
 
 <template>
-  <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
+  <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all rich-text-wrapper">
     
-    <!-- TOOLBAR -->
-    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
+    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]">
       
-      <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
-      <button @click.prevent="editor.chain().focus().redo().run()" :class="btnBase" title="Redo">↪</button>
+      <button @click.prevent="toggleFormat('bold')" :class="[btnBase, activeFormats.bold ? btnActive : '']"><strong>B</strong></button>
+      <button @click.prevent="toggleFormat('italic')" :class="[btnBase, activeFormats.italic ? btnActive : '']"><em>i</em></button>
+      <button @click.prevent="toggleFormat('underline')" :class="[btnBase, activeFormats.underline ? btnActive : '']"><u>U</u></button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
-      <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
-      <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
+      <button @click.prevent="toggleHeader(2)" :class="[btnBase, activeFormats.header2 ? btnActive : '']">H2</button>
+      <button @click.prevent="toggleHeader(3)" :class="[btnBase, activeFormats.header3 ? btnActive : '']">H3</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[btnBase, editor.isActive('heading', { level: 2 }) ? btnActive : '']">H2</button>
-      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[btnBase, editor.isActive('heading', { level: 3 }) ? btnActive : '']">H3</button>
-      <div class="w-px h-4 bg-gray-300 mx-1"></div>
-
-      <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
-         <!-- List Icon -->
+      <button @click.prevent="toggleFormat('list', 'bullet')" :class="[btnBase, activeFormats.listBullet ? btnActive : '']">
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
-      <button @click.prevent="editor.chain().focus().toggleOrderedList().run()" :class="[btnBase, editor.isActive('orderedList') ? btnActive : '']">
-         <!-- Ordered List Icon -->
+      <button @click.prevent="toggleFormat('list', 'ordered')" :class="[btnBase, activeFormats.listOrdered ? btnActive : '']">
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h12M7 12h12M7 17h12M3 7h.01M3 12h.01M3 17h.01"></path></svg>
       </button>
-      <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
+      <button @click.prevent="toggleFormat('blockquote')" :class="[btnBase, activeFormats.blockquote ? btnActive : '']">”</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
-      <button @click.prevent="setLink" :class="[btnBase, editor.isActive('link') ? btnActive : '']">Link</button>
+      <button @click.prevent="setLink" :class="[btnBase, activeFormats.link ? btnActive : '']">Link</button>
       
       <button 
         @click.prevent="triggerImageUpload" 
@@ -168,25 +198,63 @@ const uploadAndInsertImage = async (file: File) => {
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
     </div>
 
-    <!-- EDITOR CONTENT -->
-    <div v-if="editor" class="min-h-[400px]">
-       <editor-content :editor="editor" />
-    </div>
-    
-    <div v-else class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
-      <span>Loading Editor...</span>
-    </div>
+    <ClientOnly>
+      <QuillEditor 
+        ref="quillRef"
+        v-model:content="props.modelValue"
+        content-type="html"
+        theme="snow"
+        :toolbar="false" 
+        placeholder="Start writing your story..."
+        class="min-h-[400px] max-w-none"
+      />
+    </ClientOnly>
 
   </div>
 </template>
 
 <style scoped>
-/* Tiptap Placeholder Styling */
-:deep(.tiptap p.is-editor-empty:first-child::before) {
-  color: #9ca3af;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
+/* Custom overrides for Quill to match previous Typography */
+:deep(.ql-editor) {
+  min-height: 400px;
+  padding: 1.5rem; /* Match p-6 */
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+:deep(.ql-editor h2) {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+:deep(.ql-editor h3) {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+:deep(.ql-editor blockquote) {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4b5563;
+}
+
+:deep(.ql-editor img) {
+  border-radius: 0.75rem; /* rounded-xl */
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+:deep(.ql-container.ql-snow) {
+  border: none;
 }
 </style>
