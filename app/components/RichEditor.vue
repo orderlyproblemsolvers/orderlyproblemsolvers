@@ -1,261 +1,192 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+import Underline from '@tiptap/extension-underline'
+import Placeholder from '@tiptap/extension-placeholder'
+
+const config = useRuntimeConfig()
 
 const props = defineProps<{
   modelValue: string
 }>()
 
 const emit = defineEmits(['update:modelValue'])
-const quillContent = ref(props.modelValue)
+const fileInput = ref<HTMLInputElement | null>(null)
+const isUploading = ref(false)
+const editor = shallowRef<Editor>()
 
-// SYNC CONTENT
-watch(() => props.modelValue, (val) => {
-  if (val !== quillContent.value) {
-    quillContent.value = val
+// CONFIG
+const CLOUD_NAME = config.public.cloudinaryCloudName
+const UPLOAD_PRESET = config.public.cloudinaryUploadPreset
+
+const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
+const btnActive = "bg-black text-white hover:bg-gray-800"
+
+onMounted(() => {
+  if (!import.meta.client) return
+
+  try {
+    editor.value = new Editor({
+      content: props.modelValue,
+      extensions: [
+        StarterKit.configure({
+          heading: { levels: [2, 3] } 
+        }),
+        Underline,
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
+        }),
+        Image.configure({
+          HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
+        }),
+        Placeholder.configure({
+          placeholder: 'Start writing your story...'
+        })
+      ],
+      editorProps: {
+        attributes: {
+          class: `prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6`
+        }
+      },
+      onUpdate: ({ editor }) => {
+        emit('update:modelValue', editor.getHTML())
+      }
+    })
+  } catch (e) {
+    console.error("Failed to initialize Tiptap:", e)
   }
 })
 
-const onUpdate = () => {
-  emit('update:modelValue', quillContent.value)
+onBeforeUnmount(() => {
+  editor.value?.destroy()
+})
+
+// Watch for external changes (e.g. loading draft)
+watch(() => props.modelValue, (newValue) => {
+  if (!editor.value) return
+  const isSame = editor.value.getHTML() === newValue
+  if (isSame) return
+  editor.value.commands.setContent(newValue, false)
+})
+
+// --- ACTIONS ---
+const setLink = () => {
+  if (!editor.value) return
+  const previousUrl = editor.value.getAttributes('link').href
+  const url = window.prompt('URL', previousUrl)
+  if (url === null) return
+  if (url === '') {
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+    return
+  }
+  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 }
 
-// TOOLBAR CONFIGURATION
-const toolbarOptions = [
-  [{ 'header': [2, 3, false] }], 
-  ['bold', 'italic', 'underline', 'strike'], 
-  ['blockquote', 'code-block'], 
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }], 
-  ['link', 'image', 'clean'] 
-]
+const triggerImageUpload = () => fileInput.value?.click()
+
+const handleFile = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (!target.files || target.files.length === 0) return
+  const file = target.files[0]
+  await uploadAndInsertImage(file)
+  target.value = '' 
+}
+
+const uploadAndInsertImage = async (file: File) => {
+  if (!editor.value) return
+  isUploading.value = true
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('upload_preset', UPLOAD_PRESET)
+
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: 'POST',
+      body: formData
+    })
+    const data = await res.json()
+    if (data.secure_url) {
+      editor.value.chain().focus().setImage({ src: data.secure_url }).run()
+    } else {
+      alert('Image upload failed: ' + (data.error?.message || 'Unknown error'))
+    }
+  } catch (e) {
+    alert('Network error')
+  } finally {
+    isUploading.value = false
+  }
+}
 </script>
 
 <template>
-  <div class="rich-text-wrapper">
-    <ClientOnly>
-      <QuillEditor 
-        v-model:content="quillContent"
-        contentType="html"
-        theme="snow"
-        :toolbar="toolbarOptions"
-        placeholder="Share your solution details..."
-        @textChange="onUpdate"
-      />
-    </ClientOnly>
+  <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
+    
+    <!-- TOOLBAR -->
+    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
+      
+      <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
+      <button @click.prevent="editor.chain().focus().redo().run()" :class="btnBase" title="Redo">↪</button>
+      <div class="w-px h-4 bg-gray-300 mx-1"></div>
+
+      <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
+      <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
+      <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
+      <div class="w-px h-4 bg-gray-300 mx-1"></div>
+
+      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[btnBase, editor.isActive('heading', { level: 2 }) ? btnActive : '']">H2</button>
+      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[btnBase, editor.isActive('heading', { level: 3 }) ? btnActive : '']">H3</button>
+      <div class="w-px h-4 bg-gray-300 mx-1"></div>
+
+      <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
+         <!-- List Icon -->
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+      <button @click.prevent="editor.chain().focus().toggleOrderedList().run()" :class="[btnBase, editor.isActive('orderedList') ? btnActive : '']">
+         <!-- Ordered List Icon -->
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h12M7 12h12M7 17h12M3 7h.01M3 12h.01M3 17h.01"></path></svg>
+      </button>
+      <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
+      <div class="w-px h-4 bg-gray-300 mx-1"></div>
+
+      <button @click.prevent="setLink" :class="[btnBase, editor.isActive('link') ? btnActive : '']">Link</button>
+      
+      <button 
+        @click.prevent="triggerImageUpload" 
+        :class="btnBase" 
+        :disabled="isUploading"
+      >
+        <span v-if="isUploading" class="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+        <div v-else class="flex items-center gap-1">
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+           Img
+        </div>
+      </button>
+      <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
+    </div>
+
+    <!-- EDITOR CONTENT -->
+    <div v-if="editor" class="min-h-[400px]">
+       <editor-content :editor="editor" />
+    </div>
+    
+    <div v-else class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
+      <span>Loading Editor...</span>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
-/* 🎨 COLOR PALETTE & STRATEGY
-   - Light Mode: White bg, Gray-900 text, Gray-200 borders
-   - Dark Mode: Slate-950 bg, White text (Forced), Slate-800 borders
-*/
-
-/* --- 1. WRAPPER LAYOUT --- */
-.rich-text-wrapper {
-  border: 1px solid #e5e7eb; /* gray-200 */
-  border-radius: 0.75rem;    
-  overflow: hidden;
-  background-color: #ffffff;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-/* Dark Mode Wrapper */
-:global(.dark) .rich-text-wrapper {
-  background-color: #020617; /* slate-950 */
-  border-color: #1e293b;     /* slate-800 */
-}
-
-/* Focus State */
-.rich-text-wrapper:focus-within {
-  border-color: #000000;
-  box-shadow: 0 0 0 1px #000000;
-}
-:global(.dark) .rich-text-wrapper:focus-within {
-  border-color: #3b82f6; /* blue-500 */
-  box-shadow: 0 0 0 1px #3b82f6;
-}
-
-/* --- 2. TOOLBAR CUSTOMIZATION --- */
-:deep(.ql-toolbar.ql-snow) {
-  border: none;
-  border-bottom: 1px solid #f3f4f6; /* gray-100 */
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  padding: 12px;
-}
-:global(.dark) :deep(.ql-toolbar.ql-snow) {
-  background-color: rgba(2, 6, 23, 0.95); /* slate-950 opacity */
-  border-bottom-color: #1e293b;          /* slate-800 */
-}
-
-/* Dropdown Labels (Header/Format) */
-:deep(.ql-snow .ql-picker-label),
-:deep(.ql-snow .ql-formats) {
-  color: #6b7280; /* gray-500 */
-  font-weight: 700;
-  font-size: 0.75rem; 
-  text-transform: uppercase;
-}
-:global(.dark) :deep(.ql-snow .ql-picker-label) {
-  color: #94a3b8; /* slate-400 */
-}
-
-/* Rename 'Normal' to 'Format' */
-:deep(.ql-snow .ql-picker.ql-header .ql-picker-label::before) {
-  content: 'Format'; 
-  color: #6b7280;
-}
-:global(.dark) :deep(.ql-snow .ql-picker.ql-header .ql-picker-label::before) {
-  color: #94a3b8;
-}
-
-/* --- ICONS (SVG STROKES & FILLS) --- */
-:deep(.ql-snow .ql-stroke) { stroke: #6b7280; stroke-width: 2; }
-:deep(.ql-snow .ql-fill) { fill: #6b7280; }
-
-:global(.dark) :deep(.ql-snow .ql-stroke) { stroke: #94a3b8; } 
-:global(.dark) :deep(.ql-snow .ql-fill) { fill: #94a3b8; }
-
-/* Hover States */
-:deep(button:hover .ql-stroke),
-:deep(.ql-picker:hover .ql-picker-label) { stroke: #111827; color: #111827; }
-:deep(button:hover .ql-fill) { fill: #111827; }
-:deep(button:hover) { background-color: #f3f4f6; border-radius: 6px; }
-
-:global(.dark) :deep(button:hover .ql-stroke),
-:global(.dark) :deep(.ql-picker:hover .ql-picker-label) { stroke: #f8fafc; color: #f8fafc; }
-:global(.dark) :deep(button:hover .ql-fill) { fill: #f8fafc; }
-:global(.dark) :deep(button:hover) { background-color: #1e293b; }
-
-/* Active States */
-:deep(button.ql-active .ql-stroke) { stroke: #2563eb !important; }
-:deep(button.ql-active .ql-fill) { fill: #2563eb !important; }
-
-/* --- 3. DROPDOWN MENUS (The Popups) --- */
-:deep(.ql-picker-options) {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 0;
-}
-:global(.dark) :deep(.ql-picker-options) {
-  background-color: #0f172a !important; /* slate-900 */
-  border-color: #1e293b !important;
-}
-:global(.dark) :deep(.ql-picker-item) {
-  color: #94a3b8 !important;
-}
-:global(.dark) :deep(.ql-picker-item:hover) {
-  color: #fff !important;
-  background-color: #1e293b !important;
-}
-
-/* --- 4. EDITOR CONTENT (The Main Fix) --- */
-:deep(.ql-container.ql-snow) {
-  border: none;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-:deep(.ql-editor) {
-  min-height: 400px;
-  padding: 1.5rem;
-  line-height: 1.75;
-  color: #111827; /* Light mode default */
-}
-
-/* 🚨 THE FIX: Force White Text on all elements in Dark Mode */
-:global(.dark) :deep(.ql-editor),
-:global(.dark) :deep(.ql-editor p),
-:global(.dark) :deep(.ql-editor span),
-:global(.dark) :deep(.ql-editor li) {
-  color: #f8fafc !important; /* Pure White/Slate-50 */
-}
-
-/* Placeholder */
-:deep(.ql-editor.ql-blank::before) {
+/* Tiptap Placeholder Styling */
+:deep(.tiptap p.is-editor-empty:first-child::before) {
   color: #9ca3af;
-  font-style: normal;
-}
-:global(.dark) :deep(.ql-editor.ql-blank::before) {
-  color: #475569 !important; /* slate-600 */
-}
-
-/* --- 5. TYPOGRAPHY ELEMENTS --- */
-/* Headings */
-:deep(.ql-editor h2) {
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  color: #111827;
-}
-:global(.dark) :deep(.ql-editor h2) {
-  color: #ffffff !important;
-}
-
-:deep(.ql-editor h3) {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  color: #111827;
-}
-:global(.dark) :deep(.ql-editor h3) {
-  color: #f1f5f9 !important; /* slate-100 */
-}
-
-/* Blockquotes */
-:deep(.ql-editor blockquote) {
-  border-left: 4px solid #e5e7eb;
-  padding-left: 1rem;
-  font-style: italic;
-  color: #4b5563; /* gray-600 */
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-:global(.dark) :deep(.ql-editor blockquote) {
-  border-color: #334155;
-  color: #94a3b8 !important;
-}
-
-/* Code Blocks */
-:deep(.ql-editor pre.ql-syntax) {
-  background-color: #111827;
-  color: #f3f4f6 !important;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-family: monospace;
-  font-size: 0.875rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  overflow-x: auto;
-}
-:global(.dark) :deep(.ql-editor pre.ql-syntax) {
-  background-color: #020617; /* Darker black */
-  border: 1px solid #1e293b;
-}
-
-/* Images */
-:deep(.ql-editor img) {
-  border-radius: 0.75rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-  max-height: 500px;
-  object-fit: cover;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #f3f4f6;
-}
-:global(.dark) :deep(.ql-editor img) {
-  border-color: #1e293b;
-  opacity: 0.9;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }
 </style>

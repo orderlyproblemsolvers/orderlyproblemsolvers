@@ -32,7 +32,7 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
-// ✅ ROBUST ID EXTRACTOR
+// ✅ NEW: Robust YouTube ID Extractor
 const getYoutubeId = (url: string) => {
   if (!url) return null
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
@@ -40,7 +40,6 @@ const getYoutubeId = (url: string) => {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-// SEO & Meta
 useSeoMeta({
   title: () => `${company.value?.name} - Verified`,
   description: () => company.value?.headline || `Learn about ${company.value?.name}, a ${company.value?.industry} company in ${company.value?.location}.`,
@@ -79,7 +78,7 @@ defineOgImageComponent('OpsTemplate', {
 
 <template>
   <AppHeader/>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
     
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
        <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
@@ -93,16 +92,16 @@ defineOgImageComponent('OpsTemplate', {
          <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-start gap-8">
                
-               <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0 border-4 border-transparent dark:border-gray-800">
+               <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0">
                   <img v-if="logoUrl" :src="logoUrl" class="w-full h-full object-cover" alt="Company Logo" />
                   <span v-else>{{ fallbackInitial }}</span>
                </div>
 
                <div class="flex-1">
                   <div class="flex items-center gap-4 mb-4 flex-wrap">
-                     <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white">{{ company.name }}</h1>
-                     <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest text-white">{{ company.industry }}</span>
-                     <span class="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase tracking-widest text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">{{ company.stage }}</span>
+                     <h1 class="text-4xl md:text-5xl font-black tracking-tight">{{ company.name }}</h1>
+                     <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest">{{ company.industry }}</span>
+                     <span class="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase tracking-widest">{{ company.stage }}</span>
                   </div>
                   <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
                      {{ company.headline || 'Building the future of ' + company.industry }}
@@ -110,7 +109,7 @@ defineOgImageComponent('OpsTemplate', {
                </div>
 
                <div class="flex flex-col gap-3 w-full md:w-auto mt-4 md:mt-0">
-                  <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2 shadow-lg">
+                  <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2">
                      Visit Website
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
@@ -146,7 +145,7 @@ defineOgImageComponent('OpsTemplate', {
                <section>
                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">The Solution</h3>
                   <div 
-                    class="rich-text-content" 
+                    class="prose prose-lg prose-gray dark:prose-invert max-w-none text-gray-900 dark:text-gray-100 leading-relaxed prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400" 
                     v-if="company.description"
                     v-html="company.description.includes('<') ? company.description : `<p>${company.description}</p>`"
                   ></div>
@@ -157,6 +156,7 @@ defineOgImageComponent('OpsTemplate', {
                    <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
                    <div class="grid grid-cols-1 gap-8">
                      <div v-for="(videoUrl, index) in company.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
+                       
                        <template v-if="getYoutubeId(videoUrl)">
                          <ClientOnly>
                             <iframe 
@@ -170,10 +170,12 @@ defineOgImageComponent('OpsTemplate', {
                           ></iframe>
                          </ClientOnly>
                         </template>
-                        <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 text-gray-400 dark:text-slate-600">
+
+                        <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
                           <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                           <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
                         </div>
+
                       </div>
                     </div>
                 </section>
@@ -185,7 +187,7 @@ defineOgImageComponent('OpsTemplate', {
                        v-for="tech in company.stack" 
                        :key="tech.name" 
                        :to="`/solutions/${toSolutionSlug(tech.name)}`"
-                       class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg hover:border-black dark:hover:border-white hover:shadow-md transition-all"
+                       class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-black dark:hover:border-white hover:shadow-sm transition-all"
                      >
                         <span class="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{{ tech.name }}</span>
                         <span class="text-[10px] text-gray-400 dark:text-gray-500 uppercase group-hover:text-gray-600 dark:group-hover:text-gray-400">{{ tech.category }}</span>
@@ -239,6 +241,7 @@ defineOgImageComponent('OpsTemplate', {
                </div>
 
             </div>
+
          </div>
       </div>
 
@@ -246,118 +249,3 @@ defineOgImageComponent('OpsTemplate', {
   </div>
   <AppFooter/>
 </template>
-
-<style scoped>
-/* ✅ BASE STYLES FOR RICH TEXT */
-:deep(.rich-text-content) {
-  font-size: 1.125rem; /* text-lg */
-  line-height: 1.75rem;
-  color: #374151; /* text-gray-700 */
-}
-
-/* ☢️ NUCLEAR DARK MODE FIX 
-   This forces EVERY child element inside the rich text container 
-   to take these colors in dark mode, overriding inline styles.
-*/
-
-/* 1. Reset color for the container */
-:global(.dark) :deep(.rich-text-content) {
-  color: #f1f5f9 !important; /* Slate-100 */
-}
-
-/* 2. FORCE ALL CHILDREN (p, span, div, li) TO WHITE */
-:global(.dark) :deep(.rich-text-content *) {
-  color: #f1f5f9 !important; /* Slate-100 */
-  border-color: #334155 !important; /* Slate-700 */
-}
-
-/* 3. EXCEPTION: LINKS (Keep them Blue) */
-:global(.dark) :deep(.rich-text-content a) {
-  color: #60a5fa !important; /* Blue-400 */
-}
-
-/* 4. HEADERS (Make them brighter white) */
-:global(.dark) :deep(.rich-text-content h1),
-:global(.dark) :deep(.rich-text-content h2),
-:global(.dark) :deep(.rich-text-content h3),
-:global(.dark) :deep(.rich-text-content strong),
-:global(.dark) :deep(.rich-text-content b) {
-  color: #ffffff !important;
-}
-
-/* --- STANDARD ELEMENT STYLING (Layout/Size only) --- */
-/* Headers */
-:deep(.rich-text-content h2) {
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-:deep(.rich-text-content h3) {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-}
-
-/* Links */
-:deep(.rich-text-content a) {
-  color: #2563eb; /* blue-600 */
-  text-decoration: underline;
-  font-weight: 600;
-}
-
-/* Lists */
-:deep(.rich-text-content ul) {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-:deep(.rich-text-content ol) {
-  list-style-type: decimal;
-  padding-left: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-:deep(.rich-text-content li) {
-  margin-bottom: 0.5rem;
-}
-
-/* Blockquotes */
-:deep(.rich-text-content blockquote) {
-  border-left-width: 4px;
-  border-color: #e5e7eb; /* gray-200 */
-  padding-left: 1rem;
-  font-style: italic;
-  color: #6b7280; /* gray-500 */
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Code Blocks */
-:deep(.rich-text-content pre) {
-  background-color: #111827; /* gray-900 */
-  color: #f3f4f6 !important; /* Always light text in code block */
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-family: monospace;
-  font-size: 0.875rem;
-  overflow-x: auto;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid transparent;
-}
-
-/* Images */
-:deep(.rich-text-content img) {
-  border-radius: 0.75rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  width: 100%;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-</style>
