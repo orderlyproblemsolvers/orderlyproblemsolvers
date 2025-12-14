@@ -206,7 +206,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative w-full  overflow-hidden flex items-center justify-center bg-white dark:bg-slate-950 transition-colors duration-500">
+  <div class="relative w-full py-4 overflow-hidden flex items-center justify-center bg-white dark:bg-slate-950 transition-colors duration-500">
     
     <div 
       ref="canvasContainer" 
