@@ -288,7 +288,7 @@ const navMap = {
         >
           <div class="p-6">
             <div class="flex items-center justify-between mb-8">
-              <NuxtImg
+              <img
                 src="/img/logo.png"
                 alt="OPS Logo"
                 class="h-10 w-auto dark:invert"
