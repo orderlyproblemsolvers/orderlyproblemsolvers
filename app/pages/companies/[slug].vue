@@ -248,29 +248,50 @@ defineOgImageComponent('OpsTemplate', {
 </template>
 
 <style scoped>
-/* ✅ OPTIMIZED WYSIWYG STYLING */
-
+/* ✅ BASE STYLES FOR RICH TEXT */
 :deep(.rich-text-content) {
   font-size: 1.125rem; /* text-lg */
   line-height: 1.75rem;
   color: #374151; /* text-gray-700 */
 }
 
-/* Dark Mode Text Base - FORCED WHITE */
+/* ☢️ NUCLEAR DARK MODE FIX 
+   This forces EVERY child element inside the rich text container 
+   to take these colors in dark mode, overriding inline styles.
+*/
+
+/* 1. Reset color for the container */
 :global(.dark) :deep(.rich-text-content) {
-  color: #ffffff; /* Pure white for maximum contrast */
+  color: #f1f5f9 !important; /* Slate-100 */
 }
 
+/* 2. FORCE ALL CHILDREN (p, span, div, li) TO WHITE */
+:global(.dark) :deep(.rich-text-content *) {
+  color: #f1f5f9 !important; /* Slate-100 */
+  border-color: #334155 !important; /* Slate-700 */
+}
+
+/* 3. EXCEPTION: LINKS (Keep them Blue) */
+:global(.dark) :deep(.rich-text-content a) {
+  color: #60a5fa !important; /* Blue-400 */
+}
+
+/* 4. HEADERS (Make them brighter white) */
+:global(.dark) :deep(.rich-text-content h1),
+:global(.dark) :deep(.rich-text-content h2),
+:global(.dark) :deep(.rich-text-content h3),
+:global(.dark) :deep(.rich-text-content strong),
+:global(.dark) :deep(.rich-text-content b) {
+  color: #ffffff !important;
+}
+
+/* --- STANDARD ELEMENT STYLING (Layout/Size only) --- */
 /* Headers */
 :deep(.rich-text-content h2) {
   font-size: 1.5rem;
   font-weight: 900;
   margin-top: 2rem;
   margin-bottom: 1rem;
-  color: #111827; /* text-gray-900 */
-}
-:global(.dark) :deep(.rich-text-content h2) {
-  color: #ffffff; /* Pure white */
 }
 
 :deep(.rich-text-content h3) {
@@ -278,10 +299,6 @@ defineOgImageComponent('OpsTemplate', {
   font-weight: 700;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
-  color: #111827;
-}
-:global(.dark) :deep(.rich-text-content h3) {
-  color: #f1f5f9; /* slate-100 */
 }
 
 /* Links */
@@ -289,9 +306,6 @@ defineOgImageComponent('OpsTemplate', {
   color: #2563eb; /* blue-600 */
   text-decoration: underline;
   font-weight: 600;
-}
-:global(.dark) :deep(.rich-text-content a) {
-  color: #60a5fa; /* blue-400 - brighter blue for dark mode */
 }
 
 /* Lists */
@@ -323,15 +337,11 @@ defineOgImageComponent('OpsTemplate', {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
-:global(.dark) :deep(.rich-text-content blockquote) {
-  border-color: #334155; /* slate-700 */
-  color: #cbd5e1; /* slate-300 */
-}
 
 /* Code Blocks */
 :deep(.rich-text-content pre) {
   background-color: #111827; /* gray-900 */
-  color: #f3f4f6; /* gray-100 */
+  color: #f3f4f6 !important; /* Always light text in code block */
   padding: 1rem;
   border-radius: 0.5rem;
   font-family: monospace;
@@ -340,10 +350,6 @@ defineOgImageComponent('OpsTemplate', {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   border: 1px solid transparent;
-}
-:global(.dark) :deep(.rich-text-content pre) {
-  background-color: #020617; /* slate-950 */
-  border-color: #1e293b; /* slate-800 */
 }
 
 /* Images */
