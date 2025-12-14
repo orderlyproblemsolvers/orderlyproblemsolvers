@@ -78,7 +78,7 @@ const navMap = {
 
 <template>
   <header
-    class="sticky top-2 z-40 w-[90dvw] border-b border rounded-sm border-gray-100 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md transition-colors duration-300"
+    class="sticky top-0 z-40 w-full border-b border-gray-100 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md transition-colors duration-300"
   >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center justify-between">
