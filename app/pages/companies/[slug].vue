@@ -40,6 +40,7 @@ const getYoutubeId = (url: string) => {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
+// SEO & Meta (Unchanged)
 useSeoMeta({
   title: () => `${company.value?.name} - Verified`,
   description: () => company.value?.headline || `Learn about ${company.value?.name}, a ${company.value?.industry} company in ${company.value?.location}.`,
@@ -78,7 +79,7 @@ defineOgImageComponent('OpsTemplate', {
 
 <template>
   <AppHeader/>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
     
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
        <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
@@ -92,16 +93,16 @@ defineOgImageComponent('OpsTemplate', {
          <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-start gap-8">
                
-               <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0">
+               <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0 border-4 border-transparent dark:border-gray-800">
                   <img v-if="logoUrl" :src="logoUrl" class="w-full h-full object-cover" alt="Company Logo" />
                   <span v-else>{{ fallbackInitial }}</span>
                </div>
 
                <div class="flex-1">
                   <div class="flex items-center gap-4 mb-4 flex-wrap">
-                     <h1 class="text-4xl md:text-5xl font-black tracking-tight">{{ company.name }}</h1>
-                     <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest">{{ company.industry }}</span>
-                     <span class="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase tracking-widest">{{ company.stage }}</span>
+                     <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white">{{ company.name }}</h1>
+                     <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest text-white">{{ company.industry }}</span>
+                     <span class="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase tracking-widest text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">{{ company.stage }}</span>
                   </div>
                   <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
                      {{ company.headline || 'Building the future of ' + company.industry }}
@@ -109,7 +110,7 @@ defineOgImageComponent('OpsTemplate', {
                </div>
 
                <div class="flex flex-col gap-3 w-full md:w-auto mt-4 md:mt-0">
-                  <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2">
+                  <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2 shadow-lg">
                      Visit Website
                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                   </a>
@@ -169,7 +170,7 @@ defineOgImageComponent('OpsTemplate', {
                           ></iframe>
                          </ClientOnly>
                         </template>
-                        <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
+                        <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 text-gray-400 dark:text-slate-600">
                           <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                           <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
                         </div>
@@ -184,7 +185,7 @@ defineOgImageComponent('OpsTemplate', {
                        v-for="tech in company.stack" 
                        :key="tech.name" 
                        :to="`/solutions/${toSolutionSlug(tech.name)}`"
-                       class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-black dark:hover:border-white hover:shadow-sm transition-all"
+                       class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg hover:border-black dark:hover:border-white hover:shadow-md transition-all"
                      >
                         <span class="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{{ tech.name }}</span>
                         <span class="text-[10px] text-gray-400 dark:text-gray-500 uppercase group-hover:text-gray-600 dark:group-hover:text-gray-400">{{ tech.category }}</span>
@@ -238,7 +239,6 @@ defineOgImageComponent('OpsTemplate', {
                </div>
 
             </div>
-
          </div>
       </div>
 
@@ -248,9 +248,9 @@ defineOgImageComponent('OpsTemplate', {
 </template>
 
 <style scoped>
-/* ✅ WYSIWYG STYLING REPAIR
-  Since Tailwind resets basic HTML styles (headers, lists, etc.), 
-  we use this deep selector to manually re-apply them to the rich text content.
+/* ✅ OPTIMIZED WYSIWYG STYLING
+   We use :global(.dark) to correctly target the user's dark mode toggle 
+   even when using scoped styles.
 */
 
 :deep(.rich-text-content) {
@@ -259,9 +259,9 @@ defineOgImageComponent('OpsTemplate', {
   color: #374151; /* text-gray-700 */
 }
 
-/* Dark Mode Text */
-:deep(.dark .rich-text-content) {
-  color: #d1d5db; /* text-gray-300 */
+/* Dark Mode Text Base */
+:global(.dark) :deep(.rich-text-content) {
+  color: #cbd5e1; /* slate-300 - lighter than gray-300 for contrast on slate bg */
 }
 
 /* Headers */
@@ -272,8 +272,8 @@ defineOgImageComponent('OpsTemplate', {
   margin-bottom: 1rem;
   color: #111827; /* text-gray-900 */
 }
-:deep(.dark .rich-text-content h2) {
-  color: #ffffff;
+:global(.dark) :deep(.rich-text-content h2) {
+  color: #f8fafc; /* slate-50 */
 }
 
 :deep(.rich-text-content h3) {
@@ -283,8 +283,8 @@ defineOgImageComponent('OpsTemplate', {
   margin-bottom: 0.75rem;
   color: #111827;
 }
-:deep(.dark .rich-text-content h3) {
-  color: #ffffff;
+:global(.dark) :deep(.rich-text-content h3) {
+  color: #f1f5f9; /* slate-100 */
 }
 
 /* Links */
@@ -293,8 +293,8 @@ defineOgImageComponent('OpsTemplate', {
   text-decoration: underline;
   font-weight: 600;
 }
-:deep(.dark .rich-text-content a) {
-  color: #60a5fa; /* blue-400 */
+:global(.dark) :deep(.rich-text-content a) {
+  color: #60a5fa; /* blue-400 - brighter blue for dark mode */
 }
 
 /* Lists */
@@ -326,9 +326,9 @@ defineOgImageComponent('OpsTemplate', {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
-:deep(.dark .rich-text-content blockquote) {
-  border-color: #374151; /* gray-700 */
-  color: #9ca3af; /* gray-400 */
+:global(.dark) :deep(.rich-text-content blockquote) {
+  border-color: #334155; /* slate-700 */
+  color: #94a3b8; /* slate-400 */
 }
 
 /* Code Blocks */
@@ -342,6 +342,11 @@ defineOgImageComponent('OpsTemplate', {
   overflow-x: auto;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+}
+:global(.dark) :deep(.rich-text-content pre) {
+  background-color: #020617; /* slate-950 */
+  border-color: #1e293b; /* slate-800 */
 }
 
 /* Images */
