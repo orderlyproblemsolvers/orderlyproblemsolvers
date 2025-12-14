@@ -32,7 +32,7 @@ const toSolutionSlug = (name: string) => {
   return name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
 }
 
-// ✅ NEW: Robust YouTube ID Extractor
+// ✅ ROBUST ID EXTRACTOR
 const getYoutubeId = (url: string) => {
   if (!url) return null
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
@@ -156,7 +156,6 @@ defineOgImageComponent('OpsTemplate', {
                    <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
                    <div class="grid grid-cols-1 gap-8">
                      <div v-for="(videoUrl, index) in company.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
-                       
                        <template v-if="getYoutubeId(videoUrl)">
                          <ClientOnly>
                             <iframe 
@@ -170,12 +169,10 @@ defineOgImageComponent('OpsTemplate', {
                           ></iframe>
                          </ClientOnly>
                         </template>
-
                         <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400">
                           <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                           <span class="text-xs font-bold uppercase tracking-wider">Video Unavailable</span>
                         </div>
-
                       </div>
                     </div>
                 </section>
@@ -250,7 +247,12 @@ defineOgImageComponent('OpsTemplate', {
   <AppFooter/>
 </template>
 
-<style>
+<style scoped>
+/* ✅ WYSIWYG STYLING REPAIR
+  Since Tailwind resets basic HTML styles (headers, lists, etc.), 
+  we use this deep selector to manually re-apply them to the rich text content.
+*/
+
 :deep(.rich-text-content) {
   font-size: 1.125rem; /* text-lg */
   line-height: 1.75rem;
@@ -350,4 +352,4 @@ defineOgImageComponent('OpsTemplate', {
   width: 100%;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
-</style>>
+</style>
