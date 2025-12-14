@@ -1,13 +1,49 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
-import { Editor, EditorContent } from '@tiptap/vue-3'
+import { onMounted, onBeforeUnmount, shallowRef, watch, ref } from 'vue'
+import { Editor, EditorContent, Extension } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
+import TextStyle from '@tiptap/extension-text-style'
+import { Color } from '@tiptap/extension-color'
 
 const config = useRuntimeConfig()
+
+// --- CUSTOM FONT SIZE EXTENSION ---
+// This allows us to set the font-size style attribute on text
+const FontSize = Extension.create({
+  name: 'fontSize',
+  addOptions() { return { types: ['textStyle'] } },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: element => element.style.fontSize || null,
+            renderHTML: attributes => {
+              if (!attributes.fontSize) return {}
+              return { style: `font-size: ${attributes.fontSize}` }
+            },
+          },
+        },
+      },
+    ]
+  },
+  addCommands() {
+    return {
+      setFontSize: (fontSize) => ({ chain }) => {
+        return chain().setMark('textStyle', { fontSize }).run()
+      },
+      unsetFontSize: () => ({ chain }) => {
+        return chain().setMark('textStyle', { fontSize: null }).run()
+      },
+    }
+  },
+})
 
 const props = defineProps<{
   modelValue: string
@@ -33,9 +69,13 @@ onMounted(() => {
       content: props.modelValue,
       extensions: [
         StarterKit.configure({
-          heading: { levels: [2, 3] } 
+          heading: { levels: [2, 3] },
+          // We keep codeBlock enabled in StarterKit, we just need to style it in CSS
         }),
         Underline,
+        TextStyle,
+        Color,
+        FontSize,
         Link.configure({
           openOnClick: false,
           HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
@@ -65,7 +105,7 @@ onBeforeUnmount(() => {
   editor.value?.destroy()
 })
 
-// Watch for external changes (e.g. loading draft)
+// Watch for external changes
 watch(() => props.modelValue, (newValue) => {
   if (!editor.value) return
   const isSame = editor.value.getHTML() === newValue
@@ -125,7 +165,6 @@ const uploadAndInsertImage = async (file: File) => {
 <template>
   <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
     
-    <!-- TOOLBAR -->
     <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
       
       <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
@@ -135,6 +174,28 @@ const uploadAndInsertImage = async (file: File) => {
       <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
       <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
       <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
+      
+      <div class="relative flex items-center justify-center p-2 rounded hover:bg-gray-200 cursor-pointer" title="Text Color">
+        <span :style="{ color: editor.getAttributes('textStyle').color || '#000000' }" class="font-bold text-xs select-none">A</span>
+        <input 
+          type="color" 
+          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+          @input="editor.chain().focus().setColor(($event.target as HTMLInputElement).value).run()"
+          :value="editor.getAttributes('textStyle').color || '#000000'"
+        >
+      </div>
+
+      <select 
+        @change="editor.chain().focus().setFontSize(($event.target as HTMLSelectElement).value).run()" 
+        class="h-8 text-xs border border-gray-200 rounded bg-transparent px-1 outline-none hover:bg-gray-200 cursor-pointer"
+      >
+        <option value="" disabled selected>Size</option>
+        <option value="12px">Small</option>
+        <option value="16px">Normal</option>
+        <option value="20px">Large</option>
+        <option value="28px">Huge</option>
+      </select>
+
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
       <button @click.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[btnBase, editor.isActive('heading', { level: 2 }) ? btnActive : '']">H2</button>
@@ -142,13 +203,20 @@ const uploadAndInsertImage = async (file: File) => {
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
       <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
-         <!-- List Icon -->
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
       <button @click.prevent="editor.chain().focus().toggleOrderedList().run()" :class="[btnBase, editor.isActive('orderedList') ? btnActive : '']">
-         <!-- Ordered List Icon -->
          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h12M7 12h12M7 17h12M3 7h.01M3 12h.01M3 17h.01"></path></svg>
       </button>
+
+      <button 
+        @click.prevent="editor.chain().focus().toggleCodeBlock().run()" 
+        :class="[btnBase, editor.isActive('codeBlock') ? btnActive : '']"
+        title="Code Block"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+      </button>
+
       <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
       <div class="w-px h-4 bg-gray-300 mx-1"></div>
 
@@ -168,7 +236,6 @@ const uploadAndInsertImage = async (file: File) => {
       <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
     </div>
 
-    <!-- EDITOR CONTENT -->
     <div v-if="editor" class="min-h-[400px]">
        <editor-content :editor="editor" />
     </div>
@@ -188,5 +255,24 @@ const uploadAndInsertImage = async (file: File) => {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* 3. CODE BLOCK STYLING 
+   This makes the code blocks look like dark terminals.
+*/
+:deep(.tiptap pre) {
+  background: #0d0d0d;
+  color: #FFF;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+:deep(.tiptap code) {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
 }
 </style>
