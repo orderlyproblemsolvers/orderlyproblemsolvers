@@ -10,6 +10,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 // No script needed here unless you have global layout logic
+useJsonld(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Orderly Problem Solvers',
+  url: 'https://orderlyproblemsolvers.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://orderlyproblemsolvers.com/search?q={search_term_string}',
+    'query-input': 'required name=search_term_string'
+  }
+}))
 </script>
