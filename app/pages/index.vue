@@ -2,8 +2,8 @@
    <div>
     <LazyHeroSection/>
     <FeatureDrop/>
-    <EcosystemGrid/>
-    <SolversStream/>
+    <LazyEcosystemGrid/>
+    <LazySolversStream/>
     <OPSSection/>
     <SubmissionCTA/>
    </div>
