@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
 const props = withDefaults(defineProps<{
   title?: string
   description?: string
@@ -14,102 +12,102 @@ const props = withDefaults(defineProps<{
   type: 'General'
 })
 
-// Helper to determine the "Category" tag displayed at the top
-const categoryLabel = computed(() => {
-  if (props.type === 'Person') return 'Expert Profile'
-  if (props.type === 'Company') return 'Solution Provider'
-  if (props.type === 'Story') return 'Insight'
-  return 'OPS Index'
-})
+// Current Date for that "Daily Briefing" feel
+const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 </script>
 
 <template>
-  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #020617; color: #ffffff; position: relative; overflow: hidden; font-family: sans-serif;">
+  <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #0f172a; color: #ffffff; font-family: sans-serif; position: relative;">
     
-    <div style="position: absolute; top: -300px; left: 50%; transform: translateX(-50%); width: 1000px; height: 600px; background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%); filter: blur(80px);"></div>
-    
-    <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 60px 60px; mask-image: linear-gradient(to bottom, black 40%, transparent 100%);"></div>
+    <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
-    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to right, #3b82f6, #8b5cf6, #3b82f6);"></div>
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: #2563eb;"></div>
 
+    <div style="flex: 1; display: flex; flex-direction: column; padding: 60px 80px; position: relative; z-index: 10;">
 
-    <div style="flex: 1; display: flex; flex-direction: column; padding: 64px; position: relative; z-index: 10;">
-      
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: auto;">
-        <div style="display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 20px; border-radius: 99px;">
-          <img src="/img/logo-sm.png" width="24" height="24" style="filter: brightness(0) invert(1);" />
-          <span style="font-size: 18px; font-weight: 600; letter-spacing: 0.05em; color: #94a3b8; text-transform: uppercase;">
-             OPS <span style="color: #475569; margin: 0 8px;">/</span> {{ categoryLabel }}
-          </span>
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 24px; margin-bottom: 48px;">
+        
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+           <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 24px; height: 24px; background: #2563eb;"></div>
+              <span style="font-size: 20px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">OPS Index.</span>
+           </div>
         </div>
+
+        <span style="font-size: 20px; font-weight: 400; color: #94a3b8; font-family: serif; font-style: italic;">
+          {{ type === 'General' ? 'Intelligence Brief' : type }} &mdash; {{ dateStr }}
+        </span>
       </div>
 
-      <div v-if="type === 'Story'" style="display: flex; flex-direction: column; gap: 32px; max-width: 1000px;">
-        <h1 style="font-size: 80px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin: 0; background: linear-gradient(to bottom right, #ffffff, #cbd5e1); background-clip: text; color: transparent;">
-          {{ title }}
-        </h1>
-        <p style="font-size: 36px; line-height: 1.4; color: #94a3b8; font-weight: 400; border-left: 4px solid #3b82f6; padding-left: 32px;">
-          {{ description }}
-        </p>
-      </div>
 
-      <div v-else-if="type === 'Person'" style="display: flex; align-items: center; gap: 56px;">
-        <div style="position: relative; display: flex;">
-          <div style="position: absolute; inset: -4px; border-radius: 50%; background: linear-gradient(to bottom right, #3b82f6, #8b5cf6); opacity: 0.4; filter: blur(10px);"></div>
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        
+        <div v-if="type === 'Story'" style="display: flex; flex-direction: column; gap: 32px;">
+          <h1 style="font-family: serif; font-size: 80px; font-weight: 400; line-height: 1.1; margin: 0; color: #ffffff;">
+            {{ title }}
+          </h1>
+          <div style="width: 100px; height: 2px; background: #2563eb;"></div>
+          <p style="font-size: 32px; line-height: 1.5; color: #cbd5e1; max-width: 900px;">
+            {{ description }}
+          </p>
+        </div>
+
+        <div v-else-if="type === 'Person'" style="display: flex; align-items: flex-start; gap: 60px;">
           <img 
             v-if="image"
             :src="image" 
             width="280" height="280"
-            style="border-radius: 50%; object-fit: cover; border: 4px solid #1e293b; position: relative;"
+            style="object-fit: cover; border: 1px solid rgba(255,255,255,0.2);"
           />
+          
+          <div style="display: flex; flex-direction: column; justify-content: center; padding-top: 10px;">
+             <span style="font-size: 24px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #2563eb; margin-bottom: 16px;">
+               Expert Profile
+             </span>
+             <h1 style="font-family: serif; font-size: 72px; font-weight: 400; line-height: 1; margin: 0 0 16px 0; color: #ffffff;">
+               {{ title }}
+             </h1>
+             <p style="font-size: 32px; color: #94a3b8; margin: 0;">
+               {{ role }} <span v-if="companyName" style="color: #64748b; margin: 0 8px;">/</span> {{ companyName }}
+             </p>
+          </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-           <h1 style="font-size: 84px; font-weight: 900; letter-spacing: -0.04em; margin: 0; line-height: 1; color: white;">
-             {{ title }}
-           </h1>
-           <div style="display: flex; align-items: center; gap: 16px;">
-              <span style="font-size: 36px; font-weight: 500; color: #3b82f6;">{{ role }}</span>
-              <span v-if="companyName" style="font-size: 36px; color: #475569;">at</span>
-              <span v-if="companyName" style="font-size: 36px; font-weight: 600; color: #e2e8f0;">{{ companyName }}</span>
-           </div>
-           <div style="display: flex; gap: 12px; margin-top: 16px;">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.1);"></div>
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.1);"></div>
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.1);"></div>
-           </div>
+        <div v-else style="display: flex; align-items: center; gap: 60px;">
+          <div style="display: flex; align-items: center; justify-content: center; width: 240px; height: 240px; background: #ffffff; border: 1px solid #e2e8f0;">
+             <img 
+               v-if="image"
+               :src="image" 
+               width="160" height="160"
+               style="object-fit: contain;"
+             />
+             <div v-else style="color: #0f172a; font-weight: 900; font-size: 48px;">OPS</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+             <div style="display: flex; align-items: center; gap: 16px;">
+                <h1 style="font-family: serif; font-size: 80px; font-weight: 400; margin: 0; line-height: 1; color: #ffffff;">
+                  {{ title }}
+                </h1>
+                <div style="padding: 4px 12px; border: 1px solid #2563eb; color: #2563eb; font-size: 18px; font-weight: 600; text-transform: uppercase;">
+                  Listed
+                </div>
+             </div>
+             <p style="font-size: 30px; font-weight: 400; color: #cbd5e1; max-width: 800px; line-height: 1.4;">
+               {{ description }}
+             </p>
+          </div>
         </div>
+
       </div>
 
-      <div v-else style="display: flex; align-items: flex-start; gap: 48px;">
-        <div style="display: flex; align-items: center; justify-content: center; width: 240px; height: 240px; background: linear-gradient(to bottom right, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.1); border-radius: 48px; box-shadow: 0 24px 48px -12px rgba(0,0,0,0.5);">
-          <img 
-            v-if="image"
-            :src="image" 
-            width="140" height="140"
-            style="object-fit: contain; border-radius: 12px;"
-          />
-        </div>
 
-        <div style="display: flex; flex-direction: column; gap: 16px; padding-top: 16px;">
-           <h1 style="font-size: 88px; font-weight: 900; letter-spacing: -0.05em; margin: 0; line-height: 1; color: white;">
-             {{ title }}
-           </h1>
-           <p style="font-size: 32px; font-weight: 400; color: #94a3b8; max-width: 750px; line-height: 1.4;">
-             {{ description }}
-           </p>
-           
-           <div style="display: flex; align-items: center; gap: 12px; margin-top: 12px;">
-             <div style="height: 1px; width: 40px; background: #3b82f6;"></div>
-             <span style="font-size: 24px; font-weight: 600; color: #3b82f6; letter-spacing: 0.05em; text-transform: uppercase;">View Solution</span>
-           </div>
-        </div>
-      </div>
-
-
-      <div style="margin-top: auto; display: flex; justify-content: flex-end; align-items: flex-end;">
-         <span style="font-size: 28px; font-weight: 600; color: #475569; letter-spacing: -0.02em;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 24px; margin-top: 48px;">
+         <span style="font-size: 24px; color: #64748b; font-weight: 500;">
            orderlyproblemsolvers.com
+         </span>
+         <span style="font-size: 24px; color: #2563eb; font-weight: 600;">
+           &rarr; Read the analysis
          </span>
       </div>
 
