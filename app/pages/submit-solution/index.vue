@@ -126,204 +126,273 @@ ${form.value.metric}
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
-    <div class="sticky top-20 z-20 bg-white/90 dark:bg-slate-950/90 backdrop-blur border-b border-gray-100 dark:border-slate-800 transition-colors">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Submission Portal</span>
-        <div class="hidden md:flex items-center gap-3 text-xs font-mono">
-          <span :class="currentStep >= 1 ? 'text-black dark:text-white font-bold' : 'text-gray-300 dark:text-gray-600'">01. IDENTITY</span>
-          <span class="text-gray-300 dark:text-gray-700">/</span>
-          <span :class="currentStep >= 2 ? 'text-black dark:text-white font-bold' : 'text-gray-300 dark:text-gray-600'">02. CONTEXT</span>
-          <span class="text-gray-300 dark:text-gray-700">/</span>
-          <span :class="currentStep >= 3 ? 'text-black dark:text-white font-bold' : 'text-gray-300 dark:text-gray-600'">03. IMPACT</span>
-          <span class="text-gray-300 dark:text-gray-700">/</span>
-          <span :class="currentStep >= 4 ? 'text-black dark:text-white font-bold' : 'text-gray-300 dark:text-gray-600'">04. REVIEW</span>
+    <div class="sticky top-0 z-30 bg-white/95 dark:bg-[#051C2C]/95 backdrop-blur border-b border-gray-200 dark:border-gray-800 transition-colors">
+      <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+        
+        <div class="flex items-center gap-4">
+           <span class="w-2 h-2 bg-[#00A9F4] animate-pulse rounded-full"></span>
+           <span class="text-xs font-bold uppercase tracking-[0.2em] text-[#051C2C] dark:text-white">Application Protocol</span>
         </div>
-        <div class="md:hidden text-xs font-bold text-gray-900 dark:text-white">Step {{ currentStep }} of {{ totalSteps }}</div>
+
+        <div class="hidden md:flex items-center gap-8">
+          <div v-for="step in totalSteps" :key="step" class="flex items-center gap-2">
+             <span 
+               class="font-mono text-sm font-bold"
+               :class="currentStep === step ? 'text-[#00A9F4]' : (currentStep > step ? 'text-[#051C2C] dark:text-white' : 'text-gray-300 dark:text-gray-700')"
+             >
+               0{{ step }}
+             </span>
+             <span v-if="step < totalSteps" class="text-gray-200 dark:text-gray-800 text-xs">//</span>
+          </div>
+        </div>
+
+        <div class="md:hidden font-mono text-xs text-[#00A9F4]">
+          STEP 0{{ currentStep }} / 0{{ totalSteps }}
+        </div>
+
       </div>
-      <div class="h-1 bg-gray-100 dark:bg-slate-800 w-full">
-        <div class="h-full bg-blue-600 transition-all duration-500 ease-out" :style="{ width: `${progress}%` }"></div>
-      </div>
+      
+      <div class="absolute bottom-0 left-0 h-[2px] bg-[#00A9F4] transition-all duration-500 ease-in-out" :style="{ width: `${progress}%` }"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
       
-      <div v-if="isSuccess" class="max-w-lg mx-auto text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mx-auto mb-8">
-          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        </div>
-        <h2 class="text-4xl font-black tracking-tighter mb-4 text-gray-900 dark:text-white">Received.</h2>
-        <p class="text-gray-500 dark:text-gray-400 mb-10">Your profile is in the verification queue. Our editorial team reviews all submissions within 48 hours.</p>
-        
-        <div class="bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 p-6 rounded-lg text-left font-mono text-sm mb-10 relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600"></div>
-          <div class="flex justify-between mb-2 border-b border-gray-200 dark:border-slate-800 pb-2">
-            <span class="text-gray-400 dark:text-gray-500">TICKET ID</span>
-            <span class="font-bold text-gray-900 dark:text-gray-200">{{ submissionId }}</span>
-          </div>
-          <div class="flex justify-between mb-2">
-            <span class="text-gray-400 dark:text-gray-500">TYPE</span>
-            <span class="uppercase text-gray-900 dark:text-gray-200">{{ form.type }}</span>
-          </div>
-          <div class="flex justify-between mb-2">
-            <span class="text-gray-400 dark:text-gray-500">ENTITY</span>
-            <span class="font-bold text-gray-900 dark:text-gray-200">{{ form.name }}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-gray-400 dark:text-gray-500">STATUS</span>
-            <span class="text-orange-500 dark:text-orange-400 font-bold">PENDING REVIEW</span>
-          </div>
-        </div>
+      <div v-if="isSuccess" class="max-w-xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div class="border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0A253A] p-8 lg:p-12 relative overflow-hidden">
+           
+           <div class="absolute top-0 left-0 w-full h-2 bg-[radial-gradient(circle,transparent_50%,#051C2C_50%)] dark:bg-[radial-gradient(circle,transparent_50%,#fff_50%)] bg-[length:16px_16px] opacity-10"></div>
 
-        <NuxtLink to="/" class="inline-block px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-bold text-sm rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
-          Return to Index
-        </NuxtLink>
+           <div class="text-center mb-10">
+              <div class="inline-flex items-center justify-center w-16 h-16 border-2 border-[#00A9F4] rounded-full text-[#00A9F4] mb-6">
+                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+              <h2 class="text-4xl font-serif text-[#051C2C] dark:text-white mb-2">Submission Received</h2>
+              <p class="font-mono text-xs text-gray-500 uppercase tracking-widest">Logged at {{ new Date().toLocaleTimeString() }}</p>
+           </div>
+
+           <div class="space-y-4 font-mono text-sm border-t border-b border-gray-200 dark:border-gray-700 py-6 mb-8 border-dashed">
+              <div class="flex justify-between">
+                 <span class="text-gray-500 uppercase">Ref ID</span>
+                 <span class="font-bold text-[#051C2C] dark:text-white">{{ submissionId }}</span>
+              </div>
+              <div class="flex justify-between">
+                 <span class="text-gray-500 uppercase">Entity</span>
+                 <span class="font-bold text-[#051C2C] dark:text-white">{{ form.name }}</span>
+              </div>
+              <div class="flex justify-between">
+                 <span class="text-gray-500 uppercase">Category</span>
+                 <span class="font-bold text-[#051C2C] dark:text-white uppercase">{{ form.type }}</span>
+              </div>
+              <div class="flex justify-between">
+                 <span class="text-gray-500 uppercase">Status</span>
+                 <span class="font-bold text-[#00A9F4] uppercase animate-pulse">Queued for Verification</span>
+              </div>
+           </div>
+
+           <div class="text-center">
+              <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+                 Our editorial board reviews all submissions within 48 hours. You will be notified via {{ form.email }} upon approval.
+              </p>
+              <NuxtLink to="/" class="inline-block px-8 py-4 bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity">
+                 Return to Index
+              </NuxtLink>
+           </div>
+        </div>
       </div>
 
-      <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
         
         <div class="hidden lg:block lg:col-span-4">
-          <div class="sticky top-48">
-            <h1 class="text-5xl font-black tracking-tighter mb-6 leading-[0.9] text-gray-900 dark:text-white">
-              ADD TO <br/> THE INDEX.
+          <div class="sticky top-32">
+            <h1 class="text-6xl font-serif text-[#051C2C] dark:text-white mb-6 leading-[0.9]">
+              Add to<br/> <span class="text-[#00A9F4]">The Index.</span>
             </h1>
-            <p class="text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+            <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 leading-relaxed font-light">
               Join the definitive directory of problem solvers. Verification grants you visibility to investors, partners, and talent.
             </p>
             
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/50 p-6 rounded-xl">
-               <h4 class="text-blue-900 dark:text-blue-300 font-bold text-sm mb-2">Why "Impact" matters?</h4>
-               <p class="text-blue-700 dark:text-blue-200 text-xs leading-relaxed">
-                  We don't just list names. We list solutions. Providing a clear case study (The Problem & The Fix) increases your chance of verification by 80%.
+            <div class="border-l-2 border-[#00A9F4] pl-6 py-2">
+               <h4 class="font-bold text-xs uppercase tracking-widest text-[#051C2C] dark:text-white mb-2">Guidance</h4>
+               <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                 We don't just list names. We list solutions. Providing a clear case study (The Problem & The Fix) increases your chance of verification by 80%.
                </p>
             </div>
           </div>
         </div>
 
-        <div class="lg:col-span-8 max-w-2xl">
-          
-          <form @submit.prevent class="space-y-10">
+        <div class="lg:col-span-8">
+          <form @submit.prevent class="space-y-12">
             
-            <div v-if="currentStep === 1" class="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
+            <div v-if="currentStep === 1" class="space-y-10 animate-in slide-in-from-right-8 fade-in duration-500">
               
               <div>
-                <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4">I am listing a...</label>
-                <div class="grid grid-cols-2 gap-4">
+                <label class="block font-mono text-xs text-gray-400 uppercase mb-4">Select Entity Type</label>
+                <div class="grid grid-cols-2 gap-6">
                   <div 
                     @click="form.type = 'person'" 
-                    class="cursor-pointer border-2 rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all" 
-                    :class="form.type === 'person' ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500' : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600'"
+                    class="cursor-pointer h-32 border flex flex-col items-center justify-center transition-all duration-300" 
+                    :class="form.type === 'person' ? 'border-[#00A9F4] bg-[#00A9F4]/5' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'"
                   >
-                    <svg class="w-8 h-8 mb-3" :class="form.type === 'person' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    <span class="font-bold text-sm" :class="form.type === 'person' ? 'text-blue-900 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'">Person</span>
+                    <span class="text-2xl mb-2" :class="form.type === 'person' ? 'text-[#00A9F4]' : 'text-gray-300'">●</span>
+                    <span class="font-bold text-xs uppercase tracking-widest" :class="form.type === 'person' ? 'text-[#051C2C] dark:text-white' : 'text-gray-400'">Individual</span>
                   </div>
                   <div 
                     @click="form.type = 'company'" 
-                    class="cursor-pointer border-2 rounded-xl p-6 flex flex-col items-center justify-center text-center transition-all" 
-                    :class="form.type === 'company' ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 dark:border-blue-500' : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600'"
+                    class="cursor-pointer h-32 border flex flex-col items-center justify-center transition-all duration-300" 
+                    :class="form.type === 'company' ? 'border-[#00A9F4] bg-[#00A9F4]/5' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400'"
                   >
-                    <svg class="w-8 h-8 mb-3" :class="form.type === 'company' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                    <span class="font-bold text-sm" :class="form.type === 'company' ? 'text-blue-900 dark:text-blue-300' : 'text-gray-500 dark:text-gray-400'">Company</span>
+                    <span class="text-2xl mb-2" :class="form.type === 'company' ? 'text-[#00A9F4]' : 'text-gray-300'">■</span>
+                    <span class="font-bold text-xs uppercase tracking-widest" :class="form.type === 'company' ? 'text-[#051C2C] dark:text-white' : 'text-gray-400'">Organization</span>
                   </div>
                 </div>
               </div>
 
-              <div class="space-y-6">
+              <div class="space-y-8">
                 <div>
-                  <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">{{ form.type === 'person' ? 'Full Name' : 'Company Name' }}</label>
-                  <input v-model="form.name" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. PayStack" />
+                  <label class="block font-mono text-xs text-gray-400 uppercase mb-2">Official Name</label>
+                  <input v-model="form.name" type="text" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-lg font-serif text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="e.g. John Doe OR PayStack" />
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
-                    <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">Email Address</label>
-                    <input v-model="form.email" type="email" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="admin@example.com" />
+                    <label class="block font-mono text-xs text-gray-400 uppercase mb-2">Contact Email</label>
+                    <input v-model="form.email" type="email" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="admin@example.com" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">Website / Portfolio</label>
-                    <input v-model="form.website" type="url" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="https://" />
+                    <label class="block font-mono text-xs text-gray-400 uppercase mb-2">Public URL</label>
+                    <input v-model="form.website" type="url" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="https://" />
                   </div>
                 </div>
+
                 <div v-if="form.type === 'person'">
-                  <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">Current Role</label>
-                  <input v-model="form.role" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. Senior Engineer" />
+                  <label class="block font-mono text-xs text-gray-400 uppercase mb-2">Current Title</label>
+                  <input v-model="form.role" type="text" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="e.g. Lead Systems Architect" />
                 </div>
               </div>
             </div>
 
-            <div v-if="currentStep === 2" class="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div v-if="currentStep === 2" class="space-y-10 animate-in slide-in-from-right-8 fade-in duration-500">
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">Industry</label>
+                  <label class="block font-mono text-xs text-gray-400 uppercase mb-2">Sector</label>
                   <div class="relative">
-                    <select v-model="form.industry" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm appearance-none cursor-pointer text-gray-900 dark:text-white">
-                      <option value="" disabled selected>Select...</option>
+                    <select v-model="form.industry" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white focus:border-[#00A9F4] focus:outline-none transition-colors appearance-none rounded-none cursor-pointer">
+                      <option value="" disabled selected>SELECT VERTICAL</option>
                       <option v-for="ind in industries" :key="ind" :value="ind">{{ ind }}</option>
                     </select>
-                    <svg class="w-4 h-4 text-gray-400 absolute right-4 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <span class="absolute right-0 top-3 pointer-events-none text-gray-400">▼</span>
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">HQ Location</label>
-                  <input v-model="form.location" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. Lagos" />
+                  <label class="block font-mono text-xs text-gray-400 uppercase mb-2">HQ Location</label>
+                  <input v-model="form.location" type="text" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="e.g. Lagos, Nigeria" />
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">Tech Stack / Tools</label>
-                <div class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus-within:bg-white dark:focus-within:bg-black focus-within:border-black dark:focus-within:border-white transition-colors flex flex-wrap gap-2 min-h-[50px]">
-                  <span v-for="(tag, index) in form.stack" :key="index" class="bg-black dark:bg-white text-white dark:text-black text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+                <label class="block font-mono text-xs text-gray-400 uppercase mb-4">Technical Stack</label>
+                <div class="border border-gray-200 dark:border-gray-700 p-4 min-h-[100px] flex flex-wrap content-start gap-2 bg-gray-50 dark:bg-[#0A253A]">
+                  <span v-for="(tag, index) in form.stack" :key="index" class="bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] font-mono text-[10px] uppercase px-3 py-1 flex items-center gap-2">
                     {{ tag }}
-                    <button @click="removeTag(index)" class="hover:text-gray-300 dark:hover:text-gray-500"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                    <button @click="removeTag(index)" class="hover:text-[#00A9F4]">×</button>
                   </span>
-                  <input v-model="form.stackInput" @keydown.enter.prevent="addTag" @keydown.backspace="form.stackInput === '' && form.stack.pop()" type="text" class="bg-transparent outline-none text-sm flex-1 min-w-[120px] text-gray-900 dark:text-white placeholder-gray-400" placeholder="Type & Enter..." />
+                  <input 
+                    v-model="form.stackInput" 
+                    @keydown.enter.prevent="addTag" 
+                    @keydown.backspace="form.stackInput === '' && form.stack.pop()" 
+                    type="text" 
+                    class="bg-transparent outline-none font-mono text-xs flex-1 min-w-[150px] text-[#051C2C] dark:text-white placeholder-gray-400 uppercase" 
+                    placeholder="TYPE TOOL & ENTER..." 
+                  />
                 </div>
               </div>
             </div>
 
-            <div v-if="currentStep === 3" class="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
+            <div v-if="currentStep === 3" class="space-y-10 animate-in slide-in-from-right-8 fade-in duration-500">
               
-              <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800/30 p-4 rounded-lg mb-6">
-                 <p class="text-xs text-yellow-800 dark:text-yellow-200 font-medium">Describe a specific challenge you solved. This helps us verify your expertise.</p>
+              
+
+              <div class="bg-blue-50 dark:bg-[#00A9F4]/10 border-l-4 border-[#00A9F4] p-6">
+                 <p class="font-serif italic text-lg text-[#051C2C] dark:text-white leading-relaxed">
+                   "We define verification by results, not hype. Be specific about the engineering constraint and the measurable outcome."
+                 </p>
               </div>
 
-              <div>
-                 <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">The Challenge (Constraint)</label>
-                 <textarea v-model="form.problem" rows="2" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. Our payment API was timing out at 50 TPS during Black Friday..."></textarea>
-              </div>
+              <div class="space-y-8">
+                <div>
+                   <label class="block font-mono text-xs text-gray-400 uppercase mb-2">01. The Challenge (Constraint)</label>
+                   <textarea v-model="form.problem" rows="3" class="w-full bg-transparent border border-gray-200 dark:border-gray-700 p-4 text-sm text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-600 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="Describe the specific technical or operational bottleneck..."></textarea>
+                </div>
 
-              <div>
-                 <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">The Fix (Technical Approach)</label>
-                 <textarea v-model="form.solution" rows="3" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. We migrated the ledger to Rust and implemented Redis caching for read-heavy endpoints..."></textarea>
-              </div>
+                <div>
+                   <label class="block font-mono text-xs text-gray-400 uppercase mb-2">02. The Fix (Approach)</label>
+                   <textarea v-model="form.solution" rows="4" class="w-full bg-transparent border border-gray-200 dark:border-gray-700 p-4 text-sm text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-600 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="Detail the architecture, stack choice, or strategy used..."></textarea>
+                </div>
 
-              <div>
-                 <label class="block text-xs font-bold text-gray-900 dark:text-white mb-2">The Outcome (Metric)</label>
-                 <input v-model="form.metric" type="text" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white outline-none transition-colors text-sm text-gray-900 dark:text-white placeholder-gray-400" placeholder="e.g. Scaled to 5,000 TPS with 0 downtime." />
+                <div>
+                   <label class="block font-mono text-xs text-gray-400 uppercase mb-2">03. The Outcome (Metric)</label>
+                   <input v-model="form.metric" type="text" class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-3 text-sm font-bold text-[#051C2C] dark:text-white placeholder-gray-300 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors rounded-none" placeholder="e.g. Reduced latency by 400ms." />
+                </div>
               </div>
             </div>
 
-            <div v-if="currentStep === 4" class="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
-              <div class="bg-gray-50 dark:bg-slate-900 p-6 rounded-xl border border-gray-200 dark:border-slate-800">
-                <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-widest mb-6 border-b border-gray-200 dark:border-slate-800 pb-4">Review</h3>
-                <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 text-sm text-gray-600 dark:text-gray-400">
-                  <div><dt class="text-gray-400 dark:text-gray-500 text-xs uppercase font-bold mb-1">Type</dt><dd class="font-bold capitalize text-gray-900 dark:text-white">{{ form.type }}</dd></div>
-                  <div><dt class="text-gray-400 dark:text-gray-500 text-xs uppercase font-bold mb-1">Name</dt><dd class="font-bold text-gray-900 dark:text-white">{{ form.name }}</dd></div>
-                  <div><dt class="text-gray-400 dark:text-gray-500 text-xs uppercase font-bold mb-1">Location</dt><dd class="font-bold text-gray-900 dark:text-white">{{ form.location }}</dd></div>
-                  <div class="md:col-span-2"><dt class="text-gray-400 dark:text-gray-500 text-xs uppercase font-bold mb-1">Stack</dt><dd class="flex flex-wrap gap-2"><span v-for="tag in form.stack" :key="tag" class="bg-gray-200 dark:bg-slate-800 text-gray-700 dark:text-gray-300 text-[10px] font-bold px-2 py-1 rounded">{{ tag }}</span></dd></div>
-                </dl>
+            <div v-if="currentStep === 4" class="space-y-10 animate-in slide-in-from-right-8 fade-in duration-500">
+              
+              <div class="border border-gray-200 dark:border-gray-700 p-8">
+                <h3 class="font-mono text-xs font-bold uppercase tracking-widest mb-8 text-[#00A9F4]">Data Verification</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12">
+                   <div>
+                     <span class="block font-mono text-[10px] text-gray-400 uppercase mb-1">Classification</span>
+                     <span class="block font-bold text-lg text-[#051C2C] dark:text-white capitalize">{{ form.type }}</span>
+                   </div>
+                   <div>
+                     <span class="block font-mono text-[10px] text-gray-400 uppercase mb-1">Entity Name</span>
+                     <span class="block font-bold text-lg text-[#051C2C] dark:text-white">{{ form.name }}</span>
+                   </div>
+                   <div>
+                     <span class="block font-mono text-[10px] text-gray-400 uppercase mb-1">Origin</span>
+                     <span class="block font-bold text-lg text-[#051C2C] dark:text-white">{{ form.location }}</span>
+                   </div>
+                   <div class="md:col-span-2">
+                     <span class="block font-mono text-[10px] text-gray-400 uppercase mb-2">Infrastructure</span>
+                     <div class="flex flex-wrap gap-2">
+                        <span v-for="tag in form.stack" :key="tag" class="border border-gray-300 dark:border-gray-600 px-2 py-1 text-[10px] font-mono uppercase">{{ tag }}</span>
+                     </div>
+                   </div>
+                </div>
               </div>
-              <div class="flex items-start gap-3">
-                <input type="checkbox" id="terms" class="mt-1 w-4 h-4 rounded border-gray-300 dark:border-slate-700 text-black focus:ring-black accent-black dark:accent-white" />
-                <label for="terms" class="text-sm text-gray-600 dark:text-gray-400">I confirm this info is accurate. I agree to the <NuxtLink to="/legal/terms" class="underline text-black dark:text-white">Terms</NuxtLink>.</label>
+
+              <div class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-[#0A253A]">
+                <input type="checkbox" id="terms" class="mt-1 w-4 h-4 rounded-none border-gray-400 text-[#00A9F4] focus:ring-0 cursor-pointer" />
+                <label for="terms" class="text-sm text-gray-500 dark:text-gray-400 font-light cursor-pointer select-none">
+                  I certify that the information provided is accurate and representative of actual work. I agree to the <NuxtLink to="/legal/terms" class="underline decoration-[#00A9F4] text-[#051C2C] dark:text-white">Terms of Service</NuxtLink>.
+                </label>
               </div>
+
             </div>
 
-            <div class="flex items-center gap-4 pt-6 border-t border-gray-100 dark:border-slate-800">
-              <button v-if="currentStep > 1" @click="prevStep" type="button" class="px-6 py-3 rounded-lg border border-gray-200 dark:border-slate-700 text-sm font-bold hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-900 dark:text-white transition-colors">Back</button>
-              <button @click="nextStep" type="button" class="flex-1 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors flex items-center justify-center gap-2" :disabled="isSubmitting">
-                <span v-if="isSubmitting">Submitting...</span>
-                <span v-else>{{ currentStep === totalSteps ? 'Submit Solution' : 'Continue' }}</span>
+            <div class="flex items-center gap-6 pt-8 border-t border-gray-100 dark:border-gray-800">
+              <button 
+                v-if="currentStep > 1" 
+                @click="prevStep" 
+                type="button" 
+                class="px-8 py-4 border border-gray-200 dark:border-gray-700 text-xs font-bold uppercase tracking-widest hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+              >
+                Previous
+              </button>
+              
+              <button 
+                @click="nextStep" 
+                type="button" 
+                class="flex-1 px-8 py-4 bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] text-xs font-bold uppercase tracking-widest hover:bg-[#00A9F4] dark:hover:bg-[#00A9F4] hover:text-white dark:hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                :disabled="isSubmitting"
+              >
+                <span v-if="isSubmitting">Processing...</span>
+                <span v-else>{{ currentStep === totalSteps ? 'Confirm Submission' : 'Proceed to Next' }}</span>
               </button>
             </div>
 

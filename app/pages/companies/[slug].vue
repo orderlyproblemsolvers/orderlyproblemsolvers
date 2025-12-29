@@ -24,7 +24,7 @@ const fallbackInitial = computed(() => {
 })
 
 const formatDate = (dateStr: string | Date | null) => {
-  if (!dateStr) return ''
+  if (!dateStr) return '—'
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 }
 
@@ -51,222 +51,257 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
     <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
-       <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
+       <div class="flex flex-col items-center gap-4">
+         <div class="w-16 h-16 border-t-2 border-[#00A9F4] rounded-full animate-spin"></div>
+         <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Loading Intelligence...</span>
+       </div>
     </div>
 
     <div v-else-if="company">
       
-      <div class="relative bg-gray-900 dark:bg-black text-white pt-32 pb-16 overflow-hidden transition-colors duration-300">
-         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
-         <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-start gap-8">
-               <div class="w-24 h-24 rounded-2xl bg-white flex items-center justify-center text-4xl font-black text-gray-900 shadow-2xl overflow-hidden shrink-0 border-4 border-transparent dark:border-gray-800">
-                  <img v-if="logoUrl" :src="logoUrl" class="w-full h-full object-cover" />
-                  <span v-else>{{ fallbackInitial }}</span>
+      <div class="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0A253A]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 pt-20 pb-12">
+           
+           <div class="flex flex-col md:flex-row items-start gap-10">
+              <div class="shrink-0 w-32 h-32 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-lg">
+                 <img v-if="logoUrl" :src="logoUrl" class="w-24 h-24 object-contain" :alt="company.name" />
+                 <span v-else class="text-5xl font-serif font-black text-gray-300 dark:text-gray-700">{{ fallbackInitial }}</span>
+              </div>
+
+              <div class="flex-1">
+                 <div class="flex flex-wrap items-center gap-4 mb-4 text-xs font-bold uppercase tracking-widest">
+                    <span class="text-[#00A9F4]">{{ company.industry }}</span>
+                    <span class="text-gray-300 dark:text-gray-600">/</span>
+                    <span class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                       {{ company.stage }}
+                       <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    </span>
+                 </div>
+
+                 <h1 class="text-5xl md:text-7xl font-serif text-[#051C2C] dark:text-white mb-6 leading-[0.9]">
+                   {{ company.name }}
+                 </h1>
+                 
+                 <p class="text-xl md:text-2xl font-light text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl">
+                   {{ company.headline }}
+                 </p>
+              </div>
+              
+              <div class="mt-4 md:mt-0">
+                 <a 
+                   v-if="company.website" 
+                   :href="company.website" 
+                   target="_blank" 
+                   class="group flex items-center gap-3 px-6 py-4 bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] text-xs font-bold uppercase tracking-widest hover:bg-[#00A9F4] dark:hover:bg-[#00A9F4] hover:text-white dark:hover:text-white transition-all duration-300 shadow-xl"
+                 >
+                   Visit Site
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                 </a>
+              </div>
+           </div>
+
+        </div>
+      </div>
+
+      <div class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#051C2C]">
+         <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-gray-200 dark:divide-gray-800 border-x border-gray-200 dark:border-gray-800">
+               
+               <div class="p-6">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">HQ Location</span>
+                  <span class="font-mono text-lg text-[#051C2C] dark:text-white">{{ company.location }}</span>
                </div>
-               <div class="flex-1">
-                  <div class="flex items-center gap-4 mb-4 flex-wrap">
-                     <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white">{{ company.name }}</h1>
-                     <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest text-white">{{ company.industry }}</span>
-                     <span class="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase tracking-widest text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">{{ company.stage }}</span>
-                  </div>
-                  <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">{{ company.headline }}</p>
+               
+               <div class="p-6">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Founded</span>
+                  <span class="font-mono text-lg text-[#051C2C] dark:text-white">{{ formatDate(company.createdAt) }}</span>
                </div>
-               <div class="flex flex-col gap-3 w-full md:w-auto mt-4 md:mt-0">
-                  <a v-if="company.website" :href="company.website" target="_blank" class="px-6 py-3 bg-white text-black text-sm font-bold rounded-lg hover:bg-gray-200 transition-colors text-center flex items-center justify-center gap-2 shadow-lg">
-                     Visit Website
-                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                  </a>
+
+               <div class="p-6">
+                  <span class="block text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Team Size</span>
+                  <span class="font-mono text-lg text-[#051C2C] dark:text-white">{{ company.team?.length > 0 ? company.team.length : '—' }} Verified</span>
                </div>
+
+               <div class="p-6 flex items-center justify-center bg-gray-50 dark:bg-white/5">
+                  <span class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#00A9F4]">
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                     Verified Entity
+                  </span>
+               </div>
+
             </div>
          </div>
       </div>
 
-      <div class="border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
-         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-wrap divide-x divide-gray-200 dark:divide-slate-800">
-               <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Location</p>
-                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ company.location }}</p>
-               </div>
-               <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Added On</p>
-                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ formatDate(company.createdAt) }}</p>
-               </div>
-               <div class="px-8 py-6 flex-1 text-center md:text-left">
-                  <p class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-1">Team Size</p>
-                  <p class="text-lg font-black text-gray-900 dark:text-white">{{ company.team?.length > 0 ? company.team.length + '+' : 'N/A' }}</p>
-               </div>
-            </div>
-         </div>
-      </div>
-
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div class="max-w-7xl mx-auto px-6 lg:px-12 py-20">
+         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
             
-            <div class="lg:col-span-8 space-y-16">
+            <div class="lg:col-span-8 space-y-20">
                
                <section>
-                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">The Solution</h3>
+                  <h3 class="text-xs font-bold text-[#00A9F4] uppercase tracking-[0.2em] mb-8 border-b border-gray-200 dark:border-gray-800 pb-2">
+                    Executive Summary
+                  </h3>
                   
                   <div 
-                    class="tiptap-content" 
+                    class="tiptap-content max-w-none font-serif" 
                     v-if="company.description"
                     v-html="company.description.includes('<') ? company.description : `<p>${company.description}</p>`"
                   ></div>
-                  
-                  <p v-else class="text-gray-500 dark:text-gray-400 italic">No description provided.</p>
+                  <p v-else class="text-gray-400 italic font-serif text-lg">No summary provided.</p>
                </section>
 
-               <section v-if="company.videos && company.videos.length > 0">
-                   <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">In Action</h3>
-                   <div class="grid grid-cols-1 gap-8">
-                     <div v-for="(videoUrl, index) in company.videos" :key="index" class="aspect-video bg-black rounded-xl overflow-hidden shadow-sm relative group border border-gray-200 dark:border-slate-800">
-                       <template v-if="getYoutubeId(videoUrl)">
-                         <ClientOnly>
-<iframe 
-                            class="w-full h-full"
-                            :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&loop=1&playlist=${getYoutubeId(videoUrl)}&origin=https://orderlyproblemsolvers.com`" 
-                            title="YouTube video player" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            loading="lazy"
-                          ></iframe>
-                         </ClientOnly>
-                        </template>
-                        <div v-else class="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-slate-900 text-gray-400"><span class="text-xs font-bold">Video Unavailable</span></div>
-                      </div>
-                    </div>
-                </section>
-
                <section v-if="company.stack && company.stack.length > 0">
-                  <h3 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Tech Stack</h3>
+                  <h3 class="text-xs font-bold text-[#00A9F4] uppercase tracking-[0.2em] mb-8 border-b border-gray-200 dark:border-gray-800 pb-2">
+                    Technology Infrastructure
+                  </h3>
+
+
                   <div class="flex flex-wrap gap-3">
-                     <NuxtLink v-for="tech in company.stack" :key="tech.name" :to="`/solutions/${toSolutionSlug(tech.name)}`" class="group flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg hover:border-black dark:hover:border-white transition-all">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{{ tech.name }}</span>
-                        <span class="text-[10px] text-gray-400 dark:text-gray-500 uppercase group-hover:text-gray-600 dark:group-hover:text-gray-400">{{ tech.category }}</span>
+                     <NuxtLink 
+                        v-for="tech in company.stack" 
+                        :key="tech.name" 
+                        :to="`/solutions/${toSolutionSlug(tech.name)}`"
+                        class="group flex items-center gap-3 px-4 py-2 border border-gray-200 dark:border-gray-700 hover:border-[#00A9F4] dark:hover:border-[#00A9F4] transition-colors bg-white dark:bg-transparent"
+                     >
+                        <span class="text-sm font-mono font-bold text-[#051C2C] dark:text-white">{{ tech.name }}</span>
+                        <span class="w-px h-3 bg-gray-300 dark:bg-gray-700"></span>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider group-hover:text-[#00A9F4]">{{ tech.category }}</span>
                      </NuxtLink>
                   </div>
                </section>
+
             </div>
 
-            <div class="lg:col-span-4 space-y-12">
-               <div class="p-6 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl shadow-sm">
-                  <div class="flex items-center justify-between mb-6">
-                     <h3 class="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">Team</h3>
-                     <NuxtLink to="/people" class="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline">View Directory</NuxtLink>
+            <div class="lg:col-span-4 space-y-16">
+               
+               <section>
+                  <div class="flex items-center justify-between mb-8 border-b border-gray-200 dark:border-gray-800 pb-2">
+                     <h3 class="text-xs font-bold text-[#00A9F4] uppercase tracking-[0.2em]">Leadership</h3>
+                     <NuxtLink to="/people" class="text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-[#051C2C] dark:hover:text-white transition-colors">Directory &rarr;</NuxtLink>
                   </div>
-                  <div v-if="company.team && company.team.length > 0" class="space-y-4">
-                     <NuxtLink v-for="person in company.team" :key="person.slug" :to="`/people/${person.slug}`" class="flex items-center gap-3 group">
-                        <img :src="person.image || `https://ui-avatars.com/api/?name=${person.name}&background=random`" class="w-10 h-10 rounded-full object-cover" />
+
+                  <div v-if="company.team && company.team.length > 0" class="flex flex-col">
+                     <NuxtLink 
+                        v-for="person in company.team" 
+                        :key="person.slug" 
+                        :to="`/people/${person.slug}`" 
+                        class="group flex items-center gap-4 py-4 border-b border-gray-100 dark:border-gray-800 last:border-0"
+                     >
+                        <img 
+                           :src="person.image || `https://ui-avatars.com/api/?name=${person.name}&background=051C2C&color=fff`" 
+                           class="w-12 h-12 grayscale group-hover:grayscale-0 transition-all duration-300 object-cover border border-gray-200 dark:border-gray-700" 
+                        />
                         <div>
-                           <p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600">{{ person.name }}</p>
-                           <p class="text-xs text-gray-500 dark:text-gray-400">{{ person.role }}</p>
+                           <p class="text-sm font-bold font-serif text-[#051C2C] dark:text-white group-hover:text-[#00A9F4] transition-colors mb-0.5">
+                              {{ person.name }}
+                           </p>
+                           <p class="text-xs text-gray-500 uppercase tracking-wider">{{ person.role }}</p>
                         </div>
                      </NuxtLink>
                   </div>
-                  <div v-else class="text-center py-6"><p class="text-xs text-gray-400">No verified team members.</p></div>
-               </div>
+                  <div v-else class="p-6 bg-gray-50 dark:bg-[#0A253A] border border-gray-100 dark:border-white/5 text-center">
+                     <span class="text-xs text-gray-400">No verified members listed.</span>
+                  </div>
+               </section>
+
+               <section v-if="company.videos && company.videos.length > 0">
+                  <h3 class="text-xs font-bold text-[#00A9F4] uppercase tracking-[0.2em] mb-8 border-b border-gray-200 dark:border-gray-800 pb-2">
+                    Media Assets
+                  </h3>
+                  <div class="flex flex-col gap-6">
+                     <div 
+                        v-for="(videoUrl, index) in company.videos" 
+                        :key="index" 
+                        class="w-full aspect-video bg-black border border-gray-800 relative group"
+                     >
+                        <template v-if="getYoutubeId(videoUrl)">
+                           <ClientOnly>
+                              <iframe 
+                                 class="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                                 :src="`https://www.youtube.com/embed/${getYoutubeId(videoUrl)}?rel=0&modestbranding=1&loop=0`" 
+                                 title="YouTube video player" 
+                                 frameborder="0" 
+                                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                 referrerpolicy="strict-origin-when-cross-origin"
+                                 allowfullscreen
+                              ></iframe>
+                           </ClientOnly>
+                        </template>
+                        <div v-else class="w-full h-full flex items-center justify-center text-gray-600">
+                           <span class="text-xs font-mono uppercase">Asset Unavailable</span>
+                        </div>
+                     </div>
+                  </div>
+               </section>
+
             </div>
+
          </div>
       </div>
+
     </div>
   </div>
 </template>
 
-<style>
-/* 1. Base Styles for Tiptap Content */
+<style scoped>
+/* EDITORIAL TYPOGRAPHY FOR DESCRIPTION */
 .tiptap-content {
-  font-size: 1.125rem; /* 18px */
+  font-size: 1.125rem; 
   line-height: 1.8;
-  color: #374151; /* gray-700 */
 }
 
 /* Headers */
-.tiptap-content h2 { font-size: 1.75rem; font-weight: 800; color: #111827; margin-top: 2rem; margin-bottom: 1rem; }
-.tiptap-content h3 { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.tiptap-content :deep(h2) { 
+  font-family: serif; 
+  font-size: 1.75rem; 
+  color: #051C2C; 
+  margin-top: 2rem; 
+  margin-bottom: 1rem; 
+}
+.tiptap-content :deep(h3) { 
+  font-family: serif; 
+  font-size: 1.5rem; 
+  color: #051C2C; 
+  margin-top: 1.5rem; 
+  margin-bottom: 0.75rem; 
+}
 
 /* Links */
-.tiptap-content a { color: #2563eb; text-decoration: underline; font-weight: 600; cursor: pointer; }
+.tiptap-content :deep(a) { 
+  color: #00A9F4; 
+  text-decoration: underline; 
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
 
-/* Lists */
-.tiptap-content ul { list-style-type: disc; padding-left: 1.5rem; margin: 1rem 0; }
-.tiptap-content ol { list-style-type: decimal; padding-left: 1.5rem; margin: 1rem 0; }
-
-/* Blockquotes */
-.tiptap-content blockquote {
-  border-left: 4px solid #e5e7eb;
-  padding-left: 1rem;
+/* Blockquotes: Editorial Style */
+.tiptap-content :deep(blockquote) {
+  border-left: 2px solid #00A9F4;
+  padding-left: 1.5rem;
+  font-family: serif;
   font-style: italic;
-  color: #6b7280;
-  margin: 1.5rem 0;
-}
-
-/* Images */
-.tiptap-content img {
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-size: 1.25rem;
+  color: #555;
   margin: 2rem 0;
-  max-width: 100%;
 }
 
-/* 2. CODE BLOCKS (Dark Terminal Look) */
-.tiptap-content pre {
-  background: #0d0d0d;
-  color: #FFF;
-  font-family: 'JetBrainsMono', monospace;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin: 1.5rem 0;
-  overflow-x: auto;
-}
-.tiptap-content code {
-  color: inherit;
-  background: none;
-  font-size: 0.875rem;
+/* Images: Sharp edges */
+.tiptap-content :deep(img) {
+  border-radius: 0;
+  margin: 2rem 0;
+  width: 100%;
 }
 
-/* 3. DARK MODE OVERRIDES (The "Nuclear" Fix) */
-/* We target 'html.dark' to ensure this only applies when dark mode is active */
-
-html.dark .tiptap-content {
-  color: #f1f5f9 !important; /* Slate-100 */
+/* DARK MODE OVERRIDES */
+html.dark .tiptap-content :deep(h2),
+html.dark .tiptap-content :deep(h3) {
+  color: #ffffff;
 }
-
-/* Force standard text elements to white */
-html.dark .tiptap-content p, 
-html.dark .tiptap-content span:not([style*="color"]), /* Don't override spans that have specific color styles from the picker */
-html.dark .tiptap-content li {
-  color: #f1f5f9; 
-}
-
-/* Headers - Bright White */
-html.dark .tiptap-content h1,
-html.dark .tiptap-content h2,
-html.dark .tiptap-content h3,
-html.dark .tiptap-content strong,
-html.dark .tiptap-content b {
-  color: #ffffff !important;
-}
-
-/* Links - Keep Blue */
-html.dark .tiptap-content a {
-  color: #60a5fa !important; /* Blue-400 */
-}
-
-/* Blockquotes */
-html.dark .tiptap-content blockquote {
-  border-color: #334155; /* Slate-700 */
-  color: #cbd5e1; /* Slate-300 */
-}
-
-/* Code Blocks - Ensure they stay dark */
-html.dark .tiptap-content pre {
-  background: #020617; /* Slate-950 */
-  border: 1px solid #1e293b;
+html.dark .tiptap-content :deep(blockquote) {
+  color: #9ca3af;
 }
 </style>

@@ -34,99 +34,105 @@ const socialLinks = [
 </script>
 
 <template>
-  <footer class="bg-gray-50 dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 pt-16 pb-8 transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <footer class="bg-white dark:bg-[#051C2C] border-t border-gray-900 dark:border-white/10 transition-colors duration-500">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
       
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 mb-16 items-stretch">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-l border-gray-200 dark:border-white/5">
         
-        <div class="lg:col-span-8 lg:pr-12 flex flex-col justify-center">
-          
-          <div class="mb-10">
-            <NuxtLink to="/">
-              <img src="/img/logo.png" alt="OPS Logo" class="h-12 w-auto object-contain dark:invert" />
-            </NuxtLink>
+        <div class="pt-16 pb-12 pr-8 border-r border-gray-200 dark:border-white/5 pl-8 md:pl-0 lg:pl-0 border-l-0 lg:border-l-0">
+          <div class="mb-8">
+             <NuxtLink to="/" class="block">
+                <img src="/img/logo.png" alt="Logo" class="h-12 dark:invert" />
+             </NuxtLink>
           </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-            
-            <div>
-              <h4 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Discover</h4>
-              <ul class="space-y-4">
-                <li v-for="link in footerNav.discover" :key="link.label">
-                  <NuxtLink 
-                    :to="link.to" 
-                    class="text-sm transition-colors"
-                    :class="link.isHighlight ? 'text-blue-600 dark:text-blue-400 font-bold hover:text-blue-800 dark:hover:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white'"
-                  >
-                    {{ link.label }}
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Stories</h4>
-              <ul class="space-y-4">
-                <li v-for="link in footerNav.stories" :key="link.label">
-                  <NuxtLink to="/stories" class="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
-                    {{ link.label }}
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 class="text-xs font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Company</h4>
-              <ul class="space-y-4">
-                <li v-for="link in footerNav.company" :key="link.label" class="flex items-center gap-2">
-                  <NuxtLink to="/about" class="text-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
-                    {{ link.label }}
-                  </NuxtLink>
-                  <span v-if="link.isBadge" class="bg-black dark:bg-white text-white dark:text-black text-[10px] font-bold px-1.5 py-0.5 rounded-sm">NEW</span>
-                </li>
-              </ul>
-            </div>
-
+          <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-light mb-8">
+            Orderly Problem Solvers is the definitive directory and intelligence platform for emerging market innovation.
+          </p>
+          <div class="text-xs font-bold text-gray-300 dark:text-gray-600 uppercase tracking-widest">
+            Abuja, Nigeria 
           </div>
         </div>
 
-        <div class="lg:col-span-4 flex flex-col h-full min-h-[300px] lg:min-h-0 mt-8 lg:mt-0">
-           <div class="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 p-10 text-white h-full flex flex-col justify-center overflow-hidden rounded-2xl">
-              
-              <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <div class="pt-16 pb-12 px-8 border-r border-gray-200 dark:border-white/5">
+          <h4 class="text-xs font-bold text-[#051C2C] dark:text-white uppercase tracking-[0.2em] mb-8">
+            Directory
+          </h4>
+          <ul class="space-y-4">
+            <li v-for="link in footerNav.discover" :key="link.label">
+              <NuxtLink 
+                :to="link.to" 
+                class="group flex items-center text-sm transition-colors duration-300"
+                :class="link.isHighlight ? 'text-[#00A9F4] font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-[#051C2C] dark:hover:text-white'"
+              >
+                {{ link.label }}
+                <svg v-if="link.isHighlight" class="w-3 h-3 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
 
-              <div class="relative z-10 mb-10">
-                <h3 class="text-3xl font-black tracking-tight uppercase mb-2 leading-none">Join the<br/>Community.</h3>
-                <p class="text-gray-400 text-sm font-medium">Follow the journey of 10,000+ problem solvers.</p>
-              </div>
+        <div class="pt-16 pb-12 px-8 border-r border-gray-200 dark:border-white/5">
+          <h4 class="text-xs font-bold text-[#051C2C] dark:text-white uppercase tracking-[0.2em] mb-8">
+            Insights
+          </h4>
+          <ul class="space-y-4 mb-10">
+            <li v-for="link in footerNav.stories" :key="link.label">
+              <NuxtLink :to="link.to" class="text-sm text-gray-600 dark:text-gray-400 hover:text-[#051C2C] dark:hover:text-white transition-colors duration-300">
+                {{ link.label }}
+              </NuxtLink>
+            </li>
+          </ul>
 
-              <div class="relative z-10 flex items-center gap-8">
-                 <a 
-                   v-for="social in socialLinks" 
-                   :key="social.name"
-                   :href="social.url" 
-                   class="text-gray-500 hover:text-white transition-all duration-300 group"
-                   :aria-label="social.name"
-                 >
-                    <svg class="w-12 h-12 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
-                       <path :d="social.icon"></path>
-                    </svg>
-                 </a>
-              </div>
+          <h4 class="text-xs font-bold text-[#051C2C] dark:text-white uppercase tracking-[0.2em] mb-8">
+            Firm
+          </h4>
+          <ul class="space-y-4">
+            <li v-for="link in footerNav.company" :key="link.label" class="flex items-center gap-2">
+              <NuxtLink :to="link.to" class="text-sm text-gray-600 dark:text-gray-400 hover:text-[#051C2C] dark:hover:text-white transition-colors duration-300">
+                {{ link.label }}
+              </NuxtLink>
+              <span v-if="link.isBadge" class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A9F4] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#00A9F4]"></span>
+              </span>
+            </li>
+          </ul>
+        </div>
 
-           </div>
+        <div class="pt-16 pb-12 px-8 border-r border-gray-200 dark:border-white/5">
+           <h4 class="text-xs font-bold text-[#051C2C] dark:text-white uppercase tracking-[0.2em] mb-8">
+            Connect
+          </h4>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 font-light">
+             Follow the journey of 10,000+ problem solvers building the future.
+          </p>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <a 
+              v-for="social in socialLinks" 
+              :key="social.name"
+              :href="social.url" 
+              class="flex items-center gap-3 group text-gray-500 dark:text-gray-500 hover:text-[#051C2C] dark:hover:text-white transition-colors duration-300"
+              :aria-label="social.name"
+            >
+               <svg class="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                  <path :d="social.icon"></path>
+               </svg>
+               <span class="text-xs font-medium">{{ social.name }}</span>
+            </a>
+          </div>
         </div>
 
       </div>
 
-      <div class="border-t border-gray-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <p class="text-xs text-gray-400 dark:text-gray-500 font-medium">
+      <div class="border-t border-gray-200 dark:border-white/5 py-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <p class="text-xs text-gray-400 font-mono">
           &copy; {{ currentYear }} Orderly Problem Solvers.
         </p>
         
-        <div class="flex gap-6">
-          <NuxtLink to="/legal/privacy" class="text-xs text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors">Privacy Policy</NuxtLink>
-          <NuxtLink to="/legal/terms" class="text-xs text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors">Terms of Service</NuxtLink>
+        <div class="flex gap-8">
+          <NuxtLink to="/legal/privacy" class="text-xs text-gray-400 hover:text-[#051C2C] dark:hover:text-white transition-colors">Privacy Policy</NuxtLink>
+          <NuxtLink to="/legal/terms" class="text-xs text-gray-400 hover:text-[#051C2C] dark:hover:text-white transition-colors">Terms of Service</NuxtLink>
         </div>
       </div>
 

@@ -11,12 +11,10 @@ const activeTab = ref('all') // 'all', 'company', 'person', 'story'
 const isLoading = ref(false)
 
 // DATA FETCHING
-// We use 'immediate: false' because we want to control when the fetch happens (debounce)
-// But if there is a query param on load, we fetch immediately.
 const { data: results, refresh, status } = await useFetch('/api/search', {
   query: computed(() => ({ q: searchQuery.value })),
   immediate: !!route.query.q, 
-  watch: false // Disable auto-watch to implement custom debounce
+  watch: false 
 })
 
 // DEBOUNCE LOGIC
@@ -26,10 +24,10 @@ const handleInput = () => {
   isLoading.value = true
   clearTimeout(timeout)
   
-  // Update URL without reloading the page so users can share the link
+  // Update URL
   router.replace({ query: { ...route.query, q: searchQuery.value } })
 
-  // Wait 500ms after typing stops before hitting the API
+  // Wait 500ms
   timeout = setTimeout(async () => {
     if (searchQuery.value.length >= 2) {
       await refresh()
@@ -38,7 +36,7 @@ const handleInput = () => {
   }, 500)
 }
 
-// FILTERING LOGIC (Client-side filter for speed)
+// FILTERING LOGIC
 const displayResults = computed(() => {
   if (!results.value) return []
   if (activeTab.value === 'all') return results.value
@@ -46,10 +44,10 @@ const displayResults = computed(() => {
 })
 
 const tabs = [
-  { id: 'all', label: 'All Results' },
-  { id: 'company', label: 'Companies' },
-  { id: 'person', label: 'People' },
-  { id: 'story', label: 'Stories' }
+  { id: 'all', label: 'All Records' },
+  { id: 'company', label: 'Entities' },
+  { id: 'person', label: 'Talent' },
+  { id: 'story', label: 'Journal' }
 ]
 
 // NAVIGATION HELPER
@@ -68,94 +66,104 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
-    <!-- SEARCH HEADER -->
-    <div class="bg-gray-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-0 sticky top-0 z-20 transition-colors duration-300">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="sticky top-0 z-30 bg-white/95 dark:bg-[#051C2C]/95 backdrop-blur border-b border-gray-200 dark:border-gray-800 transition-colors">
+      <div class="max-w-5xl mx-auto px-6 lg:px-12 pt-24 pb-8">
         
-        <!-- Input Field -->
-        <div class="relative mb-8">
+        <div class="relative group">
+           <div class="absolute top-1/2 -translate-y-1/2 left-0 font-mono text-xl text-gray-300 dark:text-gray-600 select-none">
+             <span v-if="isLoading" class="animate-pulse text-[#00A9F4]">>_</span>
+             <span v-else>></span>
+           </div>
+           
            <input 
              v-model="searchQuery"
              @input="handleInput"
              type="text" 
-             placeholder="Search companies, people, or stories..." 
-             class="w-full pl-14 pr-4 py-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm text-lg focus:outline-none focus:border-black dark:focus:border-white transition-colors placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-white"
+             placeholder="ENTER QUERY..." 
+             class="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-4 pl-10 text-2xl md:text-4xl font-mono font-bold uppercase text-[#051C2C] dark:text-white placeholder-gray-200 dark:placeholder-gray-700 focus:border-[#00A9F4] focus:outline-none transition-colors"
              autofocus
            />
            
-           <!-- Search Icon (Default) -->
-           <svg v-if="!isLoading && status !== 'pending'" class="w-6 h-6 text-gray-400 dark:text-gray-500 absolute left-5 top-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-           
-           <!-- Loading Spinner -->
-           <div v-else class="w-6 h-6 border-2 border-gray-200 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin absolute left-5 top-4.5"></div>
+           <div v-if="isLoading || status === 'pending'" class="absolute right-0 top-1/2 -translate-y-1/2">
+              <div class="w-5 h-5 border-2 border-[#00A9F4] border-t-transparent rounded-full animate-spin"></div>
+           </div>
         </div>
         
-        <!-- Tabs -->
-        <div class="flex gap-8 overflow-x-auto no-scrollbar">
-           <button 
-             v-for="tab in tabs" 
-             :key="tab.id"
-             @click="activeTab = tab.id"
-             class="pb-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap px-1"
-             :class="activeTab === tab.id ? 'border-black dark:border-white text-black dark:text-white' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'"
-           >
-             {{ tab.label }}
-           </button>
+        <div class="mt-8 flex items-center justify-between">
+           <div class="flex gap-4 overflow-x-auto no-scrollbar">
+              <button 
+                v-for="tab in tabs" 
+                :key="tab.id"
+                @click="activeTab = tab.id"
+                class="text-xs font-bold uppercase tracking-widest px-3 py-1 transition-all"
+                :class="activeTab === tab.id ? 'bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C]' : 'text-gray-400 hover:text-[#051C2C] dark:hover:text-white'"
+              >
+                {{ tab.label }}
+              </button>
+           </div>
+           
+           <div class="hidden md:block font-mono text-[10px] text-gray-400 uppercase tracking-widest">
+              {{ displayResults.length }} Matches Found
+           </div>
         </div>
+
       </div>
     </div>
 
-    <!-- RESULTS AREA -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-5xl mx-auto px-6 lg:px-12 py-12">
       
-      <!-- LIST OF RESULTS -->
-      <div v-if="displayResults.length > 0" class="space-y-4">
+      <div v-if="displayResults.length > 0" class="flex flex-col border-t border-gray-200 dark:border-gray-800">
          <NuxtLink 
            v-for="item in displayResults" 
            :key="item.id + item.type" 
            :to="getLink(item)"
-           class="group flex items-center gap-4 p-5 border border-gray-100 dark:border-slate-800 rounded-xl hover:border-blue-200 dark:hover:border-blue-800 hover:shadow-md transition-all cursor-pointer bg-white dark:bg-slate-900"
+           class="group flex items-start gap-6 py-8 border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-[#0A253A] transition-colors cursor-pointer"
          >
-            
-            <!-- Icon / Thumb -->
-            <div class="w-12 h-12 rounded-full bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-gray-400 shrink-0 border border-gray-100 dark:border-slate-700 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-               <svg v-if="item.type === 'person'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-               <svg v-if="item.type === 'company'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-               <svg v-if="item.type === 'story'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+            <div class="pt-1">
+               <span 
+                 class="block w-2 h-2 rounded-full"
+                 :class="{
+                   'bg-[#00A9F4]': item.type === 'company',
+                   'bg-green-500': item.type === 'person',
+                   'bg-purple-500': item.type === 'story'
+                 }"
+               ></span>
             </div>
 
-            <!-- Info -->
             <div class="flex-1 min-w-0">
-               <div class="flex items-center gap-2 mb-1">
-                  <span class="text-[10px] font-bold uppercase bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded tracking-wide">{{ item.type }}</span>
+               <div class="flex items-center gap-3 mb-2">
+                  <span class="font-mono text-[10px] uppercase text-gray-400 group-hover:text-[#051C2C] dark:group-hover:text-white transition-colors">
+                     [{{ item.type }}]
+                  </span>
+                  <div v-if="item.type === 'story'" class="h-px w-8 bg-gray-200 dark:bg-gray-700"></div>
                </div>
-               <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+               
+               <h3 class="text-2xl font-serif text-[#051C2C] dark:text-white leading-tight group-hover:text-[#00A9F4] transition-colors mb-2">
                   {{ item.name }}
                </h3>
-               <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1" v-if="item.info">
-                  {{ item.info }}
+               
+               <p class="font-mono text-xs text-gray-500 dark:text-gray-400 truncate max-w-lg" v-if="item.info">
+                  // {{ item.info }}
                </p>
             </div>
 
-            <!-- Arrow -->
-            <svg class="w-5 h-5 text-gray-300 dark:text-gray-600 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <div class="self-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-300">
+               <span class="text-xs font-bold uppercase tracking-widest text-[#051C2C] dark:text-white">View</span>
+            </div>
          </NuxtLink>
       </div>
 
-      <!-- EMPTY STATE (No Matches) -->
-      <div v-else-if="searchQuery && !isLoading && (!results || results.length === 0)" class="text-center py-24 border border-dashed border-gray-200 dark:border-slate-800 rounded-2xl">
-         <div class="inline-flex p-4 bg-gray-50 dark:bg-slate-900 rounded-full mb-4">
-            <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-         </div>
-         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No results found</h3>
-         <p class="text-gray-500 dark:text-gray-400 text-sm">We couldn't find anything for "{{ searchQuery }}". <br/>Try a broader keyword or a different category.</p>
+      <div v-else-if="searchQuery && !isLoading && (!results || results.length === 0)" class="py-32 text-center border border-dashed border-gray-200 dark:border-gray-800">
+         <p class="font-mono text-xs text-gray-400 mb-2">STATUS: NO_DATA</p>
+         <h3 class="text-xl font-serif text-[#051C2C] dark:text-white mb-4">No records found for "{{ searchQuery }}"</h3>
+         <p class="text-sm text-gray-500 max-w-xs mx-auto">Verify spelling or try a broader category keyword.</p>
       </div>
 
-      <!-- INITIAL STATE (Start Typing) -->
-      <div v-else-if="!searchQuery" class="text-center py-32 opacity-50">
-         <p class="text-gray-400 dark:text-gray-500 font-bold text-sm uppercase tracking-widest">Type to search the index</p>
+      <div v-else-if="!searchQuery" class="py-32 text-center opacity-30">
+         <div class="font-mono text-4xl text-gray-300 dark:text-gray-700 mb-4 font-bold">Waiting for Input...</div>
+         <p class="text-xs uppercase tracking-widest text-gray-400">Accessing The Global Index</p>
       </div>
 
     </div>

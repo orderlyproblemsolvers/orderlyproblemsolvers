@@ -1,31 +1,36 @@
-import { sql } from 'drizzle-orm';
+import { sql, eq, desc } from 'drizzle-orm';
 import { db } from '../../utils/db';
 import { technologies, companyStack } from '../../database/schema';
 
 export default defineEventHandler(async () => {
-  // 1. Fetch all solutions with a count of how many companies use them
-  // We group by category to create the "Diverse" layout
-  
+  // 1. Fetch all solutions + count of companies using them
   const result = await db.select({
     id: technologies.id,
     name: technologies.name,
     category: technologies.category,
-    count: sql<number>`count(${companyStack.companyId})`
+    // Cast count to integer ensures it comes back as a number, not string '12'
+    count: sql<number>`cast(count(${companyStack.companyId}) as int)`
   })
   .from(technologies)
-  .leftJoin(companyStack, sql`${technologies.id} = ${companyStack.techId}`)
+  .leftJoin(companyStack, eq(technologies.id, companyStack.techId))
   .groupBy(technologies.id, technologies.name, technologies.category)
-  .orderBy(technologies.category);
+  // Sort by Category A-Z, then by Popularity (Highest First)
+  .orderBy(technologies.category, desc(sql`count`));
 
   // 2. Group by Category in JS
   const grouped: Record<string, any[]> = {};
   
   result.forEach(item => {
-    const cat = item.category || 'Uncategorized';
+    // Handle Legacy Data: If category is null, put in 'Uncategorized'
+    // If it's 'General', you might want to group that separately or rename it
+    const cat = item.category || 'General Solutions';
+    
     if (!grouped[cat]) grouped[cat] = [];
+    
     grouped[cat].push({
       ...item,
-      slug: item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+      // Create a URL-friendly slug on the fly
+      slug: item.name.toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, '')
     });
   });
 

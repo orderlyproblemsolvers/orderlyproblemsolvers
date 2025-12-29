@@ -52,7 +52,7 @@ const initThreeJS = () => {
 
   // Scene
   scene = new THREE.Scene()
-  scene.background = null
+  scene.background = null // Transparent
 
   // Camera
   camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
@@ -68,8 +68,9 @@ const initThreeJS = () => {
   tesseract = new THREE.Group()
   scene.add(tesseract)
 
-  const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 })
-  const materialInner = new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.8 })
+  // Colors adapted for the dark container
+  const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 })
+  const materialInner = new THREE.LineBasicMaterial({ color: 0x00A9F4, transparent: true, opacity: 0.8 })
 
   // Outer Cube
   const geometry1 = new THREE.BoxGeometry(3, 3, 3)
@@ -112,7 +113,7 @@ const initThreeJS = () => {
     size: 0.03,
     color: 0xffffff,
     transparent: true,
-    opacity: 0.4
+    opacity: 0.2
   })
 
   particles = new THREE.Points(particlesGeo, particlesMat)
@@ -125,12 +126,12 @@ const animate = () => {
   animationId = requestAnimationFrame(animate)
 
   if (tesseract) {
-    tesseract.rotation.x += 0.005
-    tesseract.rotation.y += 0.005
+    tesseract.rotation.x += 0.002
+    tesseract.rotation.y += 0.002
   }
 
   if (particles) {
-    particles.rotation.y -= 0.001
+    particles.rotation.y -= 0.0005
   }
 
   renderer.render(scene, camera)
@@ -168,7 +169,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
   ogUrl: 'https://orderlyproblemsolvers.com/about',
   canonical: 'https://orderlyproblemsolvers.com/about'
-
 })
 
 defineOgImageComponent('OpsTemplate', {
@@ -180,48 +180,64 @@ defineOgImageComponent('OpsTemplate', {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
 
-    <section class="pt-20 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 px-4 sm:px-6 lg:px-8 border-b border-gray-900 dark:border-gray-700 transition-colors duration-300">
-      <div class="max-w-7xl mx-auto">
-        <span class="block text-xs font-bold tracking-[0.2em] uppercase mb-6 sm:mb-8 text-gray-900 dark:text-gray-100">The Manifesto</span>
-
-        <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] mb-12 sm:mb-16 text-gray-900 dark:text-white">
-          WE CHRONICLE <br class="hidden sm:inline"/>
-          THE AGE OF <br class="hidden sm:inline"/>
-          <span class="bg-linear-to-b from-gray-500 to-gray-900 dark:from-gray-400 dark:to-gray-100 bg-clip-text text-transparent">SOLUTION.</span>
-        </h1>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 border-t border-gray-200 dark:border-gray-800 pt-8 sm:pt-12 transition-colors duration-300">
-          <div class="lg:col-span-5">
-            <p class="text-lg sm:text-xl md:text-2xl font-serif leading-relaxed text-gray-800 dark:text-gray-200">
-              In an industry saturated with hype and ephemeral trends, our mission is to distinguish genuine innovation from mere noise.
-            </p>
+    <section class="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0A253A] pt-32 pb-24">
+      <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 border-t border-black dark:border-white pt-8">
+          
+          <div class="lg:col-span-7">
+             <span class="block text-xs font-bold tracking-[0.2em] uppercase mb-8 text-[#00A9F4]">
+               The Manifesto
+             </span>
+             <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif text-[#051C2C] dark:text-white tracking-tight leading-[0.9]">
+               We chronicle <br/>
+               the age of <br/>
+               <span class="italic text-[#00A9F4]">solution.</span>
+             </h1>
           </div>
-          <div class="lg:col-span-7 flex flex-col justify-between gap-6 sm:gap-8">
-            <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg leading-relaxed max-w-xl">
-              OPS started as a simple observation: for every problem we tried to solve, there was already a brilliant team somewhere in the world solving it. The problem wasn't a lack of innovation; it was a lack of <strong>Order</strong>.
-            </p>
-            <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-gray-300">Est. 2025 — Abuja / Global</p>
+
+          <div class="lg:col-span-5 flex flex-col justify-between border-l border-gray-300 dark:border-gray-600 pl-8 lg:pl-12 py-2">
+             <p class="text-xl font-serif leading-relaxed text-[#051C2C] dark:text-gray-200 mb-8">
+               In an industry saturated with hype and ephemeral trends, our mission is to distinguish genuine innovation from mere noise.
+             </p>
+             <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 font-light">
+                  OPS started as a simple observation: for every problem we tried to solve, there was already a brilliant team somewhere in the world solving it. The problem wasn't a lack of innovation; it was a lack of <strong>Order</strong>.
+                </p>
+                <div class="flex items-center gap-4">
+                   <div class="h-px w-8 bg-[#051C2C] dark:bg-white"></div>
+                   <p class="text-xs font-bold uppercase tracking-widest text-[#051C2C] dark:text-white">Est. 2025</p>
+                </div>
+             </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <section class="border-b border-gray-900 dark:border-gray-700 transition-colors duration-300">
+    <section class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#051C2C]">
       <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-900 dark:divide-gray-700 transition-colors duration-300">
+        <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-800 border-x border-gray-200 dark:border-gray-800">
 
-          <div v-for="pillar in pillars" :key="pillar.number" class="group relative p-6 sm:p-8 lg:p-12 flex flex-col justify-between min-h-80 sm:min-h-[400px] hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors cursor-pointer">
+          <div v-for="pillar in pillars" :key="pillar.number" class="group relative p-12 hover:bg-[#051C2C] dark:hover:bg-white transition-colors duration-500 cursor-pointer min-h-[450px] flex flex-col justify-between">
             <div>
-              <span class="block text-5xl sm:text-6xl font-black text-gray-200 dark:text-gray-800 mb-6 sm:mb-8 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors duration-500">{{ pillar.number }}</span>
-              <h3 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3 sm:mb-4 text-gray-900 dark:text-white">{{ pillar.title }}</h3>
-              <p class="text-gray-500 dark:text-gray-400 text-sm sm:text-base leading-relaxed">{{ pillar.desc }}</p>
+              <span class="block text-6xl font-serif font-black text-gray-200 dark:text-gray-800 mb-8 group-hover:text-white/20 dark:group-hover:text-[#051C2C]/20 transition-colors duration-300">
+                {{ pillar.number }}
+              </span>
+              <h3 class="text-2xl font-bold tracking-tight mb-4 text-[#051C2C] dark:text-white group-hover:text-white dark:group-hover:text-[#051C2C] transition-colors">
+                {{ pillar.title }}
+              </h3>
+              <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 dark:group-hover:text-gray-600 transition-colors">
+                {{ pillar.desc }}
+              </p>
             </div>
 
-            <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100 dark:border-gray-800 group-hover:border-gray-900 dark:group-hover:border-gray-100 transition-colors">
-              <NuxtLink :to="pillar.link" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-900 dark:text-white group-hover:translate-x-2 transition-transform">
-                {{ pillar.label }} &rarr;
+            <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800 group-hover:border-white/20 dark:group-hover:border-black/10 transition-colors">
+              <NuxtLink :to="pillar.link" class="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-[#051C2C] dark:text-white group-hover:text-[#00A9F4] dark:group-hover:text-[#00A9F4] transition-colors">
+                {{ pillar.label }} 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </NuxtLink>
             </div>
           </div>
@@ -230,83 +246,97 @@ defineOgImageComponent('OpsTemplate', {
       </div>
     </section>
 
-    <section class="bg-black text-white py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-8">
+    <section class="py-24 px-6 lg:px-12 bg-gray-50 dark:bg-[#0A253A] border-b border-gray-200 dark:border-gray-800">
       <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-
-          <div>
-            <div class="inline-block px-3 py-1.5 border border-white/30 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 sm:mb-8">
-              OPS Studio
-            </div>
-            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-6 sm:mb-8 leading-tight">
-              WE PRACTICE <br/>
-              WHAT WE <br/>
-              PREACH.
-            </h2>
-            <p class="text-gray-400 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-md">
-              We don't just curate the ecosystem; we build the infrastructure. OPS Studio applies our philosophy of "Radical Order" to build scalable platforms for enterprise and government clients.
-            </p>
-            <NuxtLink to="/services" class="inline-block bg-white text-black px-6 sm:px-8 py-3 sm:py-4 font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors">
-              View Capabilities
-            </NuxtLink>
+          <div class="order-2 lg:order-1">
+             <div class="inline-block px-3 py-1 border border-[#051C2C] dark:border-white rounded-full text-[10px] font-bold uppercase tracking-widest mb-8 text-[#051C2C] dark:text-white">
+               Internal Infrastructure
+             </div>
+             <h2 class="text-4xl md:text-6xl font-serif text-[#051C2C] dark:text-white tracking-tight mb-8 leading-[1]">
+               We practice <br/>
+               what we <span class="text-[#00A9F4]">preach.</span>
+             </h2>
+             <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-10 max-w-md border-l-2 border-[#00A9F4] pl-6">
+               We don't just curate the ecosystem; we build the infrastructure. OPS Studio applies our philosophy of "Radical Order" to build scalable platforms for enterprise.
+             </p>
+             <NuxtLink to="/services" class="inline-flex items-center gap-2 px-8 py-4 bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] font-bold text-xs uppercase tracking-widest hover:bg-[#00A9F4] dark:hover:bg-[#00A9F4] hover:text-white dark:hover:text-white transition-colors">
+               View Capabilities
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+             </NuxtLink>
           </div>
 
-          <div class="relative w-full aspect-square lg:aspect-4/5 border border-white/20 rounded-lg overflow-hidden bg-black/50">
-
-            <div ref="canvasContainer" class="absolute inset-0 z-0"></div>
-
-            <div class="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 pointer-events-none z-10">
-              <div class="text-xs font-mono text-gray-500">
-                <p>ARCHITECTURE_V1.0</p>
-                <p>STATUS: ONLINE</p>
-                <p class="animate-pulse text-blue-500">>> RENDERING</p>
-              </div>
-
-              <div class="text-right">
-                <p class="text-4xl sm:text-6xl font-black text-white/10">BUILD</p>
-              </div>
+          <div class="order-1 lg:order-2 relative w-full aspect-square bg-[#051C2C] border border-gray-800 overflow-hidden shadow-2xl">
+            <div ref="canvasContainer" class="absolute inset-0 z-0 cursor-move"></div>
+            
+            <div class="absolute inset-0 z-10 pointer-events-none p-6 flex flex-col justify-between">
+               <div class="flex justify-between items-start text-[10px] font-mono text-[#00A9F4]">
+                  <div>
+                    <p>VIEWPORT_01</p>
+                    <p>FPS: 60</p>
+                  </div>
+                  <div class="text-right">
+                    <p>X: 0.00</p>
+                    <p>Y: 0.00</p>
+                    <p>Z: 8.00</p>
+                  </div>
+               </div>
+               
+               <div class="flex justify-between items-end">
+                  <div class="h-16 w-16 border-l border-b border-[#00A9F4]/50"></div>
+                  <div class="text-[10px] font-mono text-white/50">OPS.ENGINE.CORE</div>
+               </div>
             </div>
+            
+            <div class="absolute inset-0 z-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#00A9F4 1px, transparent 1px), linear-gradient(to right, #00A9F4 1px, transparent 1px); background-size: 40px 40px;"></div>
           </div>
 
         </div>
-
       </div>
     </section>
 
-    <section class="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section class="py-24 px-6 lg:px-12 bg-white dark:bg-[#051C2C] border-b border-gray-200 dark:border-gray-800">
       <div class="max-w-7xl mx-auto">
-        <div class="mb-12 sm:mb-16 border-b border-gray-900 dark:border-gray-700 pb-4 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-          <h2 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter uppercase text-gray-900 dark:text-white">The Editorial Board</h2>
-          <p class="hidden sm:block text-xs font-bold uppercase tracking-widest whitespace-nowrap text-gray-900 dark:text-gray-300">Curators of Order</p>
+        
+        <div class="flex items-end justify-between mb-16 border-b border-black dark:border-gray-700 pb-4">
+          <h2 class="text-3xl md:text-4xl font-serif text-[#051C2C] dark:text-white tracking-tight">The Board</h2>
+          <p class="hidden sm:block text-xs font-bold uppercase tracking-widest text-gray-400">Curators of Order</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
           <div v-for="member in team" :key="member.name" class="group">
-            <div class="aspect-3/4 overflow-hidden bg-gray-100 dark:bg-gray-800 mb-3 sm:mb-4 grayscale group-hover:grayscale-0 transition-all duration-500">
-              <img :src="member.image" class="w-full h-full object-cover" alt="Team Member" />
+            <div class="aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800 mb-6 border border-gray-200 dark:border-gray-800">
+              <img 
+                :src="member.image" 
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                :alt="member.name" 
+              />
             </div>
-            <h3 class="text-sm sm:text-base md:text-lg font-bold uppercase tracking-tight text-gray-900 dark:text-white">{{ member.name }}</h3>
-            <p class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ member.role }}</p>
+            <div class="border-l-2 border-transparent group-hover:border-[#00A9F4] pl-3 transition-colors duration-300">
+               <h3 class="text-lg font-serif font-bold text-[#051C2C] dark:text-white">{{ member.name }}</h3>
+               <p class="text-xs font-mono font-medium text-gray-500 dark:text-gray-400 uppercase mt-1">{{ member.role }}</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 lg:px-8 text-center bg-white dark:bg-slate-950 transition-colors duration-300">
-      <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-4 sm:mb-6">The Ecosystem is waiting</p>
-      <h2 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 sm:mb-12 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-default text-gray-900 dark:text-white">
-        JOIN THE<br/>
-        ORDER.
-      </h2>
-      <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-        <NuxtLink to="/submit-solution" class="px-6 sm:px-10 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black font-bold text-xs sm:text-sm uppercase tracking-widest hover:bg-blue-600 dark:hover:bg-gray-200 transition-colors">
-          Submit Solution
-        </NuxtLink>
-        <NuxtLink to="/stories" class="px-6 sm:px-10 py-3 sm:py-4 border border-gray-200 dark:border-gray-700 font-bold text-xs sm:text-sm uppercase tracking-widest hover:border-black dark:hover:border-white text-gray-900 dark:text-white transition-colors">
-          Read The Journal
-        </NuxtLink>
-      </div>
+    <section class="py-24 px-6 lg:px-12 bg-[#051C2C] dark:bg-black text-white text-center">
+       <div class="max-w-4xl mx-auto">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-[#00A9F4]">The Ecosystem is Waiting</p>
+          <h2 class="text-5xl md:text-8xl font-serif mb-12 leading-none">
+             Join the Order.
+          </h2>
+          <div class="flex flex-col sm:flex-row justify-center gap-6">
+             <NuxtLink to="/submit-solution" class="px-10 py-4 bg-white text-[#051C2C] font-bold text-xs uppercase tracking-widest hover:bg-[#00A9F4] hover:text-white transition-colors">
+               Submit Solution
+             </NuxtLink>
+             <NuxtLink to="/stories" class="px-10 py-4 border border-white/20 text-white font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-[#051C2C] transition-colors">
+               Read Journal
+             </NuxtLink>
+          </div>
+       </div>
     </section>
 
   </div>

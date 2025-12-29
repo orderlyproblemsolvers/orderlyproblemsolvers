@@ -8,15 +8,12 @@ definePageMeta({
 
 useSeoMeta({
   title: "Services & Pricing - OPS Studio",
-  description:
-    "We build the engines. Elite software engineering, mobile development, and system design for ambitious brands in emerging markets.",
+  description: "We build the engines. Elite software engineering, mobile development, and system design for ambitious brands in emerging markets.",
   ogTitle: "OPS Studio - Engineering & Design",
-  ogDescription:
-    "Custom software, cloud architecture, and system design. View our transparent pricing and packages.",
+  ogDescription: "Custom software, cloud architecture, and system design. View our transparent pricing and packages.",
   twitterCard: "summary_large_image",
   ogUrl: 'https://orderlyproblemsolvers.com/services',
   canonical: 'https://orderlyproblemsolvers.com/services'
-
 });
 
 const billingCycle = ref('project')
@@ -26,7 +23,7 @@ const toggleFaq = (index: number) => {
   activeFaq.value = activeFaq.value === index ? null : index
 }
 
-// 1. SERVICES DATA
+// 1. SERVICES DATA (Kept original logic)
 const services = [
   {
     title: 'Custom Software',
@@ -55,20 +52,14 @@ const services = [
   }
 ]
 
-// 2. PRICING DATA
+// 2. PRICING DATA (Kept original logic)
 const projectPlans = [
   {
     name: 'MVP Build',
-    description: 'For startups verifying an idea. We build core features fast.',
+    description: 'For startups verifying an idea. Core features fast.',
     price: '₦150k',
     priceNote: 'Starts at',
-    features: [
-      'Web or Mobile App',
-      'Auth & User Profiles',
-      'Database Setup',
-      'Basic Admin Dashboard',
-      'Payment Integration'
-    ]
+    features: ['Web or Mobile App', 'Auth & User Profiles', 'Database Setup', 'Basic Admin Dashboard', 'Payment Integration']
   },
   {
     name: 'Business Scale',
@@ -76,27 +67,14 @@ const projectPlans = [
     price: '₦250k',
     priceNote: 'Starts at',
     featured: true,
-    features: [
-      'Full Custom Platform',
-      'Complex Workflows',
-      'Advanced Analytics',
-      'CRM/ERP Integration',
-      'Cloud Infrastructure',
-      '90 Days Support'
-    ]
+    features: ['Full Custom Platform', 'Complex Workflows', 'Advanced Analytics', 'CRM/ERP Integration', 'Cloud Infrastructure', '90 Days Support']
   },
   {
     name: 'System Design',
     description: 'Pure architectural consultancy before you build.',
     price: '₦100k',
     priceNote: 'Fixed Fee',
-    features: [
-      'Requirement Analysis',
-      'Database Schema (ERD)',
-      'API Specification',
-      'Cloud Architecture',
-      'Risk Assessment'
-    ]
+    features: ['Requirement Analysis', 'Database Schema (ERD)', 'API Specification', 'Cloud Architecture', 'Risk Assessment']
   }
 ]
 
@@ -106,13 +84,7 @@ const retainerPlans = [
     description: 'Keep your lights on and software secure.',
     price: '₦50k',
     priceNote: '/ month',
-    features: [
-      'Security Patching',
-      'Uptime Monitoring',
-      'Minor Updates',
-      'Database Backups',
-      'Monthly Report'
-    ]
+    features: ['Security Patching', 'Uptime Monitoring', 'Minor Updates', 'Database Backups', 'Monthly Report']
   },
   {
     name: 'Dev Team',
@@ -120,28 +92,14 @@ const retainerPlans = [
     price: '₦150k',
     priceNote: '/ month',
     featured: true,
-    features: [
-      'New Feature Dev',
-      'UI/UX Improvements',
-      'API Development',
-      'Code Reviews',
-      'Priority Support',
-      'Weekly Sprints'
-    ]
+    features: ['New Feature Dev', 'UI/UX Improvements', 'API Development', 'Code Reviews', 'Priority Support', 'Weekly Sprints']
   },
   {
     name: 'CTO Service',
     description: 'Strategic leadership for your technical team.',
     price: '₦200k',
     priceNote: '/ month',
-    features: [
-      'Technical Strategy',
-      'Vendor Selection',
-      'Hiring & Vetting',
-      'Code Audits',
-      'Cost Optimization',
-      'Board Advisory'
-    ]
+    features: ['Technical Strategy', 'Vendor Selection', 'Hiring & Vetting', 'Code Audits', 'Cost Optimization', 'Board Advisory']
   }
 ]
 
@@ -166,53 +124,68 @@ const pricingFaqs = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white selection:bg-blue-100 dark:selection:bg-blue-900 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
-    <div class="relative border-b border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 pt-32 pb-20 lg:pb-32 overflow-hidden transition-colors duration-300">
-      <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.1]" style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(to right, #000 1px, transparent 1px); background-size: 40px 40px;"></div>
+    <div class="relative bg-[#051C2C] text-white pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
       
-      <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
-        <div class="inline-block mb-8">
-          <span class="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase">OPS Studio</span>
-        </div>
-        
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-gray-900 dark:text-white tracking-tighter mb-8 leading-[0.9]">
-          WE BUILD THE <br/>
-          <span class="text-transparent bg-clip-text bg-gradient-to-b from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600">ENGINES.</span>
-        </h1>
-        
-        <p class="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
-          The elite engineering arm of the ecosystem. We solve hard technical problems so you can focus on growth.
-        </p>
+      <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#00A9F4 1px, transparent 1px); background-size: 32px 32px;"></div>
+      
+      <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+           <div>
+             <div class="inline-block mb-8 border-b border-[#00A9F4] pb-1">
+               <span class="text-xs font-bold tracking-[0.2em] uppercase text-[#00A9F4]">OPS Studio</span>
+             </div>
+             
+             <h1 class="text-6xl md:text-8xl font-serif tracking-tight mb-8 leading-[0.95]">
+               We build<br/>
+               <span class="italic text-gray-400">the engines.</span>
+             </h1>
+             
+             <p class="text-xl text-gray-300 max-w-lg mb-12 leading-relaxed font-light border-l border-white/20 pl-6">
+               The elite engineering arm of the ecosystem. We solve hard technical problems so you can focus on growth.
+             </p>
 
-        <div class="flex flex-wrap justify-center gap-4">
-           <div class="px-6 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 shadow-sm">Web & Mobile</div>
-           <div class="px-6 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 shadow-sm">Cloud Systems</div>
-           <div class="px-6 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 shadow-sm">Consultancy</div>
+             <div class="flex flex-wrap gap-8 text-xs font-bold uppercase tracking-widest text-gray-400">
+               <span class="flex items-center gap-2"><div class="w-1 h-1 bg-[#00A9F4]"></div>Web & Mobile</span>
+               <span class="flex items-center gap-2"><div class="w-1 h-1 bg-[#00A9F4]"></div>Cloud Systems</span>
+               <span class="flex items-center gap-2"><div class="w-1 h-1 bg-[#00A9F4]"></div>Consultancy</span>
+             </div>
+           </div>
+
+           <div class="hidden lg:block relative h-full">
+              <div class="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 border border-white/10 rotate-45"></div>
+              <div class="absolute right-12 top-1/2 -translate-y-1/2 w-64 h-64 border border-[#00A9F4]/30 rotate-12"></div>
+           </div>
         </div>
       </div>
     </div>
 
-    <div class="border-b border-gray-200 dark:border-slate-800">
+    <div class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#051C2C]">
        <div class="max-w-7xl mx-auto">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-slate-800 border-x border-gray-200 dark:border-slate-800">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-x border-gray-200 dark:border-gray-800">
              
-             <div v-for="service in services" :key="service.title" class="p-10 hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors group">
-                <div class="w-12 h-12 mb-6 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                   <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="service.icon"></path></svg>
+             <div 
+               v-for="(service, index) in services" 
+               :key="service.title" 
+               class="p-10 border-b md:border-b-0 border-r border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-[#0A253A] transition-colors group"
+               :class="{'lg:border-b': index < 3}"
+             >
+                <div class="w-8 h-8 mb-8 text-gray-400 group-hover:text-[#00A9F4] transition-colors">
+                   <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" :d="service.icon"></path></svg>
                 </div>
-                <h3 class="text-xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">{{ service.title }}</h3>
-                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{{ service.desc }}</p>
+                <h3 class="text-xl font-serif text-[#051C2C] dark:text-white mb-4">{{ service.title }}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed font-light">{{ service.desc }}</p>
              </div>
 
-             <div class="p-10 bg-gray-900 dark:bg-black text-white flex flex-col justify-center items-center text-center">
-                <h3 class="text-2xl font-black mb-4 tracking-tight">Have a unique challenge?</h3>
-                <p class="text-gray-400 text-sm mb-8">We thrive on complexity. Let's talk about your edge case.</p>
+             <div class="p-10 bg-[#00A9F4] text-white flex flex-col justify-center items-start">
+                <h3 class="text-xl font-serif mb-2">Unique Challenge?</h3>
+                <p class="text-sm text-white/80 mb-8 leading-relaxed">We thrive on edge cases. Tell us about your complex requirements.</p>
                 <a 
-                  href="mailto:orderlyproblemsolvers@gmail.com?subject=Discovery Call Request" 
-                  class="inline-block px-6 py-3 bg-white text-black font-bold text-sm rounded hover:bg-gray-200 transition-colors uppercase tracking-wider"
+                   href="mailto:orderlyproblemsolvers@gmail.com" 
+                   class="inline-block border-b border-white pb-1 text-xs font-bold uppercase tracking-widest hover:opacity-70 transition-opacity"
                 >
-                   Book Discovery Call
+                   Book Technical Call
                 </a>
              </div>
 
@@ -220,81 +193,106 @@ const pricingFaqs = [
        </div>
     </div>
 
-    <div class="py-24 px-6 lg:px-8 bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
+    <div class="py-24 px-6 lg:px-12 bg-gray-50 dark:bg-[#0A253A] transition-colors duration-300">
       <div class="max-w-7xl mx-auto">
         
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-black tracking-tighter text-gray-900 dark:text-white mb-8">TRANSPARENT PRICING</h2>
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div>
+             <h2 class="text-4xl font-serif text-[#051C2C] dark:text-white mb-2">Engagement Models</h2>
+             <p class="text-gray-500 dark:text-gray-400 font-light">Transparent pricing structures for every stage.</p>
+          </div>
           
-          <div class="inline-flex bg-white dark:bg-slate-900 p-1 rounded-lg border border-gray-200 dark:border-slate-800 shadow-sm">
+          <div class="flex border-b border-gray-300 dark:border-gray-600">
             <button
               @click="billingCycle = 'project'"
-              class="px-6 py-2 rounded-md text-sm font-bold transition-all"
-              :class="billingCycle === 'project' ? 'bg-black dark:bg-white text-white dark:text-black shadow' : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'"
+              class="px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all relative"
+              :class="billingCycle === 'project' ? 'text-[#051C2C] dark:text-white' : 'text-gray-400 hover:text-gray-600'"
             >
-              Project Based
+              Project
+              <span v-if="billingCycle === 'project'" class="absolute bottom-0 left-0 w-full h-0.5 bg-[#00A9F4]"></span>
             </button>
             <button
               @click="billingCycle = 'retainer'"
-              class="px-6 py-2 rounded-md text-sm font-bold transition-all"
-              :class="billingCycle === 'retainer' ? 'bg-black dark:bg-white text-white dark:text-black shadow' : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'"
+              class="px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all relative"
+              :class="billingCycle === 'retainer' ? 'text-[#051C2C] dark:text-white' : 'text-gray-400 hover:text-gray-600'"
             >
-              Monthly Retainer
+              Retainer
+              <span v-if="billingCycle === 'retainer'" class="absolute bottom-0 left-0 w-full h-0.5 bg-[#00A9F4]"></span>
             </button>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#051C2C] shadow-xl">
           
           <div 
-            v-for="plan in (billingCycle === 'project' ? projectPlans : retainerPlans)" 
+            v-for="(plan) in (billingCycle === 'project' ? projectPlans : retainerPlans)" 
             :key="plan.name"
-            class="bg-white dark:bg-slate-900 p-8 rounded-2xl border transition-all duration-300 relative flex flex-col"
-            :class="plan.featured ? 'border-blue-600 dark:border-blue-500 shadow-xl shadow-blue-900/5 dark:shadow-black/40 scale-105 z-10' : 'border-gray-200 dark:border-slate-800 hover:border-gray-300 dark:hover:border-slate-700'"
+            class="relative p-10 flex flex-col border-r border-gray-200 dark:border-gray-700 last:border-r-0 dark:hover:bg-white/5 transition-colors"
+            :class="plan.featured ? 'bg-[#051C2C] dark:bg-black text-white hover:bg-[#051C2C] dark:hover:bg-black transform md:scale-y-110 md:-my-5 z-10 shadow-2xl border-none ring-1 ring-[#051C2C] dark:ring-gray-700' : ''"
           >
-            <div v-if="plan.featured" class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-               Recommended
+            <div class="mb-8">
+               <h3 class="text-xl font-serif font-bold mb-2" :class="plan.featured ? 'text-white' : 'text-[#051C2C] dark:text-white'">
+                 {{ plan.name }}
+               </h3>
+               <p class="text-sm leading-relaxed min-h-[40px]" :class="plan.featured ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'">
+                 {{ plan.description }}
+               </p>
             </div>
-
-            <h3 class="text-xl font-black text-gray-900 dark:text-white mb-2">{{ plan.name }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-8 h-10">{{ plan.description }}</p>
             
-            <div class="mb-8 pb-8 border-b border-gray-100 dark:border-slate-800">
-               <span class="text-4xl font-black text-gray-900 dark:text-white">{{ plan.price }}</span>
-               <p class="text-xs text-gray-400 mt-1 font-mono uppercase tracking-wider">{{ plan.priceNote }}</p>
+            <div class="mb-10 pb-8 border-b" :class="plan.featured ? 'border-gray-700' : 'border-gray-100 dark:border-gray-800'">
+               <div class="flex items-baseline gap-1">
+                 <span class="text-3xl font-mono font-bold" :class="plan.featured ? 'text-white' : 'text-[#051C2C] dark:text-white'">
+                   {{ plan.price }}
+                 </span>
+                 <span class="text-[10px] uppercase tracking-wider" :class="plan.featured ? 'text-gray-500' : 'text-gray-400'">
+                   {{ plan.priceNote }}
+                 </span>
+               </div>
             </div>
 
-            <ul class="space-y-4 mb-8 flex-1">
-               <li v-for="feat in plan.features" :key="feat" class="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-300">
-                  <span class="text-blue-600 dark:text-blue-400 font-bold text-lg leading-none">✓</span> {{ feat }}
+            <ul class="space-y-4 mb-10 flex-1">
+               <li 
+                 v-for="feat in plan.features" 
+                 :key="feat" 
+                 class="flex items-start gap-3 text-sm"
+                 :class="plan.featured ? 'text-gray-300' : 'text-gray-600 dark:text-gray-300'"
+               >
+                  <span class="text-[#00A9F4] font-bold">/</span> {{ feat }}
                </li>
             </ul>
 
             <a 
-              :href="`mailto:orderlyproblemsolvers@gmail.com?subject=${billingCycle === 'project' ? 'Project Inquiry' : 'Retainer Inquiry'}: ${plan.name}`"
-              class="block w-full py-4 text-center rounded-xl font-bold text-sm transition-colors border border-black dark:border-white" 
-              :class="plan.featured ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200' : 'bg-white dark:bg-slate-900 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-slate-800'"
+              :href="`mailto:orderlyproblemsolvers@gmail.com?subject=Inquiry: ${plan.name}`"
+              class="block w-full py-3 text-center text-xs font-bold uppercase tracking-widest border transition-all" 
+              :class="plan.featured 
+                ? 'bg-[#00A9F4] border-[#00A9F4] text-white hover:bg-white hover:text-[#051C2C]' 
+                : 'bg-transparent border-[#051C2C] dark:border-gray-600 text-[#051C2C] dark:text-white hover:bg-[#051C2C] hover:text-white dark:hover:bg-white dark:hover:text-[#051C2C]'"
             >
-               Get Started
+               Select Plan
             </a>
           </div>
 
         </div>
-
       </div>
     </div>
 
-    <div class="py-24 px-6 lg:px-8 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div class="py-24 px-6 lg:px-8 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#051C2C]">
       <div class="max-w-3xl mx-auto">
-         <h2 class="text-3xl font-black text-gray-900 dark:text-white mb-12 text-center tracking-tight">COMMON QUESTIONS</h2>
+         <h2 class="text-xs font-bold text-[#00A9F4] uppercase tracking-[0.2em] mb-12 text-center">
+           Frequently Asked Questions
+         </h2>
          
-         <div class="space-y-4">
-            <div v-for="(faq, i) in pricingFaqs" :key="i" class="border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden">
-               <button @click="toggleFaq(i)" class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 dark:hover:bg-slate-900 transition-colors">
-                  <span class="font-bold text-gray-900 dark:text-white">{{ faq.question }}</span>
-                  <span class="text-gray-400 text-2xl leading-none">{{ activeFaq === i ? '−' : '+' }}</span>
+         <div class="divide-y divide-gray-200 dark:divide-gray-800 border-y border-gray-200 dark:border-gray-800">
+            <div v-for="(faq, i) in pricingFaqs" :key="i" class="group">
+               <button @click="toggleFaq(i)" class="w-full flex items-center justify-between py-6 text-left focus:outline-none">
+                  <span class="font-serif text-lg text-[#051C2C] dark:text-white group-hover:text-[#00A9F4] transition-colors">
+                    {{ faq.question }}
+                  </span>
+                  <span class="text-[#00A9F4] text-xl font-light">
+                    {{ activeFaq === i ? '−' : '+' }}
+                  </span>
                </button>
-               <div v-show="activeFaq === i" class="px-6 pb-6 text-gray-600 dark:text-gray-300 text-sm leading-relaxed border-t border-gray-100 dark:border-slate-800 pt-4 bg-gray-50/50 dark:bg-slate-900/50">
+               <div v-show="activeFaq === i" class="pb-6 pr-12 text-gray-500 dark:text-gray-400 text-sm leading-loose font-light">
                   {{ faq.answer }}
                </div>
             </div>
@@ -302,15 +300,15 @@ const pricingFaqs = [
       </div>
     </div>
 
-    <div class="py-24 bg-black dark:bg-white text-white dark:text-black text-center px-6">
+    <div class="py-24 bg-[#051C2C] text-white text-center px-6">
        <div class="max-w-2xl mx-auto">
-          <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-6">Want a custom solution?</h2>
-          <p class="text-gray-400 dark:text-gray-600 mb-10 text-lg">Let's discuss your project and find the perfect solution.</p>
+          <h2 class="text-4xl font-serif mb-6">Need a bespoke arrangement?</h2>
+          <p class="text-gray-400 mb-10 font-light">For enterprise requirements or hybrid equity deals, let's talk.</p>
           <a 
-            href="mailto:orderlyproblemsolvers@gmail.com?subject=New Project Discussion" 
-            class="inline-block px-10 py-4 bg-white dark:bg-black text-black dark:text-white font-bold text-sm rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors uppercase tracking-widest"
+            href="mailto:orderlyproblemsolvers@gmail.com" 
+            class="inline-block px-10 py-4 border border-white/20 text-white font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-[#051C2C] transition-all"
           >
-             Schedule a Call
+             Contact Principal
           </a>
        </div>
     </div>

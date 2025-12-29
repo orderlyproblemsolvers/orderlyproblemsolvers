@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { SOLUTION_CATEGORIES } from "~/utils/constants";
 
 definePageMeta({
   layout: "admin",
@@ -11,6 +12,12 @@ const router = useRouter();
 const route = useRoute();
 const id = route.params.id as string;
 const isLoading = ref(false);
+
+// Define the shape of a selected tech item
+interface TechItem {
+  name: string;
+  category: string;
+}
 
 // 1. FETCH EXISTING DATA
 const { data: existingData, pending } = await useFetch(
@@ -30,9 +37,15 @@ const form = ref({
   logo: "",
   featured: false,
   status: "approved",
-  stack: [] as string[],
-  stackInput: "",
-  // ✅ NEW: Video Array
+  
+  // ✅ REFACTORED: Stack is now an array of objects
+  stack: [] as TechItem[],
+  
+  // ✅ NEW: Local state for the "Add Tech" inputs
+  currentTechCategory: SOLUTION_CATEGORIES[0] as string,
+  currentTechName: "",
+
+  // Video Array
   videos: [] as string[],
   videoInput: ""
 });
@@ -40,13 +53,23 @@ const form = ref({
 // Populate form once data arrives
 watch(
   existingData,
-  (newData) => {
+  (newData: any) => {
     if (newData) {
+      // Handle Stack Transformation (Legacy String vs New Object)
+      const formattedStack = (newData.stack || []).map((t: any) => {
+        if (typeof t === 'string') return { name: t, category: 'General' };
+        return t; // Assume it's already { name, category }
+      });
+
       form.value = {
         ...form.value, // Keep defaults
         ...newData, // Overwrite with DB data
-        stackInput: "", // Reset input buffer
-        // ✅ Ensure videos array is populated
+        
+        stack: formattedStack, // Use processed stack
+        currentTechCategory: SOLUTION_CATEGORIES[0], // Reset select
+        currentTechName: "", // Reset input
+        
+        // Ensure videos array is populated
         videos: newData.videos || [],
         videoInput: ""
       };
@@ -55,20 +78,33 @@ watch(
   { immediate: true }
 );
 
-// TAGGING LOGIC
-const addTag = () => {
-  const val = form.value.stackInput.trim();
-  if (val && !form.value.stack.includes(val)) {
-    form.value.stack.push(val);
+// --- TECH STACK LOGIC (Refactored) ---
+const addTech = () => {
+  const name = form.value.currentTechName.trim();
+  const category = form.value.currentTechCategory;
+
+  if (!name) return;
+
+  // Check for duplicates
+  const exists = form.value.stack.find(t => t.name.toLowerCase() === name.toLowerCase());
+  
+  if (exists) {
+    alert(`'${name}' is already added under ${exists.category}.`);
+    return;
   }
-  form.value.stackInput = "";
+
+  // Add to local list
+  form.value.stack.push({ name, category });
+  
+  // Reset Name input only (keep category selected for speed)
+  form.value.currentTechName = "";
 };
 
-const removeTag = (index: number) => {
+const removeTech = (index: number) => {
   form.value.stack.splice(index, 1);
 };
 
-// ✅ VIDEO LOGIC
+// --- VIDEO LOGIC ---
 const addVideo = () => {
   const val = form.value.videoInput.trim();
   if (val) {
@@ -85,12 +121,17 @@ const removeVideo = (index: number) => {
   form.value.videos.splice(index, 1);
 };
 
+// --- UPDATE HANDLER ---
 const handleUpdate = async () => {
   isLoading.value = true;
   try {
     await $fetch(`/api/admin/companies/${id}`, {
       method: "PUT",
-      body: form.value,
+      body: {
+        ...form.value,
+        // Ensure we send clean data
+        stack: form.value.stack.map(t => ({ name: t.name, category: t.category }))
+      },
     });
     alert("Company Updated!");
     router.push("/admin/companies");
@@ -103,7 +144,7 @@ const handleUpdate = async () => {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto">
+  <div class="max-w-2xl mx-auto py-10">
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-2xl font-black text-gray-900">Edit Company</h1>
       <div class="flex gap-3">
@@ -131,7 +172,7 @@ const handleUpdate = async () => {
     <form
       v-else
       @submit.prevent="handleUpdate"
-      class="space-y-6 bg-white p-8 rounded-xl border border-gray-200 shadow-sm"
+      class="space-y-8 bg-white p-8 rounded-xl border border-gray-200 shadow-sm"
     >
       <div class="grid grid-cols-2 gap-6">
         <div>
@@ -273,35 +314,58 @@ const handleUpdate = async () => {
         </div>
       </div>
 
-      <div>
-        <label class="block text-xs font-bold uppercase text-gray-500 mb-2"
-          >Tech Stack</label
-        >
-        <div
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white flex flex-wrap gap-2 items-center focus-within:border-black transition-all min-h-[46px]"
-        >
-          <span
-            v-for="(tag, i) in form.stack"
-            :key="tag"
-            class="bg-black text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1"
-          >
-            {{ tag }}
-            <button
-              @click="removeTag(i)"
-              type="button"
-              class="hover:text-gray-300"
+      <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+        <div class="flex items-center justify-between mb-4">
+           <label class="block text-xs font-bold uppercase text-gray-500">Tech Stack & Solutions 
+
+[Image of tech stack diagram]
+</label>
+           <span class="text-[10px] text-gray-400 bg-white border border-gray-200 px-2 py-0.5 rounded-full">{{ form.stack.length }} added</span>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-3 mb-4">
+          <div class="md:w-1/2">
+            <select v-model="form.currentTechCategory" class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-black outline-none bg-white">
+              <option v-for="cat in SOLUTION_CATEGORIES" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
+          </div>
+
+          <div class="md:w-1/2 flex gap-2">
+            <input 
+              v-model="form.currentTechName" 
+              @keydown.enter.prevent="addTech"
+              type="text" 
+              class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:border-black outline-none"
+              placeholder="Tech Name (e.g. Stripe)" 
+            />
+            <button 
+              @click.prevent="addTech"
+              type="button" 
+              class="px-4 py-2 bg-black text-white text-xs font-bold uppercase rounded-lg hover:bg-gray-800 transition-colors"
             >
-              &times;
+              Add
             </button>
-          </span>
-          <input
-            v-model="form.stackInput"
-            @keydown.enter.prevent="addTag"
-            @keydown.backspace="form.stackInput === '' && form.stack.pop()"
-            type="text"
-            class="outline-none text-sm flex-grow min-w-[100px] bg-transparent"
-            placeholder="Type & Enter..."
-          />
+          </div>
+        </div>
+
+        <div v-if="form.stack.length > 0" class="flex flex-wrap gap-2">
+          <div 
+            v-for="(item, i) in form.stack" 
+            :key="i" 
+            class="group flex items-center gap-2 bg-white border border-gray-300 rounded-md pl-2 pr-1 py-1.5 shadow-sm"
+          >
+            <div class="flex flex-col leading-none pr-1">
+              <span class="text-[9px] text-gray-400 uppercase font-bold mb-0.5">{{ item.category }}</span>
+              <span class="text-xs font-bold text-gray-900">{{ item.name }}</span>
+            </div>
+            <button @click="removeTech(i)" type="button" class="text-gray-300 hover:text-red-500 hover:bg-red-50 rounded p-1 transition-colors">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+        </div>
+        
+        <div v-else class="text-center py-6 border border-dashed border-gray-300 rounded-lg">
+          <p class="text-xs text-gray-400 italic">No technologies added yet.</p>
         </div>
       </div>
 
@@ -326,7 +390,7 @@ const handleUpdate = async () => {
         </div>
 
         <div v-if="form.videos.length > 0" class="space-y-2">
-          <div v-for="(vid, i) in form.videos" :key="i" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 animate-in fade-in slide-in-from-top-2">
+          <div v-for="(vid, i) in form.videos" :key="i" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
             <div class="flex items-center gap-2 overflow-hidden">
               <svg class="w-4 h-4 text-red-600 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               <span class="text-xs text-gray-600 truncate">{{ vid }}</span>

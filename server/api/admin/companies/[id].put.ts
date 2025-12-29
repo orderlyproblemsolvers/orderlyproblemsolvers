@@ -15,8 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event);
 
-  // 2. SANITIZATION (Fix Image Paths)
-  // Ensure we strip '/public' if a new logo was uploaded
+  // 2. SANITIZATION
   const cleanLogo = body.logo ? body.logo.replace('/public', '') : null;
 
   try {
@@ -30,46 +29,57 @@ export default defineEventHandler(async (event) => {
         location: body.location,
         website: body.website,
         stage: body.stage,
-        logo: cleanLogo, // ✅ Use sanitized path
+        logo: cleanLogo,
         
-        // ✅ NEW FIELD: Videos Array
         videos: body.videos || [],
 
-        status: body.status, // Allow changing status back to pending/rejected
+        status: body.status,
         featured: body.featured,
         updatedAt: new Date()
     }).where(eq(companies.id, id));
 
     // 4. Sync Tech Stack (Delete All -> Re-insert)
-    // This is the safest way to handle "updates" to a many-to-many relationship
     if (Array.isArray(body.stack)) {
         
-        // A. Wipe existing links
+        // A. Wipe existing links for this company
         await db.delete(companyStack).where(eq(companyStack.companyId, id));
 
         // B. Insert new links
-        for (const techName of body.stack) {
+        for (const item of body.stack) {
+            // 🔄 REFACTOR: Handle both legacy strings and new objects
+            const techName = typeof item === 'string' ? item : item.name;
+            const techCat = typeof item === 'string' ? 'General' : item.category;
+
             const cleanName = techName.trim();
             if (!cleanName) continue;
 
-            // Find or Create Tech
+            // Find existing tech
             let tech = await db.query.technologies.findFirst({
                 where: eq(technologies.name, cleanName)
             });
 
             if (!tech) {
+                // CREATE: Use the specific category provided by Admin
                 const inserted = await db.insert(technologies).values({
                     name: cleanName,
-                    category: body.industry || 'General' 
+                    category: techCat 
                 }).returning();
                 tech = inserted[0];
+            } else {
+                // UPDATE: If existing tech has no category (or 'General'), 
+                // but we now know it's specific (e.g. 'FinTech'), update it.
+                if ((!tech.category || tech.category === 'General') && techCat !== 'General') {
+                     await db.update(technologies)
+                       .set({ category: techCat })
+                       .where(eq(technologies.id, tech.id));
+                }
             }
 
             // Link
             await db.insert(companyStack).values({
                 companyId: id,
                 techId: tech.id
-            });
+            }).onConflictDoNothing();
         }
     }
 

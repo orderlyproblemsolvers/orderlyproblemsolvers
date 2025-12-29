@@ -10,131 +10,138 @@ const { data: solution, error, status } = await useFetch(`/api/solutions/${slug}
 
 // 2. HANDLE 404
 if (error.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Solution not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: 'Solution Specification Not Found', fatal: true })
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-slate-950 font-sans text-gray-900 dark:text-white transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
-    <!-- LOADING STATE -->
-    <div v-if="status === 'pending'" class="h-screen flex items-center justify-center">
-       <div class="w-12 h-12 border-4 border-gray-100 dark:border-slate-800 border-t-black dark:border-t-white rounded-full animate-spin"></div>
+    <div v-if="status === 'pending'" class="h-screen flex items-center justify-center font-mono text-xs uppercase tracking-widest text-gray-400">
+       <div class="w-8 h-8 border-2 border-[#00A9F4] border-t-transparent rounded-full animate-spin mb-4"></div>
+       <p>Loading Specification...</p>
     </div>
 
     <div v-else-if="solution">
       
-      <!-- HERO SECTION -->
-      <div class="bg-gray-900 dark:bg-black text-white pt-32 pb-20 relative overflow-hidden transition-colors duration-300">
-        <!-- Abstract Background Pattern -->
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-gray-500 to-transparent"></div>
+      <div class="bg-[#051C2C] dark:bg-black text-white pt-32 pb-16 relative overflow-hidden">
+        
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;"></div>
 
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-           <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+           <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
               <div>
-                 <span class="px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">
-                    {{ solution.category || 'General Tech' }}
-                 </span>
-                 <h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-8">{{ solution.name }}</h1>
+                 <div class="flex items-center gap-3 mb-6">
+                    <span class="font-mono text-xs text-[#00A9F4] uppercase border border-[#00A9F4] px-2 py-0.5">
+                      {{ solution.category || 'General' }}
+                    </span>
+                    <span class="font-mono text-xs text-gray-500">SPEC_ID: {{ solution.id }}</span>
+                 </div>
                  
-                 <!-- Stats -->
-                 <div class="flex gap-8 text-sm font-mono text-gray-400 border-t border-white/10 pt-6 inline-flex">
+                 <h1 class="text-6xl md:text-8xl font-serif font-bold tracking-tight mb-8">
+                   {{ solution.name }}<span class="text-[#00A9F4]">.</span>
+                 </h1>
+                 
+                 <div class="flex gap-12 border-t border-white/20 pt-6">
                     <div>
-                       <strong class="text-white text-lg block">{{ solution.stats.companies }}</strong>
-                       <span>Organizations</span>
+                       <span class="block text-4xl font-mono font-bold">{{ solution.stats.companies }}</span>
+                       <span class="text-[10px] uppercase tracking-widest text-gray-400">Implementations</span>
                     </div>
-                    <div class="w-px bg-white/20 h-full"></div>
                     <div>
-                       <strong class="text-white text-lg block">{{ solution.stats.experts }}</strong>
-                       <span>Experts</span>
+                       <span class="block text-4xl font-mono font-bold">{{ solution.stats.experts }}</span>
+                       <span class="text-[10px] uppercase tracking-widest text-gray-400">Certified Experts</span>
                     </div>
                  </div>
               </div>
 
-              <!-- Dynamic Icon Block -->
-              <div class="hidden md:flex w-32 h-32 bg-white/5 border border-white/10 rounded-3xl items-center justify-center backdrop-blur-sm transform rotate-3 hover:rotate-0 transition-transform">
-                 <span class="text-5xl font-black text-white/20">{{ solution.name.charAt(0) }}</span>
+              <div class="hidden lg:block opacity-20">
+                 
               </div>
            </div>
         </div>
       </div>
 
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="border-b border-gray-200 dark:border-gray-800">
+         <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 dark:divide-gray-800 border-x border-gray-200 dark:border-gray-800">
+               
+               <div class="p-8 lg:p-12">
+                  <h3 class="text-sm font-bold uppercase tracking-widest text-[#051C2C] dark:text-white mb-8 flex items-center gap-2">
+                     <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                     Used By Organizations
+                  </h3>
+                  
+                  <div v-if="solution.companies && solution.companies.length > 0" class="space-y-6">
+                     <NuxtLink 
+                       v-for="comp in solution.companies" 
+                       :key="comp.slug" 
+                       :to="`/companies/${comp.slug}`"
+                       class="group flex items-start gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                     >
+                        <div class="w-12 h-12 bg-gray-100 dark:bg-white/10 flex items-center justify-center font-bold text-gray-400 dark:text-gray-500 group-hover:bg-blue-500 group-hover:text-white transition-colors shrink-0">
+                           <img v-if="comp.logo" :src="comp.logo" class="w-full h-full object-cover" />
+                           <span v-else>{{ comp.name.charAt(0) }}</span>
+                        </div>
+                        <div>
+                           <h4 class="text-lg font-serif font-bold text-[#051C2C] dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {{ comp.name }}
+                           </h4>
+                           <p class="font-mono text-[10px] text-gray-400 uppercase mt-1">
+                              {{ comp.industry }} • {{ comp.location }}
+                           </p>
+                        </div>
+                     </NuxtLink>
+                  </div>
+                  
+                  <div v-else class="py-12 text-center border border-dashed border-gray-200 dark:border-gray-800">
+                     <span class="font-mono text-xs text-gray-400">NO_DATA_AVAILABLE</span>
+                  </div>
+               </div>
+
+               <div class="p-8 lg:p-12 bg-gray-50 dark:bg-[#0A253A]">
+                  <h3 class="text-sm font-bold uppercase tracking-widest text-[#051C2C] dark:text-white mb-8 flex items-center gap-2">
+                     <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                     Domain Experts
+                  </h3>
+                  
+                  <div v-if="solution.experts && solution.experts.length > 0" class="space-y-6">
+                     <NuxtLink 
+                       v-for="person in solution.experts" 
+                       :key="person.slug" 
+                       :to="`/people/${person.slug}`"
+                       class="group flex items-center gap-4 p-4 hover:bg-white dark:hover:bg-black/20 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                     >
+                        <img 
+                          :src="person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`" 
+                          class="w-10 h-10 rounded-full grayscale group-hover:grayscale-0 transition-all"
+                        />
+                        <div>
+                           <h4 class="text-base font-bold text-[#051C2C] dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                              {{ person.name }}
+                           </h4>
+                           <p class="font-mono text-[10px] text-gray-400 uppercase">
+                              {{ person.role }}
+                           </p>
+                        </div>
+                     </NuxtLink>
+                  </div>
+                  
+                  <div v-else class="py-12 text-center border border-dashed border-gray-200 dark:border-gray-800">
+                     <span class="font-mono text-xs text-gray-400">NO_EXPERTS_FOUND</span>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+
+      <div class="bg-white dark:bg-[#051C2C] py-24 text-center">
+         <h3 class="text-2xl font-serif font-bold text-[#051C2C] dark:text-white mb-2">Build with {{ solution.name }}?</h3>
+         <p class="text-xs font-mono text-gray-400 uppercase tracking-widest mb-8">Verification Open for Q4</p>
          
-         <!-- SECTIONS GRID -->
-         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            
-            <!-- LEFT: COMPANIES LIST -->
-            <div>
-               <h3 class="text-xl font-black text-gray-900 dark:text-white mb-8 flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-4 transition-colors duration-300">
-                  <span class="w-2 h-2 bg-blue-600 dark:bg-blue-500 rounded-full"></span>
-                  Implemented By
-               </h3>
-               
-               <div v-if="solution.companies && solution.companies.length > 0" class="space-y-4">
-                  <NuxtLink 
-                    v-for="comp in solution.companies" 
-                    :key="comp.slug" 
-                    :to="`/companies/${comp.slug}`"
-                    class="flex items-center gap-4 p-4 border border-gray-200 dark:border-slate-800 rounded-xl hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 group"
-                  >
-                     <div class="w-12 h-12 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center font-bold text-gray-500 dark:text-gray-400 group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors overflow-hidden shrink-0">
-                        <img v-if="comp.logo && comp.logo.startsWith('http')" :src="comp.logo" class="w-full h-full object-cover" />
-                        <span v-else class="text-sm uppercase">{{ comp.name.charAt(0) }}</span>
-                     </div>
-                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{{ comp.name }}</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ comp.industry }} • {{ comp.location }}</p>
-                     </div>
-                  </NuxtLink>
-               </div>
-               
-               <div v-else class="p-8 bg-gray-50 dark:bg-slate-900 rounded-xl text-center border border-dashed border-gray-200 dark:border-slate-800 transition-colors duration-300">
-                  <p class="text-sm font-bold text-gray-400 dark:text-gray-500">No organizations verified yet.</p>
-               </div>
-            </div>
-
-            <!-- RIGHT: EXPERTS LIST -->
-            <div>
-               <h3 class="text-xl font-black text-gray-900 dark:text-white mb-8 flex items-center gap-2 border-b border-gray-100 dark:border-slate-800 pb-4 transition-colors duration-300">
-                  <span class="w-2 h-2 bg-purple-600 dark:bg-purple-500 rounded-full"></span>
-                  Domain Experts
-               </h3>
-               
-               <div v-if="solution.experts && solution.experts.length > 0" class="space-y-4">
-                  <NuxtLink 
-                    v-for="person in solution.experts" 
-                    :key="person.slug" 
-                    :to="`/people/${person.slug}`"
-                    class="flex items-center gap-4 p-4 border border-gray-200 dark:border-slate-800 rounded-xl hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 group"
-                  >
-                     <img 
-                       :src="person.avatar || `https://ui-avatars.com/api/?name=${person.name}&background=random`" 
-                       class="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 shrink-0"
-                     />
-                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors">{{ person.name }}</h4>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ person.role }}</p>
-                     </div>
-                  </NuxtLink>
-               </div>
-               
-               <div v-else class="p-8 bg-gray-50 dark:bg-slate-900 rounded-xl text-center border border-dashed border-gray-200 dark:border-slate-800 transition-colors duration-300">
-                  <p class="text-sm font-bold text-gray-400 dark:text-gray-500">No experts listed yet.</p>
-               </div>
-            </div>
-
-         </div>
-
-         <!-- CTA FOOTER -->
-         <div class="mt-24 p-10 bg-gray-100 dark:bg-slate-900 rounded-3xl text-center border border-gray-200 dark:border-slate-800 transition-colors duration-300">
-            <h3 class="text-2xl font-black mb-4 text-gray-900 dark:text-white">Do you work with {{ solution.name }}?</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">Add your profile to the index to be discovered by partners and clients looking for this expertise.</p>
-            <NuxtLink to="/submit-solution" class="inline-block px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-bold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors shadow-lg">
-               Join the Index
-            </NuxtLink>
-         </div>
-
+         <NuxtLink to="/submit-solution" class="inline-block px-10 py-4 border-2 border-[#051C2C] dark:border-white text-[#051C2C] dark:text-white text-xs font-bold uppercase tracking-widest hover:bg-[#051C2C] hover:text-white dark:hover:bg-white dark:hover:text-[#051C2C] transition-colors">
+            Register Usage
+         </NuxtLink>
       </div>
 
     </div>

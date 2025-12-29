@@ -49,7 +49,7 @@ const { data: people, status, error, refresh } = await useFetch('/api/people', {
       role: p.role,
       company: p.companyName || 'Freelance',
       location: p.location || 'Remote',
-      image: p.avatar || `https://ui-avatars.com/api/?name=${p.name}&background=random&size=128`,
+      image: p.avatar || `https://ui-avatars.com/api/?name=${p.name}&background=051C2C&color=fff`,
       bio: p.bio,
       status: p.companyName ? 'Active' : 'Open to Work'
     }))
@@ -76,149 +76,159 @@ const clearFilters = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-[#051C2C] font-sans text-[#051C2C] dark:text-white transition-colors duration-500">
     
-    <div class="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 pt-32 pb-8 transition-colors duration-300">
-       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div class="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0A253A] pt-32 pb-12 transition-colors duration-500">
+       <div class="max-w-7xl mx-auto px-6 lg:px-12">
+          
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
              <div>
-                <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">The Talent Index</p>
-                <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tighter">People.</h1>
+                <span class="block text-xs font-bold uppercase tracking-[0.2em] text-[#00A9F4] mb-3">
+                   The Network
+                </span>
+                <h1 class="text-5xl md:text-6xl font-serif text-[#051C2C] dark:text-white tracking-tight leading-none">
+                   Talent Index<span class="text-[#00A9F4]">.</span>
+                </h1>
              </div>
-             <div class="w-full md:w-96 relative">
+
+             <div class="w-full lg:w-[480px] relative group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                   <svg v-if="status !== 'pending'" class="w-5 h-5 text-gray-400 group-focus-within:text-[#00A9F4] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                   <div v-else class="w-4 h-4 border-2 border-[#00A9F4] border-t-transparent rounded-full animate-spin"></div>
+                </div>
                 <input 
                   v-model="search" 
                   @input="handleSearch"
                   type="text" 
-                  placeholder="Search by name, role, or bio..." 
-                  class="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-slate-800 border-transparent dark:border-slate-700 focus:bg-white dark:focus:bg-black focus:border-black dark:focus:border-white border rounded-lg transition-all text-sm font-medium outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" 
+                  placeholder="FIND EXPERT..." 
+                  class="block w-full pl-12 pr-4 py-4 bg-white dark:bg-[#051C2C] border-2 border-gray-200 dark:border-gray-700 text-[#051C2C] dark:text-white placeholder-gray-400 font-mono text-sm focus:border-[#00A9F4] focus:ring-0 transition-all uppercase tracking-wider" 
                 />
-                <svg v-if="status !== 'pending'" class="w-5 h-5 text-gray-400 dark:text-gray-500 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <div v-else class="w-5 h-5 border-2 border-gray-300 dark:border-gray-600 border-t-black dark:border-t-white rounded-full animate-spin absolute left-3 top-3"></div>
              </div>
           </div>
        </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
          
-         <div class="hidden lg:block lg:col-span-3 sticky top-32 space-y-10">
+         <div class="hidden lg:block lg:col-span-3 sticky top-32">
             
-            <div>
-               <div class="flex items-center justify-between mb-4">
-                 <h3 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white">Role</h3>
-                 <button v-if="selectedRole" @click="selectedRole = ''" class="text-[10px] font-bold text-red-500 hover:underline">Clear</button>
-               </div>
-               <div class="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                  <label v-for="role in filterOptions.roles" :key="role" class="flex items-center gap-3 cursor-pointer group">
-                     <input 
-                        type="radio" 
-                        name="role" 
-                        :value="role" 
-                        v-model="selectedRole"
-                        class="w-4 h-4 border-gray-300 dark:border-slate-600 text-black focus:ring-black accent-black dark:accent-white" 
-                     />
-                     <span class="text-sm text-gray-600 dark:text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors" :class="{ 'font-bold text-black dark:text-white': selectedRole === role }">{{ role }}</span>
-                  </label>
-               </div>
+            <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200 dark:border-gray-800">
+               <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-[#051C2C] dark:text-white">Parameters</h3>
+               <button v-if="search || selectedRole || selectedLocation" @click="clearFilters" class="text-[10px] font-bold text-red-500 uppercase tracking-wider hover:underline">Reset</button>
             </div>
 
-            <div>
-               <div class="flex items-center justify-between mb-4">
-                 <h3 class="text-xs font-black uppercase tracking-widest text-gray-900 dark:text-white">Location</h3>
-                 <button v-if="selectedLocation" @click="selectedLocation = ''" class="text-[10px] font-bold text-red-500 hover:underline">Clear</button>
+            <div class="space-y-10">
+               
+               <div>
+                  <h4 class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-4">Role</h4>
+                  <div class="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                     <label v-for="role in filterOptions.roles" :key="role" class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center">
+                           <input type="radio" name="role" :value="role" v-model="selectedRole" class="peer sr-only" />
+                           <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 group-hover:border-[#00A9F4] transition-colors peer-checked:bg-[#00A9F4] peer-checked:border-[#00A9F4]"></div>
+                        </div>
+                        <span class="text-sm font-mono text-gray-600 dark:text-gray-400 group-hover:text-[#051C2C] dark:group-hover:text-white transition-colors uppercase" :class="{ 'text-[#051C2C] dark:text-white font-bold': selectedRole === role }">
+                           {{ role }}
+                        </span>
+                     </label>
+                  </div>
                </div>
-               <div class="flex flex-wrap gap-2">
-                  <button 
-                    v-for="loc in filterOptions.locations" 
-                    :key="loc" 
-                    @click="selectedLocation = selectedLocation === loc ? '' : loc"
-                    class="px-3 py-1.5 rounded text-xs font-bold border transition-colors"
-                    :class="selectedLocation === loc ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white' : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-700 hover:border-black dark:hover:border-white'"
-                  >
-                     {{ loc }}
-                  </button>
-               </div>
-            </div>
 
-            <button 
-              v-if="search || selectedRole || selectedLocation" 
-              @click="clearFilters"
-              class="w-full py-2 text-xs font-bold text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-slate-700 rounded hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
-            >
-              Reset All Filters
-            </button>
+               <div>
+                  <h4 class="text-[10px] font-bold uppercase text-gray-400 dark:text-gray-500 tracking-widest mb-4">Base</h4>
+                  <div class="flex flex-wrap gap-2">
+                     <button 
+                        v-for="loc in filterOptions.locations" 
+                        :key="loc" 
+                        @click="selectedLocation = selectedLocation === loc ? '' : loc"
+                        class="px-3 py-1 border text-[10px] font-bold uppercase tracking-wider transition-all duration-300"
+                        :class="selectedLocation === loc 
+                           ? 'bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] border-[#051C2C] dark:border-white' 
+                           : 'bg-transparent text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-[#00A9F4] hover:text-[#00A9F4]'"
+                     >
+                        {{ loc }}
+                     </button>
+                  </div>
+               </div>
+
+            </div>
          </div>
 
          <div class="lg:col-span-9">
             
-            <div class="flex items-center justify-between mb-6">
-               <span class="text-sm font-bold text-gray-500 dark:text-gray-400">Showing {{ people?.length || 0 }} Solvers</span>
-               <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase">Sort:</span>
-                  <span class="text-xs font-bold text-black dark:text-white">Newest First</span>
+            <div class="flex items-center justify-between mb-6 pb-2 border-b border-gray-100 dark:border-gray-800">
+               <span class="font-mono text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                  // Records: {{ people?.length || 0 }}
+               </span>
+               <div class="hidden md:flex items-center gap-2">
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sort:</span>
+                  <span class="text-[10px] font-bold text-[#051C2C] dark:text-white uppercase tracking-widest">Relevant</span>
                </div>
             </div>
 
-            <div v-if="status === 'pending' && !people" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-               <div v-for="i in 6" :key="i" class="h-56 bg-gray-100 dark:bg-slate-900 rounded-xl animate-pulse border border-gray-200 dark:border-slate-800"></div>
+            <div v-if="status === 'pending' && !people" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               <div v-for="i in 6" :key="i" class="h-64 bg-gray-50 dark:bg-[#0A253A] animate-pulse border border-gray-200 dark:border-gray-800"></div>
             </div>
 
-            <div v-else-if="error" class="p-8 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-center border border-red-100 dark:border-red-900/30">
-               <p class="font-bold">Unable to load directory.</p>
-               <p class="text-sm mt-1">{{ error.message }}</p>
-               <button @click="refresh()" class="mt-4 text-xs font-bold underline">Try Again</button>
+            <div v-else-if="error" class="p-12 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/10 text-center">
+               <p class="font-mono text-red-600 dark:text-red-400 mb-4">ERROR: Unable to retrieve index.</p>
+               <button @click="refresh()" class="text-xs font-bold uppercase tracking-widest border-b border-red-500 text-red-500">Retry Connection</button>
             </div>
 
-            <div v-else-if="!people || people.length === 0" class="p-16 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl text-center">
-               <div class="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300 dark:text-slate-600">
-                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-               </div>
-               <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No results match your criteria</h3>
-               <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto text-sm">We couldn't find anyone matching the filters. Try clearing them or searching for something else.</p>
-               <button @click="clearFilters" class="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg font-bold text-sm hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors">Clear Filters</button>
+            <div v-else-if="!people || people.length === 0" class="py-24 border border-dashed border-gray-300 dark:border-gray-700 text-center">
+               <h3 class="text-xl font-serif text-[#051C2C] dark:text-white mb-2">No Matches Found</h3>
+               <p class="text-gray-500 font-mono text-xs mb-8">Refine your query parameters.</p>
+               <button @click="clearFilters" class="px-6 py-3 bg-[#051C2C] dark:bg-white text-white dark:text-[#051C2C] text-xs font-bold uppercase tracking-widest hover:opacity-90">Reset Filters</button>
             </div>
 
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l border-gray-200 dark:border-gray-800">
                
                <NuxtLink 
-                 v-for="person in people" 
-                 :key="person.id" 
-                 :to="`/people/${person.slug}`"
-                 class="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl p-6 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-black/50 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 flex flex-col cursor-pointer"
+                  v-for="person in people" 
+                  :key="person.id" 
+                  :to="`/people/${person.slug}`"
+                  class="group relative bg-white dark:bg-[#051C2C] border-b border-r border-gray-200 dark:border-gray-800 p-8 hover:bg-gray-50 dark:hover:bg-[#0A253A] transition-colors duration-300 flex flex-col h-full cursor-pointer"
                >
+                  <div class="absolute top-0 left-0 w-0 h-0.5 bg-[#00A9F4] group-hover:w-full transition-all duration-500"></div>
                   
-                  <div class="flex items-start justify-between mb-4">
-                     <div class="flex items-center gap-4">
-                        <div class="relative">
-                           <img :src="person.image" class="w-14 h-14 rounded-full object-cover border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800" />
-                           <div v-if="person.status === 'Open to Work'" class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full" title="Available"></div>
-                        </div>
-                        <div>
-                           <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">{{ person.name }}</h3>
-                           <p class="text-xs text-gray-500 dark:text-gray-400 font-medium line-clamp-1">
-                              {{ person.role }} 
-                              <span v-if="person.company !== 'Freelance'">
-                                <span class="text-gray-300 dark:text-gray-600 mx-1">@</span> <span class="text-black dark:text-gray-200 font-bold">{{ person.company }}</span>
-                              </span>
-                           </p>
-                        </div>
+                  <div class="flex items-start justify-between mb-8">
+                     <div class="w-16 h-16 bg-gray-200 dark:bg-black overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <img 
+                          :src="person.image" 
+                          class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500" 
+                          :alt="person.name"
+                        />
                      </div>
-                     <span class="px-2 py-1 bg-gray-50 dark:bg-slate-800 text-[10px] font-bold uppercase text-gray-500 dark:text-gray-400 rounded border border-gray-100 dark:border-slate-700 whitespace-nowrap">
-                        {{ person.location }}
-                     </span>
+                     
+                     <div v-if="person.status === 'Open to Work'" class="relative flex h-3 w-3" title="Open to Work">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A9F4] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-[#00A9F4]"></span>
+                     </div>
                   </div>
 
-                  <div v-html="person.bio || 'No bio available'" class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 line-clamp-2 grow">
+                  <div class="flex-grow mb-6">
+                     <h3 class="text-2xl font-serif text-[#051C2C] dark:text-white group-hover:text-[#00A9F4] transition-colors mb-2 leading-tight">
+                        {{ person.name }}
+                     </h3>
+                     
+                     <div class="flex flex-col gap-1 mb-4">
+                        <span class="font-mono text-xs text-[#051C2C] dark:text-white font-bold uppercase">
+                           {{ person.role }}
+                        </span>
+                        <span class="font-mono text-[10px] text-gray-400 uppercase">
+                           @ {{ person.company }}
+                        </span>
+                     </div>
                   </div>
 
-                  <div class="mt-auto pt-4 border-t border-gray-50 dark:border-slate-800 flex items-center justify-between">
-                     <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
-                        View Profile
+                  <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between group-hover:border-gray-200 dark:group-hover:border-gray-700 transition-colors">
+                     <span class="font-mono text-[10px] text-gray-500 dark:text-gray-400 uppercase">
+                        [{{ person.location }}]
                      </span>
-                     <svg class="w-5 h-5 text-gray-300 dark:text-gray-600 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                     <svg class="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-[#00A9F4] group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                   </div>
+
                </NuxtLink>
 
             </div>
@@ -230,27 +240,17 @@ const clearFilters = () => {
 </template>
 
 <style scoped>
-/* Custom Scrollbar for filter list */
+/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: transparent; 
 }
-/* Dark mode scrollbar */
-:global(.dark) .custom-scrollbar::-webkit-scrollbar-track {
-  background: #1e293b; 
-}
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #d1d5db; 
-  border-radius: 4px;
 }
 :global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #475569; 
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af; 
 }
 </style>

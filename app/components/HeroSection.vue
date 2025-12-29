@@ -8,7 +8,7 @@ const canvasContainer = ref<HTMLElement | null>(null)
 const searchQuery = ref('')
 const searchInput = ref<HTMLInputElement | null>(null)
 const colorMode = useColorMode()
-const isCanvasReady = ref(false) // ✅ NEW: Tracks if Three.js is ready
+const isCanvasReady = ref(false)
 
 const handleSearch = () => {
   if (searchQuery.value.trim().length === 0) return
@@ -29,14 +29,16 @@ let animationFrameId: number
 const quickTags = ['FinTech', 'Health', 'Logistics', 'Education']
 
 // CONFIG
-const PARTICLE_COUNT = 500 // ✅ OPTIMIZATION: Reduced slightly from 600 for faster init
-const GLOBE_RADIUS = 22
-const CONNECTION_DISTANCE = 5.5
+const PARTICLE_COUNT = 450 
+const GLOBE_RADIUS = 24 // Slightly larger for grander scale
+const CONNECTION_DISTANCE = 6.0
 
-// THEME COLORS
+// THEME COLORS (McKinsey Palette)
+// Dark: Deep Navy (#051C2C) background, Electric Cyan (0x00A9F4) nodes
+// Light: Stark White background, Deep Navy (0x051C2C) nodes
 const COLORS = {
-  light: { bg: 0xffffff, particles: 0x2563eb, lines: 0xe5e7eb },
-  dark: { bg: 0x0f172a, particles: 0x60a5fa, lines: 0x1e293b }
+  light: { bg: 0xffffff, particles: 0x051C2C, lines: 0xe2e8f0 }, 
+  dark: { bg: 0x051C2C, particles: 0x00A9F4, lines: 0x1e3a8a } 
 }
 
 const updateTheme = () => {
@@ -45,7 +47,9 @@ const updateTheme = () => {
   const theme = isDark ? COLORS.dark : COLORS.light
 
   scene.background = new THREE.Color(theme.bg)
-  scene.fog = new THREE.FogExp2(theme.bg, 0.02)
+  // Subtle fog for depth
+  scene.fog = new THREE.FogExp2(theme.bg, 0.025) 
+  
   ;(particles.material as THREE.PointsMaterial).color.setHex(theme.particles)
   ;(lines.material as THREE.LineBasicMaterial).color.setHex(theme.lines)
 }
@@ -59,8 +63,8 @@ const initThreeJS = () => {
 
   // 1. SCENE & CAMERA
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
-  camera.position.set(0, 0, 70)
+  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200) // Lower FOV for "cinematic" look
+  camera.position.set(0, 0, 85)
 
   // 2. RENDERER
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -86,18 +90,16 @@ const initThreeJS = () => {
 
   const particleMaterial = new THREE.PointsMaterial({
     color: COLORS.light.particles,
-    size: 0.4,
+    size: 0.3, // Smaller, finer particles for elegance
     transparent: true,
-    opacity: 1.2,
+    opacity: 0.9,
   })
   particles = new THREE.Points(particleGeometry, particleMaterial)
   networkGroup.add(particles)
 
-  // 4. CONNECTION LOGIC (The Heavy Part)
+  // 4. CONNECTION LOGIC
   const lineGeometry = new THREE.BufferGeometry()
   const linePositions: number[] = []
-  
-  // Optimization: Pre-calculate square distance to avoid expensive Math.sqrt() inside loop
   const CONNECTION_DIST_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE 
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -109,7 +111,6 @@ const initThreeJS = () => {
       const dx = x1 - positions[j3]
       const dy = y1 - positions[j3 + 1]
       const dz = z1 - positions[j3 + 2]
-      
       const distSq = dx*dx + dy*dy + dz*dz
 
       if (distSq < CONNECTION_DIST_SQ) {
@@ -122,7 +123,7 @@ const initThreeJS = () => {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: COLORS.light.lines,
     transparent: true,
-    opacity: 1.0
+    opacity: 0.4 // Very subtle lines
   })
   lines = new THREE.LineSegments(lineGeometry, lineMaterial)
   networkGroup.add(lines)
@@ -130,8 +131,6 @@ const initThreeJS = () => {
   updateTheme()
   animate()
   
-  // ✅ NEW: Signal that canvas is ready to fade in
-  // Small timeout ensures the first frame is actually painted to the buffer
   setTimeout(() => {
     isCanvasReady.value = true
   }, 100)
@@ -141,18 +140,18 @@ const initThreeJS = () => {
 let mouseX = 0, mouseY = 0, targetRotationX = 0, targetRotationY = 0
 
 const onDocumentMouseMove = (event: MouseEvent) => {
-  mouseX = (event.clientX - window.innerWidth / 2) * 0.0005
-  mouseY = (event.clientY - window.innerHeight / 2) * 0.0005
+  mouseX = (event.clientX - window.innerWidth / 2) * 0.0002 // Slower mouse reaction for "heavy" feel
+  mouseY = (event.clientY - window.innerHeight / 2) * 0.0002
 }
 
 const animate = () => {
   animationFrameId = requestAnimationFrame(animate)
   if (networkGroup) {
-    networkGroup.rotation.y += 0.001
-    targetRotationX = mouseY * 0.5
-    targetRotationY = mouseX * 0.5
-    networkGroup.rotation.x += 0.05 * (targetRotationX - networkGroup.rotation.x)
-    networkGroup.rotation.z += 0.05 * (targetRotationY - networkGroup.rotation.z)
+    networkGroup.rotation.y += 0.0005 // Very slow, majestic rotation
+    targetRotationX = mouseY * 0.3
+    targetRotationY = mouseX * 0.3
+    networkGroup.rotation.x += 0.02 * (targetRotationX - networkGroup.rotation.x)
+    networkGroup.rotation.z += 0.02 * (targetRotationY - networkGroup.rotation.z)
   }
   renderer.render(scene, camera)
 }
@@ -169,9 +168,6 @@ const onWindowResize = () => {
 onMounted(() => {
   window.addEventListener('resize', onWindowResize)
   document.addEventListener('mousemove', onDocumentMouseMove)
-
-  // ✅ OPTIMIZATION: Defer Three.js init until after UI paint
-  // This allows the HTML (Title, Search) to appear INSTANTLY.
   setTimeout(() => {
     requestAnimationFrame(initThreeJS)
   }, 50) 
@@ -186,52 +182,60 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative w-full py-4 overflow-hidden flex items-center justify-center bg-white dark:bg-slate-950 transition-colors duration-500">
+  <div class="relative w-full min-h-[85vh] overflow-hidden flex flex-col justify-center items-center bg-white dark:bg-[#051C2C] transition-colors duration-700">
     
     <div 
       ref="canvasContainer" 
-      class="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ease-out"
+      class="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ease-out mix-blend-screen dark:mix-blend-normal"
       :class="isCanvasReady ? 'opacity-100' : 'opacity-0'"
       aria-hidden="true"
     ></div>
 
-    <div class="relative z-10 w-full max-w-5xl px-6 text-center">
+    <div class="relative z-10 w-full max-w-6xl px-8 md:px-12 text-center">
       
-      <div class="mb-6 inline-block">
-        <span class="bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-blue-400 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border border-blue-100 dark:border-slate-700 transition-colors">
+      <div class="mb-8">
+        <span class="inline-block border-b border-black dark:border-blue-400 pb-1 text-xs font-bold tracking-[0.2em] uppercase text-gray-900 dark:text-blue-400">
           The Problem Solving Ecosystem
         </span>
       </div>
 
-      <h1 class="text-5xl md:text-7xl font-black text-gray-900 dark:text-white tracking-tight mb-6 leading-tight transition-colors">
-        Explore the minds and teams shaping the <span class="relative inline-block text-blue-600 dark:text-blue-400">
-          future
-          <svg class="absolute w-full h-3 -bottom-1 left-0 text-blue-200 dark:text-blue-900 opacity-50" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true">
-             <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
-          </svg>
-        </span> 
+      <h1 class="text-6xl md:text-8xl font-serif text-gray-900 dark:text-white tracking-tight mb-8 leading-[0.95]">
+        Think bigger.<br />
+        <span class="italic font-light text-[#00A9F4]">Build stronger.</span>
       </h1>
 
-      <p class="text-xl text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed font-medium transition-colors">
+      <p class="text-xl md:text-2xl font-light text-gray-600 dark:text-gray-300 mb-14 max-w-3xl mx-auto leading-relaxed">
         The curated directory of verified agencies, experts, and tools solving real problems in emerging markets.
       </p>
 
-      <div class="relative max-w-2xl mx-auto mb-10 shadow-2xl shadow-blue-900/10 dark:shadow-black/50 rounded-2xl">
-        <form @submit.prevent="handleSearch" role="search" class="flex items-center bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden p-2 transition-all focus-within:ring-4 focus-within:ring-blue-50 dark:focus-within:ring-blue-900/30 focus-within:border-blue-400 dark:focus-within:border-blue-500">
-          <div class="pl-4 pr-3 text-gray-400 dark:text-gray-500" aria-hidden="true">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      <div class="relative max-w-xl mx-auto mb-12">
+        <form @submit.prevent="handleSearch" role="search" class="group flex items-center bg-transparent border-b-2 border-gray-300 dark:border-gray-600 focus-within:border-black dark:focus-within:border-[#00A9F4] transition-colors duration-300 pb-2">
+          
+          <input 
+            id="search-input" 
+            ref="searchInput" 
+            v-model="searchQuery" 
+            type="search" 
+            placeholder="Search innovators, industries, or stacks..." 
+            class="w-full text-2xl font-serif bg-transparent border-none focus:ring-0 p-0 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" 
+          />
+          
+          <button type="submit" class="ml-4 text-black dark:text-[#00A9F4] hover:opacity-70 transition-opacity">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
-          </div>
-          <label for="search-input" class="sr-only">Search innovators, industries, or stacks</label>
-          <input id="search-input" ref="searchInput" v-model="searchQuery" type="search" placeholder="Search innovators, industries, or stacks..." class="w-full h-12 text-gray-900 dark:text-white text-lg placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none bg-transparent" />
-          <button type="submit" class="bg-gray-900 dark:bg-white text-white dark:text-black h-12 px-8 rounded-xl text-sm font-bold hover:bg-blue-600 dark:hover:bg-blue-300 transition-colors shadow-lg">Find It</button>
+          </button>
         </form>
       </div>
 
-      <div class="flex flex-wrap justify-center gap-3 items-center">
-        <span class="text-sm font-medium text-gray-400 dark:text-gray-500 py-2">Popular:</span>
-        <button v-for="tag in quickTags" :key="tag" @click="searchQuery = tag; handleSearch()" class="px-5 py-2 rounded-lg bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300 text-sm font-bold border border-gray-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-slate-900 transition-all">
+      <div class="flex flex-wrap justify-center gap-6 items-center">
+        <span class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Trending:</span>
+        <button 
+          v-for="tag in quickTags" 
+          :key="tag" 
+          @click="searchQuery = tag; handleSearch()" 
+          class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-[#00A9F4] underline decoration-transparent hover:decoration-current underline-offset-4 transition-all"
+        >
           {{ tag }}
         </button>
       </div>
