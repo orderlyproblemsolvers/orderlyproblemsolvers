@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { signIn } from '@/utils/auth-client'
+import { signIn } from '~/utils/auth-client'
 import { useRouter, useRoute } from 'vue-router'
 
 definePageMeta({

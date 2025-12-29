@@ -114,9 +114,8 @@ export default defineEventHandler(async (event) => {
       id: mainTech?.id || `cat-${slug}`,
       name: mainTech?.name || toTitleCase(nameQuery),
       category: mainTech?.category || "Solution Category",
-      description:
-        mainTech?.description ||
-        `Explore top companies and experts specializing in ${nameQuery}.`,
+      description: `Explore top companies and experts specializing in ${nameQuery}.`, 
+
 
       // Return the merged lists
       companies: combinedCompanies,
