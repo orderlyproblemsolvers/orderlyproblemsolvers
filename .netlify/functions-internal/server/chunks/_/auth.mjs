@@ -26,7 +26,7 @@ const auth = betterAuth({
       }
     }
   },
-  trustedOrigins: ["http://localhost:3000"]
+  trustedOrigins: ["http://localhost:3000", "https://orderlyproblemsolvers.com"]
 });
 
 export { auth as a };

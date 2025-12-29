@@ -3,6 +3,10 @@ import { ref } from 'vue'
 import { signIn } from '@/utils/auth-client'
 import { useRouter, useRoute } from 'vue-router'
 
+definePageMeta({
+  layout: 'login'
+})
+
 const router = useRouter()
 const route = useRoute()
 const isLoading = ref(false)

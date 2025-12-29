@@ -1,7 +1,7 @@
 import { createAuthClient } from 'better-auth/vue';
 
 const authClient = createAuthClient({
-  baseURL: "http://localhost:3000"
+  baseURL: "https://orderlyproblemsolvers.com"
   // Ensure this matches your .env BETTER_AUTH_URL
 });
 const {
