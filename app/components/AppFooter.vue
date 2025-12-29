@@ -19,8 +19,6 @@ const footerNav = {
   company: [
     { label: 'About OPS', to: '/about' },
     { label: 'OPS Studio', to: '/services', isBadge: true },
-    { label: 'Contact', to: '/contact' },
-    { label: 'Careers', to: '/careers' }
   ]
 }
 
