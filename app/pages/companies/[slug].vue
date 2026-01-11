@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const slug = route.params.slug as string
 
-// 1. FETCH REAL DATA
+// 1. FETCH  DATA
 const { data: company, error, status } = await useFetch(`/api/companies/${slug}`)
 
 // 2. HANDLE 404
