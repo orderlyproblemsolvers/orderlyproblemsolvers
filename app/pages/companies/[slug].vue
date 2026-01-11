@@ -48,6 +48,28 @@ useSeoMeta({
   ogImage: () => company.value?.logo,
   twitterCard: 'summary_large_image',
 })
+
+useJsonld(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: company.value?.name,
+  description: company.value?.description,
+  url: company.value?.website,
+  logo: company.value?.logo,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: company.value?.location
+  },
+  industry: company.value?.industry
+}))
+
+defineOgImageComponent('OpsTemplate', {
+  title: company.value?.name,
+  description: company.value?.headline || `Verified ${company.value?.industry} Solution`,
+  image: company.value?.logo,
+  type: 'Company',
+  badge: company.value?.industry
+})
 </script>
 
 <template>
