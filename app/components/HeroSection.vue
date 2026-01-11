@@ -30,12 +30,10 @@ const quickTags = ['FinTech', 'Health', 'Logistics', 'Education']
 
 // CONFIG
 const PARTICLE_COUNT = 450 
-const GLOBE_RADIUS = 24 // Slightly larger for grander scale
+const GLOBE_RADIUS = 44 
 const CONNECTION_DISTANCE = 6.0
 
 // THEME COLORS (McKinsey Palette)
-// Dark: Deep Navy (#051C2C) background, Electric Cyan (0x00A9F4) nodes
-// Light: Stark White background, Deep Navy (0x051C2C) nodes
 const COLORS = {
   light: { bg: 0xffffff, particles: 0x051C2C, lines: 0xe2e8f0 }, 
   dark: { bg: 0x051C2C, particles: 0x00A9F4, lines: 0x1e3a8a } 
@@ -46,9 +44,8 @@ const updateTheme = () => {
   const isDark = colorMode.value === 'dark'
   const theme = isDark ? COLORS.dark : COLORS.light
 
-  scene.background = new THREE.Color(theme.bg)
-  // Subtle fog for depth
-  scene.fog = new THREE.FogExp2(theme.bg, 0.025) 
+  // Note: We keep scene background transparent in ThreeJS so the CSS gradients show through
+  scene.background = null 
   
   ;(particles.material as THREE.PointsMaterial).color.setHex(theme.particles)
   ;(lines.material as THREE.LineBasicMaterial).color.setHex(theme.lines)
@@ -63,11 +60,11 @@ const initThreeJS = () => {
 
   // 1. SCENE & CAMERA
   scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200) // Lower FOV for "cinematic" look
+  camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200)
   camera.position.set(0, 0, 85)
 
   // 2. RENDERER
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }) // Alpha true is crucial here
   renderer.setSize(window.innerWidth, window.innerHeight)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   canvasContainer.value.appendChild(renderer.domElement)
@@ -90,7 +87,7 @@ const initThreeJS = () => {
 
   const particleMaterial = new THREE.PointsMaterial({
     color: COLORS.light.particles,
-    size: 0.3, // Smaller, finer particles for elegance
+    size: 0.3,
     transparent: true,
     opacity: 0.9,
   })
@@ -123,7 +120,7 @@ const initThreeJS = () => {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: COLORS.light.lines,
     transparent: true,
-    opacity: 0.4 // Very subtle lines
+    opacity: 0.4
   })
   lines = new THREE.LineSegments(lineGeometry, lineMaterial)
   networkGroup.add(lines)
@@ -140,14 +137,14 @@ const initThreeJS = () => {
 let mouseX = 0, mouseY = 0, targetRotationX = 0, targetRotationY = 0
 
 const onDocumentMouseMove = (event: MouseEvent) => {
-  mouseX = (event.clientX - window.innerWidth / 2) * 0.0002 // Slower mouse reaction for "heavy" feel
+  mouseX = (event.clientX - window.innerWidth / 2) * 0.0002
   mouseY = (event.clientY - window.innerHeight / 2) * 0.0002
 }
 
 const animate = () => {
   animationFrameId = requestAnimationFrame(animate)
   if (networkGroup) {
-    networkGroup.rotation.y += 0.0005 // Very slow, majestic rotation
+    networkGroup.rotation.y += 0.0005 
     targetRotationX = mouseY * 0.3
     targetRotationY = mouseX * 0.3
     networkGroup.rotation.x += 0.02 * (targetRotationX - networkGroup.rotation.x)
@@ -182,11 +179,24 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="relative w-full min-h-[85vh] overflow-hidden flex flex-col justify-center items-center bg-white dark:bg-[#051C2C] transition-colors duration-700">
+  <div class="relative w-full min-h-[85vh] overflow-hidden flex flex-col justify-center items-center bg-slate-50 dark:bg-[#051C2C] transition-colors duration-700">
     
+    <div class="absolute inset-0 pointer-events-none overflow-hidden select-none">
+        
+        <div class="absolute top-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] opacity-60 dark:opacity-20 animate-blob"
+             style="background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(56, 189, 248, 0) 70%);">
+        </div>
+
+        <div class="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-60 dark:opacity-15 animate-blob animation-delay-2000"
+             style="background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0) 70%);">
+        </div>
+
+        <div class="hidden dark:block absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00A9F4] opacity-[0.03] blur-[120px] rounded-full"></div>
+    </div>
+
     <div 
       ref="canvasContainer" 
-      class="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ease-out mix-blend-screen dark:mix-blend-normal"
+      class="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ease-out"
       :class="isCanvasReady ? 'opacity-100' : 'opacity-0'"
       aria-hidden="true"
     ></div>
@@ -199,9 +209,12 @@ onUnmounted(() => {
         </span>
       </div>
 
-      <h1 class="text-6xl md:text-8xl font-serif text-gray-900 dark:text-white tracking-tight mb-8 leading-[0.95]">
+      <h1 class="text-6xl md:text-8xl font-serif text-gray-900 dark:text-white tracking-tight mb-8 leading-[0.95] drop-shadow-sm">
         Think bigger.<br />
-        <span class="italic font-light text-[#00A9F4]">Build stronger.</span>
+        <span class="italic font-light text-[#00A9F4] relative">
+            Build stronger.
+            <span class="absolute inset-0 blur-xl bg-[#00A9F4] opacity-0 dark:opacity-20"></span>
+        </span>
       </h1>
 
       <p class="text-xl md:text-2xl font-light text-gray-600 dark:text-gray-300 mb-14 max-w-3xl mx-auto leading-relaxed">
@@ -243,3 +256,21 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Smooth float animation for the gradient blobs */
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 10s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+</style>
