@@ -138,7 +138,7 @@ defineOgImageComponent('OpsTemplate', {
                </div>
                
                <div class="p-6">
-                  <span class="block text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Founded</span>
+                  <span class="block text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Date Added</span>
                   <span class="font-mono text-lg text-[#051C2C] dark:text-white">{{ formatDate(company.createdAt) }}</span>
                </div>
 
@@ -271,18 +271,18 @@ defineOgImageComponent('OpsTemplate', {
 
 <style scoped>
 /* EDITORIAL TYPOGRAPHY FOR DESCRIPTION */
-.tiptap-content {
+:deep(.tiptap-content) {
   font-size: 1.125rem; 
   line-height: 1.8;
 }
 
 /* Headers */
-.tiptap-content :deep(h2) { 
+ :deep(.tiptap-content h2) { 
   font-family: serif; 
   font-size: 1.75rem; 
-  color: #051C2C; 
   margin-top: 2rem; 
   margin-bottom: 1rem; 
+  text-decoration: underline #00A9F4; 
 }
 .tiptap-content :deep(h3) { 
   font-family: serif; 
@@ -292,16 +292,28 @@ defineOgImageComponent('OpsTemplate', {
   margin-bottom: 0.75rem; 
 }
 
+:deep(.tiptap-content ul) {
+   list-style-type: square;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+:deep(.tiptap-content li::marker){
+   color: #00A9F4;
+}
+
 /* Links */
-.tiptap-content :deep(a) { 
+:deep(.tiptap-content a) { 
   color: #00A9F4; 
   text-decoration: underline; 
+
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
 }
 
 /* Blockquotes: Editorial Style */
-.tiptap-content :deep(blockquote) {
+ :deep(.tiptap-content blockquote) {
   border-left: 2px solid #00A9F4;
   padding-left: 1.5rem;
   font-family: serif;
@@ -312,7 +324,7 @@ defineOgImageComponent('OpsTemplate', {
 }
 
 /* Images: Sharp edges */
-.tiptap-content :deep(img) {
+:deep(.tiptap-content img) {
   border-radius: 0;
   margin: 2rem 0;
   width: 100%;

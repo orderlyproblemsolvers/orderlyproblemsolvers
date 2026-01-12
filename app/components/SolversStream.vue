@@ -55,7 +55,7 @@ const scroll = (direction: 'left' | 'right') => {
 
 <template>
   <section class="py-24 bg-white dark:bg-[#051C2C] border-b border-gray-100 dark:border-gray-800 transition-colors duration-500 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div v-animate class="max-w-7xl mx-auto px-6 lg:px-12">
       
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8 border-b border-black dark:border-gray-700 pb-6">
         <div>

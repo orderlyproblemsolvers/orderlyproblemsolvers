@@ -32,7 +32,7 @@ const trendingStories = computed(() => {
 
 <template>
   <section class="w-full py-24 px-6 lg:px-12 bg-white dark:bg-[#051C2C] border-b border-gray-200 dark:border-gray-800 transition-colors duration-500">
-    <div class="max-w-7xl mx-auto">
+    <div v-animate class="max-w-7xl mx-auto">
       
       <div class="flex items-end justify-between mb-12 border-b border-black dark:border-gray-700 pb-6">
         <div>

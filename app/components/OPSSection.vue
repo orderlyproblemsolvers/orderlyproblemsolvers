@@ -125,7 +125,7 @@ onUnmounted(() => {
     
     <div ref="canvasContainer" class="absolute inset-0 z-0 pointer-events-none opacity-50 mix-blend-multiply dark:mix-blend-screen"></div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+    <div v-animate class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
         
         <div class="lg:col-span-5 pt-8">

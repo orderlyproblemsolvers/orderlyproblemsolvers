@@ -10,7 +10,7 @@
     <div class="absolute top-0 right-0 w-1/3 h-full border-l border-gray-100 dark:border-white/5 pointer-events-none hidden lg:block"></div>
     <div class="absolute top-0 right-24 w-px h-full bg-gray-100 dark:bg-white/5 pointer-events-none hidden lg:block"></div>
 
-    <div class="relative max-w-7xl mx-auto px-6 lg:px-12">
+    <div v-animate class="relative max-w-7xl mx-auto px-6 lg:px-12">
       
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
         
