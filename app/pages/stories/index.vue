@@ -9,7 +9,6 @@ useSeoMeta({
   ogImage: '/img/logo-sm.png',
   twitterCard: 'summary_large_image',
   ogUrl: 'https://orderlyproblemsolvers.com/stories',
-  canonical: 'https://orderlyproblemsolvers.com/stories'
 })
 
 definePageMeta({
@@ -92,7 +91,7 @@ const feedStories = computed(() => {
         
         <NuxtLink :to="`/stories/${heroStory.slug}`" class="group grid grid-cols-1 lg:grid-cols-12 gap-0 border border-gray-200 dark:border-gray-800 mb-24 hover:border-[#00A9F4] transition-colors duration-500 bg-white dark:bg-[#051C2C]">
           
-          <div class="lg:col-span-8 relative aspect-[16/9] lg:aspect-auto lg:h-[600px] overflow-hidden bg-gray-100 dark:bg-[#0A253A]">
+          <div class="lg:col-span-8 relative aspect-video lg:aspect-auto lg:h-[600px] overflow-hidden bg-gray-100 dark:bg-[#0A253A]">
              <img :src="heroStory.image" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-1000 ease-out" />
              <div class="absolute top-0 left-0 bg-[#00A9F4] text-white px-4 py-2 text-xs font-bold uppercase tracking-widest">
                 Cover Story
@@ -102,7 +101,7 @@ const feedStories = computed(() => {
           <div class="lg:col-span-4 p-8 lg:p-12 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-800">
              <span class="font-mono text-xs text-[#00A9F4] uppercase mb-4">{{ heroStory.category }}</span>
              
-             <h2 class="text-4xl md:text-5xl font-serif text-[#051C2C] dark:text-white leading-[1] mb-6 group-hover:text-[#00A9F4] transition-colors">
+             <h2 class="text-4xl md:text-5xl font-serif text-[#051C2C] dark:text-white leading-none mb-6 group-hover:text-[#00A9F4] transition-colors">
                {{ heroStory.title }}
              </h2>
              
@@ -161,7 +160,7 @@ const feedStories = computed(() => {
                    :to="`/stories/${article.slug}`" 
                    class="group py-12 border-b border-gray-200 dark:border-gray-800 flex flex-col md:flex-row gap-8"
                  >
-                    <div class="md:w-1/3 aspect-[4/3] bg-gray-100 dark:bg-black grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <div class="md:w-1/3 aspect-4/3 bg-gray-100 dark:bg-black grayscale group-hover:grayscale-0 transition-all duration-500">
                        <img :src="article.image" class="w-full h-full object-cover" />
                     </div>
                     
