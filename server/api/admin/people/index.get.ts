@@ -11,20 +11,18 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch All People with Company Name
-  const result = await db.select({
-    id: people.id,
-    name: people.name,
-    role: people.role,
-    location: people.location,
-    avatar: people.avatar,
-    status: people.status,
-    createdAt: people.createdAt,
-    // Join Data
-    companyName: companies.name
-  })
-  .from(people)
-  .leftJoin(companies, eq(people.companyId, companies.id))
-  .orderBy(desc(people.createdAt));
-
-  return result;
+  return await db.select({
+      id: people.id,
+      name: people.name,
+      role: people.role,
+      location: people.location,
+      avatar: people.avatar,
+      status: people.status,
+      createdAt: people.createdAt,
+      // Join Data
+      companyName: companies.name
+    })
+    .from(people)
+    .leftJoin(companies, eq(people.companyId, companies.id))
+    .orderBy(desc(people.createdAt));
 });

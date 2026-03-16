@@ -11,6 +11,5 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch All
-  const result = await db.select().from(companies).orderBy(desc(companies.createdAt));
-  return result;
+  return await db.select().from(companies).orderBy(desc(companies.createdAt));
 });

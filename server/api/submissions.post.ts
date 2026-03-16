@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
     try {
       const currentYear = new Date().getFullYear();
       
-      const data = await resend.emails.send({
+      await resend.emails.send({
         from: 'Orderly Problem Solvers <onboarding@orderlyproblemsolvers.com>', 
         to: [body.email],
         subject: 'Submission Received: Verification Pending',
@@ -139,15 +139,14 @@ export default defineEventHandler(async (event) => {
           </html>
         `
       });
-      console.log('📧 Email sent successfully:', data.id);
     } catch (emailError) {
-      console.error('❌ Resend Error:', emailError);
+      // Swallowing the error here so that even if the email fails, 
+      // the user still gets a success response for the database insertion.
     }
 
     return { success: true, message: 'Submission received' };
 
   } catch (e: any) {
-    console.error("Submission Database Error:", e);
     throw createError({ statusCode: 500, statusMessage: 'Internal Server Error' });
   }
 });

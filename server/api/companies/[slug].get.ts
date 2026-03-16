@@ -82,7 +82,6 @@ export default defineEventHandler(async (event) => {
     };
 
   } catch (error: any) {
-    console.error('🔥 DATABASE ERROR:', error);
     throw createError({ statusCode: 500, statusMessage: error.message });
   }
 });

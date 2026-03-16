@@ -6,9 +6,6 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const q = query.q as string;
 
-  // DEBUG LOG
-  console.log('🔎 Searching for:', q);
-
   if (!q || q.length < 2) {
     return [];
   }
@@ -66,13 +63,9 @@ export default defineEventHandler(async (event) => {
     const peopleResults = rawPeople.map(p => ({ ...p, type: 'person' }));
     const storyResults = rawStories.map(s => ({ ...s, type: 'story' }));
 
-    const results = [...companyResults, ...peopleResults, ...storyResults];
-    
-    console.log(`✅ Found ${results.length} results`);
-    return results;
+    return [...companyResults, ...peopleResults, ...storyResults];
 
   } catch (e) {
-    console.error("Search API Error:", e);
     return [];
   }
 });

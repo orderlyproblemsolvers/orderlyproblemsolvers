@@ -87,7 +87,6 @@ export default defineEventHandler(async (event) => {
     if (e.code === '23505') {
         throw createError({ statusCode: 409, statusMessage: 'Slug already exists.' });
     }
-    console.error("Create Person Error:", e);
     throw createError({ statusCode: 500, statusMessage: e.message });
   }
 });

@@ -103,7 +103,6 @@ export default defineEventHandler(async (event) => {
     };
 
   } catch (error) {
-    console.error('🔥 DATABASE ERROR:', error);
     throw createError({ statusCode: 500, statusMessage: 'Internal Server Error' });
   }
 });

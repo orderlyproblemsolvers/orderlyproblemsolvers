@@ -25,23 +25,25 @@ const links = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex">
-    
+  <!-- overflow-x-hidden on the root prevents any overflowing child from
+       creating a horizontal scrollbar at the page level on mobile -->
+  <div class="min-h-screen bg-gray-50 flex text-black overflow-x-hidden">
+
     <!-- MOBILE HEADER -->
     <div class="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-20 flex items-center justify-between px-4">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 bg-black rounded-full"></div>
         <span class="font-black tracking-tight text-sm">OPS Admin</span>
       </div>
-      <button 
+      <button
         @click="isMobileMenuOpen = !isMobileMenuOpen"
         class="p-2 text-gray-600 hover:text-black transition-colors"
       >
         <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
         <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -55,11 +57,11 @@ const links = [
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div 
-        v-if="isMobileMenuOpen" 
-        @click="closeMobileMenu"
+      <div
+        v-if="isMobileMenuOpen"
         class="lg:hidden fixed inset-0 bg-black/50 z-30"
-      ></div>
+        @click="closeMobileMenu"
+      />
     </Transition>
 
     <!-- MOBILE SIDEBAR -->
@@ -71,27 +73,34 @@ const links = [
       leave-from-class="translate-x-0"
       leave-to-class="-translate-x-full"
     >
-      <aside 
+      <aside
         v-if="isMobileMenuOpen"
         class="lg:hidden fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 z-40 flex flex-col"
       >
         <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-          <NuxtLink 
-            v-for="link in links" 
-            :key="link.to" 
+          <NuxtLink
+            v-for="link in links"
+            :key="link.to"
             :to="link.to"
-            @click="closeMobileMenu"
             active-class="bg-gray-100 text-black font-bold"
             class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-50 hover:text-black transition-colors"
+            @click="closeMobileMenu"
           >
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="link.icon"></path></svg>
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="link.icon" />
+            </svg>
             {{ link.label }}
           </NuxtLink>
         </nav>
 
         <div class="p-4 border-t border-gray-100">
-          <button @click="handleLogout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 w-full transition-colors">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          <button
+            class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 w-full transition-colors"
+            @click="handleLogout"
+          >
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
             Sign Out
           </button>
         </div>
@@ -102,34 +111,40 @@ const links = [
     <aside class="w-64 bg-white border-r border-gray-200 fixed h-full z-10 hidden lg:flex flex-col">
       <div class="p-6 border-b border-gray-100">
         <div class="flex items-center gap-3">
-           <div class="w-8 h-8 bg-black rounded-full flex-shrink-0"></div>
-           <span class="font-black tracking-tight text-sm">OPS Admin</span>
+          <div class="w-8 h-8 bg-black rounded-full flex-shrink-0"></div>
+          <span class="font-black tracking-tight text-sm">OPS Admin</span>
         </div>
       </div>
 
       <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-        <NuxtLink 
-          v-for="link in links" 
-          :key="link.to" 
+        <NuxtLink
+          v-for="link in links"
+          :key="link.to"
           :to="link.to"
           active-class="bg-gray-100 text-black font-bold"
           class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-50 hover:text-black transition-colors"
         >
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="link.icon"></path></svg>
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="link.icon" />
+          </svg>
           {{ link.label }}
         </NuxtLink>
       </nav>
 
       <div class="p-4 border-t border-gray-100">
-        <button @click="handleLogout" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 w-full transition-colors">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        <button
+          class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 w-full transition-colors"
+          @click="handleLogout"
+        >
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
           Sign Out
         </button>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 lg:ml-64 pt-16 lg:pt-0">
+    <main class="flex-1 min-w-0 lg:ml-64 pt-16 lg:pt-0">
       <div class="p-4 sm:p-6 md:p-8">
         <slot />
       </div>

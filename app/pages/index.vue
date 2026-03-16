@@ -1,7 +1,6 @@
 <template>
    <div>
-    <LazyHeroSection/>
-    <FeatureDrop/>
+    <NewHero/>
     <LazyEcosystemGrid/>
     <LazySolversStream/>
     <OPSSection/>

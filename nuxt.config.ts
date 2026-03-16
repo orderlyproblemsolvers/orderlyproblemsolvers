@@ -34,7 +34,8 @@ export default defineNuxtConfig({
     'nuxt-jsonld',
     'nuxt-security',
     'nuxt-gtag',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    '@nuxt/ui'
   ],
 
   ssr: true,

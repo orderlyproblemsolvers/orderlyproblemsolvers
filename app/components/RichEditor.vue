@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, shallowRef, watch, ref } from 'vue'
-import { Editor, EditorContent, Extension } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Link from '@tiptap/extension-link'
-import Image from '@tiptap/extension-image'
+import { ref, computed } from 'vue'
+import { Extension } from '@tiptap/core'
 import Underline from '@tiptap/extension-underline'
-import Placeholder from '@tiptap/extension-placeholder'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
-
-const config = useRuntimeConfig()
+import type { EditorCustomHandlers, EditorToolbarItem } from '@nuxt/ui'
+import type { Editor } from '@tiptap/vue-3'
 
 // --- CUSTOM FONT SIZE EXTENSION ---
-// This allows us to set the font-size style attribute on text
 const FontSize = Extension.create({
   name: 'fontSize',
-  addOptions() { return { types: ['textStyle'] } },
+  addOptions() {
+    return { types: ['textStyle'] }
+  },
   addGlobalAttributes() {
     return [
       {
@@ -35,234 +32,222 @@ const FontSize = Extension.create({
   },
   addCommands() {
     return {
-      setFontSize: (fontSize) => ({ chain }) => {
-        return chain().setMark('textStyle', { fontSize }).run()
-      },
-      unsetFontSize: () => ({ chain }) => {
-        return chain().setMark('textStyle', { fontSize: null }).run()
-      },
+      setFontSize:
+        (fontSize: string) =>
+        ({ chain }: any) =>
+          chain().setMark('textStyle', { fontSize }).run(),
+      unsetFontSize:
+        () =>
+        ({ chain }: any) =>
+          chain().setMark('textStyle', { fontSize: null }).run(),
     }
   },
 })
 
-const props = defineProps<{
-  modelValue: string
-}>()
+// --- PROPS & EMITS ---
+const props = defineProps<{ modelValue: string }>()
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
 
-const emit = defineEmits(['update:modelValue'])
-const fileInput = ref<HTMLInputElement | null>(null)
-const isUploading = ref(false)
-const editor = shallowRef<Editor>()
-
-// CONFIG
+// --- CLOUDINARY CONFIG ---
+const config = useRuntimeConfig()
 const CLOUD_NAME = config.public.cloudinaryCloudName
 const UPLOAD_PRESET = config.public.cloudinaryUploadPreset
 
-const btnBase = "p-2 rounded hover:bg-gray-200 text-gray-500 font-bold text-xs uppercase min-w-[32px] transition-colors flex items-center justify-center"
-const btnActive = "bg-black text-white hover:bg-gray-800"
+// --- REFS ---
+const editorRef = useTemplateRef<{ editor: Editor | undefined }>('editorRef')
+const fileInput = ref<HTMLInputElement | null>(null)
+const isUploading = ref(false)
 
-onMounted(() => {
-  if (!import.meta.client) return
+// --- CUSTOM HANDLERS ---
+const customHandlers = {
+  imageUpload: {
+    canExecute: () => !isUploading.value,
+    execute: (editor: Editor) => {
+      fileInput.value?.click()
+      return editor.chain()
+    },
+    isActive: () => false,
+    isDisabled: () => isUploading.value,
+  },
+} satisfies EditorCustomHandlers
 
-  try {
-    editor.value = new Editor({
-      content: props.modelValue,
-      extensions: [
-        StarterKit.configure({
-          heading: { levels: [2, 3] },
-          // We keep codeBlock enabled in StarterKit, we just need to style it in CSS
-        }),
-        Underline,
-        TextStyle,
-        Color,
-        FontSize,
-        Link.configure({
-          openOnClick: false,
-          HTMLAttributes: { class: 'text-blue-600 underline cursor-pointer' }
-        }),
-        Image.configure({
-          HTMLAttributes: { class: 'rounded-xl shadow-md my-8 w-full object-cover max-h-[500px]' }
-        }),
-        Placeholder.configure({
-          placeholder: 'Start writing your story...'
-        })
-      ],
-      editorProps: {
-        attributes: {
-          class: `prose prose-sm sm:prose lg:prose-lg focus:outline-none min-h-[400px] max-w-none p-6`
-        }
-      },
-      onUpdate: ({ editor }) => {
-        emit('update:modelValue', editor.getHTML())
-      }
-    })
-  } catch (e) {
-    console.error("Failed to initialize Tiptap:", e)
-  }
-})
-
-onBeforeUnmount(() => {
-  editor.value?.destroy()
-})
-
-// Watch for external changes
-watch(() => props.modelValue, (newValue) => {
-  if (!editor.value) return
-  const isSame = editor.value.getHTML() === newValue
-  if (isSame) return
-  editor.value.commands.setContent(newValue, false)
-})
-
-// --- ACTIONS ---
-const setLink = () => {
-  if (!editor.value) return
-  const previousUrl = editor.value.getAttributes('link').href
-  const url = window.prompt('URL', previousUrl)
-  if (url === null) return
-  if (url === '') {
-    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
-    return
-  }
-  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-}
-
-const triggerImageUpload = () => fileInput.value?.click()
-
+// --- IMAGE UPLOAD HANDLER ---
 const handleFile = async (event: Event) => {
   const target = event.target as HTMLInputElement
-  if (!target.files || target.files.length === 0) return
-  const file = target.files[0]
-  await uploadAndInsertImage(file)
-  target.value = '' 
-}
+  if (!target.files?.length) return
 
-const uploadAndInsertImage = async (file: File) => {
-  if (!editor.value) return
+  const editor = editorRef.value?.editor
+  if (!editor) return
+
   isUploading.value = true
   const formData = new FormData()
-  formData.append('file', file)
+  formData.append('file', target.files[0]!)
   formData.append('upload_preset', UPLOAD_PRESET)
 
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-      method: 'POST',
-      body: formData
-    })
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: 'POST', body: formData }
+    )
     const data = await res.json()
     if (data.secure_url) {
-      editor.value.chain().focus().setImage({ src: data.secure_url }).run()
+      editor.chain().focus().setImage({ src: data.secure_url }).run()
     } else {
-      alert('Image upload failed: ' + (data.error?.message || 'Unknown error'))
+      console.error('Upload failed:', data.error?.message)
     }
   } catch (e) {
-    alert('Network error')
+    console.error('Network error during upload', e)
   } finally {
     isUploading.value = false
+    target.value = ''
   }
 }
+
+// --- TOOLBAR ITEMS ---
+const toolbarItems = computed(
+  () =>
+    [
+      [
+        { kind: 'undo', icon: 'i-lucide-undo-2' },
+        { kind: 'redo', icon: 'i-lucide-redo-2' },
+      ],
+      [
+        { kind: 'mark', mark: 'bold', icon: 'i-lucide-bold' },
+        { kind: 'mark', mark: 'italic', icon: 'i-lucide-italic' },
+        { kind: 'mark', mark: 'underline', icon: 'i-lucide-underline' },
+      ],
+      [
+        {
+          icon: 'i-lucide-heading',
+          content: { align: 'start' },
+          items: [
+            { kind: 'heading', level: 2, icon: 'i-lucide-heading-2', label: 'Heading 2' },
+            { kind: 'heading', level: 3, icon: 'i-lucide-heading-3', label: 'Heading 3' },
+          ],
+        },
+      ],
+      [
+        { kind: 'bulletList', icon: 'i-lucide-list' },
+        { kind: 'orderedList', icon: 'i-lucide-list-ordered' },
+      ],
+      [
+        { kind: 'blockquote', icon: 'i-lucide-quote' },
+        { kind: 'codeBlock', icon: 'i-lucide-square-code' },
+      ],
+      [
+        { kind: 'link', icon: 'i-lucide-link' },
+        {
+          kind: 'imageUpload',
+          icon: isUploading.value ? 'i-lucide-loader-circle' : 'i-lucide-image',
+        },
+      ],
+    ] satisfies EditorToolbarItem<typeof customHandlers>[][]
+)
 </script>
 
 <template>
-  <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm group focus-within:ring-2 focus-within:ring-black/5 transition-all">
-    
-    <div class="flex flex-wrap items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/80 backdrop-blur sticky top-0 z-10 min-h-[42px]" v-if="editor">
-      
-      <button @click.prevent="editor.chain().focus().undo().run()" :class="btnBase" title="Undo">↩</button>
-      <button @click.prevent="editor.chain().focus().redo().run()" :class="btnBase" title="Redo">↪</button>
-      <div class="w-px h-4 bg-gray-300 mx-1"></div>
+  <!--
+    min-w-0: prevents this component from forcing its grid/flex
+    parent wider than the viewport on mobile.
+  -->
+  <div class="min-w-0 w-full border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-black/5 transition-all">
+    <UEditor
+      ref="editorRef"
+      v-slot="{ editor }"
+      :model-value="modelValue"
+      content-type="html"
+      :extensions="[Underline, TextStyle, Color, FontSize]"
+      :handlers="customHandlers"
+      :starter-kit="{
+        heading: { levels: [2, 3] },
+        dropcursor: { color: 'var(--ui-primary)', width: 2 },
+        link: { openOnClick: false },
+      }"
+      :placeholder="{ placeholder: 'Start writing your story...', mode: 'firstLine' }"
+      :ui="{ base: 'focus:outline-none min-h-[300px] sm:min-h-[400px] max-w-none p-4 sm:p-6' }"
+      @update:model-value="emit('update:modelValue', $event as string)"
+    >
+      <!--
+        Toolbar wrapper:
+        - overflow-x-auto: lets the toolbar scroll horizontally on small
+          screens instead of blowing out the page width
+        - min-w-0: same containment fix as the outer wrapper
+      -->
+      <div class="min-w-0 overflow-x-auto border-b border-gray-100 bg-white sticky top-0 z-10">
+        <div class="flex items-center gap-1 p-2 min-h-[42px] w-max min-w-full">
+          <UEditorToolbar :editor="editor" :items="toolbarItems" />
 
-      <button @click.prevent="editor.chain().focus().toggleBold().run()" :class="[btnBase, editor.isActive('bold') ? btnActive : '']"><strong>B</strong></button>
-      <button @click.prevent="editor.chain().focus().toggleItalic().run()" :class="[btnBase, editor.isActive('italic') ? btnActive : '']"><em>i</em></button>
-      <button @click.prevent="editor.chain().focus().toggleUnderline().run()" :class="[btnBase, editor.isActive('underline') ? btnActive : '']"><u>U</u></button>
-      
-      <div class="relative flex items-center justify-center p-2 rounded hover:bg-gray-200 cursor-pointer" title="Text Color">
-        <span :style="{ color: editor.getAttributes('textStyle').color || '#000000' }" class="font-bold text-xs select-none">A</span>
-        <input 
-          type="color" 
-          class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          @input="editor.chain().focus().setColor(($event.target as HTMLInputElement).value).run()"
-          :value="editor.getAttributes('textStyle').color || '#000000'"
-        >
-      </div>
+          <!-- Color Picker -->
+          <div
+            class="toolbar-color-btn relative flex items-center justify-center p-2 rounded cursor-pointer shrink-0"
+            title="Text Color"
+          >
+            <span
+              class="font-bold text-xs select-none"
+              :style="{ color: editor.getAttributes('textStyle').color || '#000000' }"
+            >A</span>
+            <input
+              type="color"
+              class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+              :value="editor.getAttributes('textStyle').color || '#000000'"
+              @input="editor.chain().focus().setColor(($event.target as HTMLInputElement).value).run()"
+            />
+          </div>
 
-      <select 
-        @change="editor.chain().focus().setFontSize(($event.target as HTMLSelectElement).value).run()" 
-        class="h-8 text-xs border border-gray-200 rounded bg-transparent px-1 outline-none hover:bg-gray-200 cursor-pointer"
-      >
-        <option value="" disabled selected>Size</option>
-        <option value="12px">Small</option>
-        <option value="16px">Normal</option>
-        <option value="20px">Large</option>
-        <option value="28px">Huge</option>
-      </select>
-
-      <div class="w-px h-4 bg-gray-300 mx-1"></div>
-
-      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="[btnBase, editor.isActive('heading', { level: 2 }) ? btnActive : '']">H2</button>
-      <button @click.prevent="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="[btnBase, editor.isActive('heading', { level: 3 }) ? btnActive : '']">H3</button>
-      <div class="w-px h-4 bg-gray-300 mx-1"></div>
-
-      <button @click.prevent="editor.chain().focus().toggleBulletList().run()" :class="[btnBase, editor.isActive('bulletList') ? btnActive : '']">
-         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-      </button>
-      <button @click.prevent="editor.chain().focus().toggleOrderedList().run()" :class="[btnBase, editor.isActive('orderedList') ? btnActive : '']">
-         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h12M7 12h12M7 17h12M3 7h.01M3 12h.01M3 17h.01"></path></svg>
-      </button>
-
-      <button 
-        @click.prevent="editor.chain().focus().toggleCodeBlock().run()" 
-        :class="[btnBase, editor.isActive('codeBlock') ? btnActive : '']"
-        title="Code Block"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-      </button>
-
-      <button @click.prevent="editor.chain().focus().toggleBlockquote().run()" :class="[btnBase, editor.isActive('blockquote') ? btnActive : '']">”</button>
-      <div class="w-px h-4 bg-gray-300 mx-1"></div>
-
-      <button @click.prevent="setLink" :class="[btnBase, editor.isActive('link') ? btnActive : '']">Link</button>
-      
-      <button 
-        @click.prevent="triggerImageUpload" 
-        :class="btnBase" 
-        :disabled="isUploading"
-      >
-        <span v-if="isUploading" class="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
-        <div v-else class="flex items-center gap-1">
-           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-           Img
+          <!-- Font Size -->
+          <select
+            class="shrink-0 h-8 text-xs text-gray-800 border border-gray-200 rounded bg-white px-1 outline-none hover:bg-gray-100 cursor-pointer"
+            @change="(editor as any).chain().focus().setFontSize(($event.target as HTMLSelectElement).value).run()"
+          >
+            <option value="" disabled selected>Size</option>
+            <option value="12px">Small</option>
+            <option value="16px">Normal</option>
+            <option value="20px">Large</option>
+            <option value="28px">Huge</option>
+          </select>
         </div>
-      </button>
-      <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
-    </div>
+      </div>
+    </UEditor>
 
-    <div v-if="editor" class="min-h-[400px]">
-       <editor-content :editor="editor" />
-    </div>
-    
-    <div v-else class="p-12 text-center text-gray-400 bg-gray-50 min-h-[400px] flex items-center justify-center">
-      <span>Loading Editor...</span>
-    </div>
-
+    <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFile" />
   </div>
 </template>
 
 <style scoped>
-/* Tiptap Placeholder Styling */
-:deep(.tiptap p.is-editor-empty:first-child::before) {
-  color: #9ca3af;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
+/* ── Toolbar buttons: black on white ───────────────────────── */
+
+:deep([role="toolbar"] button) {
+  color: #111111;
+  background-color: transparent;
 }
 
-/* 3. CODE BLOCK STYLING 
-   This makes the code blocks look like dark terminals.
-*/
+:deep([role="toolbar"] button:hover) {
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+:deep([role="toolbar"] button[data-active="true"]),
+:deep([role="toolbar"] button[aria-pressed="true"]) {
+  background-color: #111111;
+  color: #ffffff;
+}
+
+:deep([role="toolbar"] button:disabled) {
+  color: #d1d5db;
+}
+
+:deep([role="toolbar"] [data-slot="separator"]) {
+  background-color: #e5e7eb;
+}
+
+.toolbar-color-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* ── Code block: dark terminal ─────────────────────────────── */
 :deep(.tiptap pre) {
   background: #0d0d0d;
-  color: #FFF;
+  color: #fff;
   font-family: 'JetBrainsMono', monospace;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
