@@ -101,7 +101,26 @@ const handleSubmit = async () => {
 
   isLoading.value = true
   try {
-    await $fetch('/api/companies', { method: 'POST', body: form.value })
+    const payload = {
+      name:        form.value.name,
+      slug:        form.value.slug,
+      headline:    form.value.headline,
+      description: form.value.description,
+      industry:    form.value.industry,
+      location:    form.value.location,
+      website:     form.value.website,
+      stage:       form.value.stage,
+      logo:        form.value.logo,
+      featured:    form.value.featured,
+      stack:       form.value.stack,
+      videos:      form.value.videos,
+    }
+
+    await $fetch('/api/companies', {
+      method: 'POST',
+      body: payload
+    })
+
     showToast('Company created successfully!', 'success')
     setTimeout(() => router.push('/admin/dashboard'), 1200)
   } catch (e: any) {
@@ -120,9 +139,8 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
 </script>
 
 <template>
-  <div class="page-root max-w-3xl mx-auto">
+  <div class="page-root max-w-4xl mx-auto">
 
-    <!-- ── TOAST ─────────────────────────────────────────────── -->
     <Transition
       enter-active-class="transition-all duration-300 ease-out"
       enter-from-class="opacity-0 translate-y-2"
@@ -148,7 +166,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
       </div>
     </Transition>
 
-    <!-- ── HEADER ─────────────────────────────────────────────── -->
     <div class="flex items-center justify-between mb-8">
       <div>
         <h1 class="text-2xl font-black text-gray-900">New Company</h1>
@@ -157,10 +174,8 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
       <UButton variant="ghost" color="neutral" to="/admin/dashboard">Cancel</UButton>
     </div>
 
-    <!-- ── FORM ───────────────────────────────────────────────── -->
-    <div class="space-y-8 bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+    <div class="space-y-8 bg-white p-2 sm:p-2 rounded-xl border border-gray-200 shadow-sm">
 
-      <!-- Name + Slug -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Company Name" :ui="{ label: labelClass }">
           <UInput v-model="form.name" placeholder="PayFlow" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
@@ -170,10 +185,8 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
         </UFormField>
       </div>
 
-      <!-- Logo -->
       <ImageUpload v-model="form.logo" label="Company Logo" />
 
-      <!-- Headline -->
       <UFormField label="Headline (One Liner)" :ui="{ label: labelClass }">
         <UInput
           v-model="form.headline"
@@ -185,7 +198,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
 
       <hr class="border-gray-100" />
 
-      <!-- Industry + Stage -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Industry" :ui="{ label: labelClass }">
           <USelect
@@ -205,7 +217,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
         </UFormField>
       </div>
 
-      <!-- Location + Website -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Location" :ui="{ label: labelClass }">
           <UInput v-model="form.location" placeholder="Lagos, Nigeria" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
@@ -217,7 +228,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
 
       <hr class="border-gray-100" />
 
-      <!-- Tech Stack -->
       <div class="bg-gray-50 p-5 sm:p-6 rounded-xl border border-gray-200">
         <div class="flex items-center justify-between mb-4">
           <label :class="labelClass">Tech Stack & Solutions</label>
@@ -226,7 +236,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
           </span>
         </div>
 
-        <!-- Category + Name + Add -->
         <div class="flex flex-col sm:flex-row gap-3 mb-4">
           <USelect
             v-model="form.currentTechCategory"
@@ -254,7 +263,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
           </div>
         </div>
 
-        <!-- Stack chips -->
         <div v-if="form.stack.length > 0" class="flex flex-wrap gap-2">
           <div
             v-for="(item, i) in form.stack"
@@ -280,7 +288,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
         </div>
       </div>
 
-      <!-- YouTube Videos -->
       <div>
         <label :class="labelClass + ' block mb-2'">YouTube Videos</label>
         <div class="flex gap-2 mb-3">
@@ -318,13 +325,13 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
         </div>
       </div>
 
-      <!-- Description -->
       <div>
         <label :class="labelClass + ' block mb-2'">Full Description</label>
-        <RichEditor v-model="form.description" />
+        <ClientOnly>
+          <RichEditor v-model="form.description" />
+        </ClientOnly>
       </div>
 
-      <!-- Featured toggle -->
       <div class="flex items-center gap-3 border-t border-gray-100 pt-5">
         <USwitch v-model="form.featured" color="neutral" />
         <label
@@ -335,7 +342,6 @@ const categoryItems = computed(() => SOLUTION_CATEGORIES.map((c: string) => ({ l
         </label>
       </div>
 
-      <!-- Submit -->
       <div class="pt-2">
         <button
           type="button"

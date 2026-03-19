@@ -24,11 +24,38 @@ const isHiring = ref(false)
 // --- OPTIONS CONFIGURATION ---
 const filterOptions = {
   industries: [
-    'FinTech', 'HealthTech', 'AgriTech', 'Logistics', 'EdTech', 
-    'Clean Energy', 'PropTech', 'GovTech', 'E-commerce', 'AI & Data'
+    'FinTech',
+  'HealthTech',
+  'EdTech',
+  'AgriTech',
+  'GovTech',
+  'ClimateTech',
+  'PropTech',
+  'Logistics & Mobility',
+  'E-Commerce & Retail Tech',
+  'AI & Data',
+  'Cybersecurity',
+  'Cloud & DevOps',
+  'Media & Creator Tech',
+  'HR & Future of Work',
+  'Sales & Marketing Tech',
+  'Payments & Infrastructure',
+  'Blockchain & Web3',
+  'Smart Cities & IoT',
+  'Enterprise Software',
+  'Social Impact & Non-Profit Tech',
+  'DefenseTech',
+  'Insurance Tech',
+  'Robotics & Drones',
+  'Legal Tech',
+  'BioTech',
+  'Food Tech',
+  'Gaming & eSports',
+  'Space Tech',
+  'AR & VR'
   ],
   stages: [
-    'Bootstrapped', 'Pre-Seed', 'Seed', 'Series A', 'Series B+', 'Public'
+    'Bootstrapped', 'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Series C', 'Series D', 'Public', 'IPO', 'Grant Funding', 'Pre-IPO', 'Debt Financing', 'Crowd Funding', 'Venture Capital'
   ]
 }
 

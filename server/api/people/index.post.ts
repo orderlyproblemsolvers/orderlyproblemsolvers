@@ -30,14 +30,13 @@ export default defineEventHandler(async (event) => {
         slug: body.slug,
         role: body.role,
         bio: body.bio,
-        avatar: cleanAvatar, // ✅ Use the sanitized path
+        avatar: cleanAvatar, 
         location: body.location,
         
         // Contact Info
         email: body.email,
         website: body.website,
 
-        // ✅ NEW FIELD: Videos Array
         // Ensure it defaults to an empty array if undefined
         videos: body.videos || [], 
 

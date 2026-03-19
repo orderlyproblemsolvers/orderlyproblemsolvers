@@ -96,6 +96,12 @@ export default defineNuxtConfig({
     ],
   },
 
+  colorMode: {
+    preference: 'dark', // default value of $colorMode.preference
+    fallback: 'dark',   // fallback value if not system preference found
+    storageKey: 'nuxt-color-mode'
+  },
+
   // ✅ FIXED SECURITY CONFIG (YouTube embeddable)
   security: {
     headers: {
@@ -168,26 +174,36 @@ export default defineNuxtConfig({
     }
   },
 
-  // Nitro route rules
-  routeRules: {
-    '/api/auth/**': {
-      security: {
-        csrf: false,
-        rateLimiter: {
-          tokensPerInterval: 20,
-          interval: 60000,
-        }
-      },
+routeRules: {
+  '/api/auth/**': {
+    security: {
+      csrf: false,
+      rateLimiter: {
+        tokensPerInterval: 20,
+        interval: 60000,
+      }
     },
-    '/api/submissions': {
-      security: {
-        rateLimiter: {
-          tokensPerInterval: 5,
-          interval: 600000
-        }
+  },
+  '/api/submissions': {
+    security: {
+      rateLimiter: {
+        tokensPerInterval: 5,
+        interval: 600000
       }
     }
   },
+  // ✅ Allow HTML body — description comes from RichEditor (TipTap)
+  '/api/companies': {
+    security: {
+      xssValidator: false,
+    }
+  },
+  '/api/people': {
+    security: {
+      xssValidator: false,
+    }
+  },
+},
 
   vite: {
     plugins: [tailwindcss()],

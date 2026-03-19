@@ -18,7 +18,16 @@ export const SOLUTION_CATEGORIES = [
   'Blockchain & Web3',
   'Smart Cities & IoT',
   'Enterprise Software',
-  'Social Impact & Non-Profit Tech'
+  'Social Impact & Non-Profit Tech',
+  'DefenseTech',
+  'Insurance Tech',
+  'Robotics & Drones',
+  'Legal Tech',
+  'BioTech',
+  'Food Tech',
+  'Gaming & eSports',
+  'Space Tech',
+  'AR & VR'
 ] as const;
 
 export type SolutionCategory = typeof SOLUTION_CATEGORIES[number];

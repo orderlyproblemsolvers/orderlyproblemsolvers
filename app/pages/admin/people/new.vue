@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 definePageMeta({
@@ -23,7 +23,45 @@ const showToast = (message: string, type: ToastType = 'success') => {
 }
 
 // ── FETCH COMPANIES ─────────────────────────────────────────────
-const { data: companies } = await useFetch('/api/companies')
+const { data: companies, pending: companiesPending } = await useFetch('/api/companies', {
+  lazy: true
+})
+
+// ── ROLES MASTER LIST ───────────────────────────────────────────
+const ROLES_LIST = [
+  'Founder', 'CTO', 'VPE (VP of Engineering)', 'Product Manager',
+  'Product Designer', 'Backend Engineer', 'Frontend Engineer',
+  'Full-Stack Engineer', 'Mobile Developer (iOS/Android)',
+  'DevOps Engineer', 'SRE', 'Data Scientist', 'Data Engineer',
+  'QA Engineer', 'Security Engineer', 'Growth Lead',
+  'Bioinformatician', 'Embedded Systems Engineer', 'Hardware Engineer',
+  'Unity Developer', 'Unreal Engine Developer', 'GIS Specialist',
+  'Security Researcher', 'Blockchain Developer', 'Smart Contract Auditor',
+  'Robotics Engineer', 'Machine Learning Engineer', 'Computer Vision Engineer',
+  'Compliance Officer', 'Legal Engineer', 'Sustainability Consultant',
+  'BIM Manager', 'Supply Chain Analyst', 'Clinical Operations Manager',
+  'Gaming Economist', 'Technical Artist'
+]
+
+// ── CUSTOM ROLE SEARCH (Nuxt UI v4) ─────────────────────────────
+// v4 uses v-model:query to control the search input, and :items
+// with a computed to filter + allow custom entries.
+const roleQuery = ref('')
+
+const filteredRoles = computed(() => {
+  const q = roleQuery.value.trim().toLowerCase()
+  if (!q) return ROLES_LIST
+
+  const filtered = ROLES_LIST.filter(r => r.toLowerCase().includes(q))
+
+  // If what they typed isn't an exact match, prepend it as a custom option
+  const exactMatch = ROLES_LIST.some(r => r.toLowerCase() === q)
+  if (!exactMatch) {
+    return [roleQuery.value.trim(), ...filtered]
+  }
+
+  return filtered
+})
 
 // ── FORM DATA ───────────────────────────────────────────────────
 const form = ref({
@@ -34,6 +72,8 @@ const form = ref({
   location: '',
   email: '',
   website: '',
+  linkedin: '',
+  github: '',
   companyId: null as number | null,
   avatar: '',
   featured: false,
@@ -93,10 +133,33 @@ const handleSubmit = async () => {
 
   isLoading.value = true
   try {
-    await $fetch('/api/people', {
-      method: 'POST',
-      body: form.value,
-    })
+    let finalBio = form.value.bio || ''
+
+    const socials = []
+    if (form.value.linkedin) socials.push(`<a href="${form.value.linkedin}" target="_blank" rel="noopener" class="text-blue-600 hover:underline">LinkedIn</a>`)
+    if (form.value.github) socials.push(`<a href="${form.value.github}" target="_blank" rel="noopener" class="text-blue-600 hover:underline">GitHub</a>`)
+
+    if (socials.length > 0) {
+      finalBio += `<br><br><p><strong>Socials:</strong> ${socials.join(' | ')}</p>`
+    }
+
+    const payload = {
+      name: form.value.name,
+      slug: form.value.slug,
+      role: form.value.role,
+      bio: finalBio,
+      location: form.value.location,
+      email: form.value.email,
+      website: form.value.website,
+      companyId: form.value.companyId,
+      avatar: form.value.avatar,
+      featured: form.value.featured,
+      stack: form.value.stack,
+      videos: form.value.videos,
+    }
+
+    await $fetch('/api/people', { method: 'POST', body: payload })
+
     showToast('Person added successfully!', 'success')
     setTimeout(() => router.push('/admin/dashboard'), 1200)
   } catch (e: any) {
@@ -108,7 +171,7 @@ const handleSubmit = async () => {
 
 const labelClass = 'text-xs font-bold uppercase tracking-wide text-black'
 const companyOptions = computed(() => [
-  { label: 'Freelance / Unemployed', value: null },
+  { label: 'Freelance / Independent', value: null },
   ...(companies.value ?? []).map((c: any) => ({ label: c.name, value: c.id })),
 ])
 </script>
@@ -116,7 +179,7 @@ const companyOptions = computed(() => [
 <template>
   <div class="page-root max-w-2xl mx-auto">
 
-    <!-- ── TOAST ─────────────────────────────────────────────── -->
+    <!-- ── TOAST ──────────────────────────────────────────────── -->
     <Transition
       enter-active-class="transition-all duration-300 ease-out"
       enter-from-class="opacity-0 translate-y-2"
@@ -154,19 +217,10 @@ const companyOptions = computed(() => [
       <!-- Name + Slug -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Full Name" :ui="{ label: labelClass }">
-          <UInput
-            v-model="form.name"
-            placeholder="Sarah Jenkins"
-            class="w-full"
-            :ui="{ base: 'bg-gray-50 text-black' }"
-          />
+          <UInput v-model="form.name" placeholder="Sarah Jenkins" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
         </UFormField>
         <UFormField label="Slug" :ui="{ label: labelClass }">
-          <UInput
-            v-model="form.slug"
-            class="w-full"
-            :ui="{ base: 'bg-gray-50 text-black' }"
-          />
+          <UInput v-model="form.slug" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
         </UFormField>
       </div>
 
@@ -176,17 +230,21 @@ const companyOptions = computed(() => [
       <!-- Role + Company -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Role / Title" :ui="{ label: labelClass }">
-          <UInput
+          <USelectMenu
             v-model="form.role"
-            placeholder="Senior Engineer"
+            v-model:query="roleQuery"
+            :items="filteredRoles"
+            placeholder="Select or type a role..."
             class="w-full"
             :ui="{ base: 'bg-gray-50 text-black' }"
           />
         </UFormField>
+
         <UFormField label="Company" :ui="{ label: labelClass }">
           <USelect
             v-model="form.companyId"
             :items="companyOptions"
+            :loading="companiesPending"
             value-key="value"
             label-key="label"
             class="w-full"
@@ -198,36 +256,29 @@ const companyOptions = computed(() => [
       <!-- Email + Website -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <UFormField label="Email (Public)" :ui="{ label: labelClass }">
-          <UInput
-            v-model="form.email"
-            type="email"
-            placeholder="contact@example.com"
-            class="w-full"
-            :ui="{ base: 'bg-gray-50 text-black' }"
-          />
+          <UInput v-model="form.email" type="email" placeholder="contact@example.com" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
         </UFormField>
         <UFormField label="Website / Portfolio" :ui="{ label: labelClass }">
-          <UInput
-            v-model="form.website"
-            type="url"
-            placeholder="https://"
-            class="w-full"
-            :ui="{ base: 'bg-gray-50 text-black' }"
-          />
+          <UInput v-model="form.website" type="url" placeholder="https://" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
+        </UFormField>
+      </div>
+
+      <!-- LinkedIn + GitHub -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <UFormField label="LinkedIn URL" :ui="{ label: labelClass }">
+          <UInput v-model="form.linkedin" type="url" placeholder="https://linkedin.com/in/..." class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
+        </UFormField>
+        <UFormField label="GitHub URL" :ui="{ label: labelClass }">
+          <UInput v-model="form.github" type="url" placeholder="https://github.com/..." class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
         </UFormField>
       </div>
 
       <!-- Location -->
       <UFormField label="Location" :ui="{ label: labelClass }">
-        <UInput
-          v-model="form.location"
-          placeholder="Remote / Lagos"
-          class="w-full"
-          :ui="{ base: 'bg-gray-50 text-black' }"
-        />
+        <UInput v-model="form.location" placeholder="Remote / Lagos" class="w-full" :ui="{ base: 'bg-gray-50 text-black' }" />
       </UFormField>
 
-      <!-- Stack Tags -->
+      <!-- Skills / Stack -->
       <div>
         <label :class="labelClass + ' block mb-2'">Skills / Stack</label>
         <div class="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-black/20 focus-within:border-black transition-all min-h-[46px]">
@@ -263,14 +314,7 @@ const companyOptions = computed(() => [
             :ui="{ base: 'bg-gray-50 text-black' }"
             @keydown.enter.prevent="addVideo"
           />
-          <UButton
-            variant="outline"
-            color="neutral"
-            type="button"
-            @click="addVideo"
-          >
-            Add
-          </UButton>
+          <UButton variant="outline" color="neutral" type="button" @click="addVideo">Add</UButton>
         </div>
 
         <div v-if="form.videos.length > 0" class="space-y-2">
@@ -285,11 +329,7 @@ const companyOptions = computed(() => [
               </svg>
               <span class="text-xs text-gray-600 truncate">{{ vid }}</span>
             </div>
-            <button
-              type="button"
-              class="text-red-500 hover:text-red-700 text-xs font-bold transition-colors shrink-0 ml-2"
-              @click="removeVideo(i)"
-            >
+            <button type="button" class="text-red-500 hover:text-red-700 text-xs font-bold transition-colors shrink-0 ml-2" @click="removeVideo(i)">
               Remove
             </button>
           </div>
@@ -299,10 +339,12 @@ const companyOptions = computed(() => [
       <!-- Bio -->
       <div>
         <label :class="labelClass + ' block mb-2'">Short Bio</label>
-        <RichEditor v-model="form.bio" />
+        <ClientOnly>
+          <RichEditor v-model="form.bio" />
+        </ClientOnly>
       </div>
 
-      <!-- Featured toggle -->
+      <!-- Featured -->
       <div class="flex items-center gap-3 border-t border-gray-100 pt-5">
         <USwitch v-model="form.featured" color="neutral" />
         <label class="text-sm font-bold text-gray-900 cursor-pointer" @click="form.featured = !form.featured">
@@ -327,7 +369,6 @@ const companyOptions = computed(() => [
   </div>
 </template>
 
-
 <style scoped>
 .page-root {
   --ui-primary: var(--color-neutral-900);
@@ -344,7 +385,6 @@ const companyOptions = computed(() => [
   --ui-primary-950: var(--color-neutral-950);
 }
 
-/* ghost button hover → gray-50 */
 .page-root :deep([data-variant="ghost"]:hover),
 .page-root :deep([data-variant="ghost"]:focus-visible) {
   background-color: #f9fafb;

@@ -25,8 +25,19 @@ const selectedLocation = ref('')
 // --- OPTIONS CONFIGURATION ---
 const filterOptions = {
   roles: [
-    'CTO', 'Founder', 'Software Engineer', 'Product Designer', 
-    'Product Manager', 'Data Scientist', 'DevOps', 'Mobile Developer'
+    'CEO', 'CTO', 'Founder', 'Software Engineer', 'Product Designer', 
+    'Product Manager', 'Data Scientist', 'DevOps', 'Mobile Developer',
+
+    // Sector-Specific Technical Roles
+    'Bioinformatician', 'Embedded Systems Engineer', 'Hardware Engineer',
+    'Unity Developer', 'Unreal Engine Developer', 'GIS Specialist',
+    'Security Researcher', 'Blockchain Developer', 'Smart Contract Auditor',
+    'Robotics Engineer', 'Machine Learning Engineer', 'Computer Vision Engineer',
+
+    // Sector-Specific Operations & Compliance
+    'Compliance Officer', 'Legal Engineer', 'Sustainability Consultant',
+    'BIM Manager', 'Supply Chain Analyst', 'Clinical Operations Manager',
+    'Gaming Economist', 'Technical Artist', 'Growth Lead'
   ],
   locations: [
     'Lagos', 'Nairobi', 'Cape Town', 'Accra', 'Cairo', 
