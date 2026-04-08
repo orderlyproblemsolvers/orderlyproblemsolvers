@@ -167,8 +167,8 @@ useSeoMeta({
   ogDescription: 'Meet the editorial board and engineering team behind the definitive index of problem solvers.',
   ogImage: '/img/logo-sm.png',
   twitterCard: 'summary_large_image',
-  ogUrl: 'https://orderlyproblemsolvers.com/about',
-  canonical: 'https://orderlyproblemsolvers.com/about'
+  ogUrl: 'https://media.orderlyproblemsolvers.com/about',
+  canonical: 'https://media.orderlyproblemsolvers.com/about'
 })
 
 defineOgImageComponent('OpsTemplate', {

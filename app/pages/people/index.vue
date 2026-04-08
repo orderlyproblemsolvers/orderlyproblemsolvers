@@ -9,12 +9,12 @@ useSeoMeta({
   ogTitle: 'People Directory - Orderly Problem Solvers',
   ogDescription: 'Discover talented problem solvers from around the world. Search and filter by role, location, and expertise to find your next collaborator or hire.',
   ogImage: '/img/logo-sm.png',
-  ogUrl: 'https://orderlyproblemsolvers.com/people',
+  ogUrl: 'https://media.orderlyproblemsolvers.com/people',
   ogType: 'website',
 
   // Twitter
   twitterCard: 'summary_large_image',
-  canonical: 'https://orderlyproblemsolvers.com/people'
+  canonical: 'https://media.orderlyproblemsolvers.com/people'
 })
 
 // --- FILTER STATE ---

@@ -41,7 +41,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   site: {
-    url: 'https://orderlyproblemsolvers.com',
+    url: 'https://media.orderlyproblemsolvers.com',
     name: 'Orderly Problem Solvers',
     description: 'The definitive index of the problem-solving economy in emerging markets.',
     defaultLocale: 'en',
@@ -68,7 +68,7 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    host: process.env.NUXT_PUBLIC_SITE_URL || 'https://orderlyproblemsolvers.com',
+    host: process.env.NUXT_PUBLIC_SITE_URL || 'https://media.orderlyproblemsolvers.com',
     domains: [
       'res.cloudinary.com',
     ],
@@ -78,8 +78,8 @@ export default defineNuxtConfig({
     identity: {
       type: 'Organization',
       name: 'Orderly Problem Solvers',
-      url: 'https://orderlyproblemssolvers.com',
-      logo: 'https://orderlyproblemsolvers.com/img/logo.png'
+      url: 'https://media.orderlyproblemssolvers.com',
+      logo: 'https://media.orderlyproblemsolvers.com/img/logo.png'
     }
   },
 
@@ -90,8 +90,8 @@ export default defineNuxtConfig({
       'images.unsplash.com',
       'i.pravatar.cc',
       'res.cloudinary.com',
-      'orderlyproblemsolvers.com',
-      'orderlyproblemsolvers.netlify.app',
+      'media.orderlyproblemsolvers.com',
+      'opsmedia.netlify.app',
       process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     ],
   },
@@ -153,9 +153,9 @@ export default defineNuxtConfig({
 
     corsHandler: {
       origin: [
-        'https://orderlyproblemsolvers.com',
-        'https://www.orderlyproblemsolvers.com',
-        'https://orderlyproblemsolvers.netlify.app',
+        'https://media.orderlyproblemsolvers.com',
+        'https://www.media.orderlyproblemsolvers.com',
+        'https://opsmedia.netlify.app',
         'http://localhost:3000'
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],

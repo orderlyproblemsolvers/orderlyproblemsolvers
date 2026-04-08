@@ -7,8 +7,8 @@ useSeoMeta({
   ogTitle: 'Submit Your Solution - Orderly Problem Solvers',
   ogDescription: 'Join the definitive index of problem solvers. Submit your profile for verification and gain visibility to investors, partners, and talent.',
   twitterCard: 'summary_large_image',
-  ogUrl: 'https://orderlyproblemsolvers.com/submit-solution',
-  canonical: 'https://orderlyproblemsolvers.com/submit-solution'
+  ogUrl: 'https://media.orderlyproblemsolvers.com/submit-solution',
+  canonical: 'https://media.orderlyproblemsolvers.com/submit-solution'
 })
 
 definePageMeta({

@@ -65,7 +65,7 @@ useJsonld(() => ({
     name: 'Orderly Problem Solvers',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://orderlyproblemsolvers.com/img/logo.png' 
+      url: 'https://media.orderlyproblemsolvers.com/img/logo.png' 
     }
   },
   description: article.value?.excerpt

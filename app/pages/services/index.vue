@@ -12,8 +12,8 @@ useSeoMeta({
   ogTitle: "OPS Studio - Engineering & Design",
   ogDescription: "Custom software, cloud architecture, and system design. View our transparent pricing and packages.",
   twitterCard: "summary_large_image",
-  ogUrl: 'https://orderlyproblemsolvers.com/services',
-  canonical: 'https://orderlyproblemsolvers.com/services'
+  ogUrl: 'https://media.orderlyproblemsolvers.com/services',
+  canonical: 'https://media.orderlyproblemsolvers.com/services'
 });
 
 const billingCycle = ref('project')

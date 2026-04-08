@@ -17,9 +17,9 @@ useSeoMeta({
   ogTitle: 'Orderly Problem Solvers',
   ogDescription: 'Discover the people and teams solving the world\'s hardest challenges.',
   ogImage: '/img/logo.png', // Fallback to logo if dynamic image fails
-  ogUrl: 'https://orderlyproblemsolvers.com',
+  ogUrl: 'https://media.orderlyproblemsolvers.com',
   ogType: 'website',
-  canonical: 'https://orderlyproblemsolvers.com',
+  canonical: 'https://media.orderlyproblemsolvers.com',
 
 
   // Twitter
@@ -46,10 +46,10 @@ useJsonld(() => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Orderly Problem Solvers',
-  url: 'https://orderlyproblemsolvers.com',
+  url: 'https://media.orderlyproblemsolvers.com',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://orderlyproblemsolvers.com/search?q={search_term_string}',
+    target: 'https://media.orderlyproblemsolvers.com/search?q={search_term_string}',
     'query-input': 'required name=search_term_string'
   }
 }))

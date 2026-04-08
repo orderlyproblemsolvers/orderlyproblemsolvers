@@ -9,7 +9,7 @@ useSeoMeta({
   ogTitle: 'Companies Directory - Orderly Problem Solvers',
   ogDescription: 'Discover innovative companies solving real-world problems across various industries. Explore our curated directory of solution-driven enterprises.',
   ogImage: '/img/logo-sm.png',
-  ogUrl: 'https://orderlyproblemsolvers.com/companies',
+  ogUrl: 'https://media.orderlyproblemsolvers.com/companies',
   ogType: 'website',
   // Twitter
   twitterCard: 'summary_large_image',

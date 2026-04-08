@@ -8,7 +8,7 @@ useSeoMeta({
   ogDescription: 'In-depth articles and insights on problem solvers shaping the future.',
   ogImage: '/img/logo-sm.png',
   twitterCard: 'summary_large_image',
-  ogUrl: 'https://orderlyproblemsolvers.com/stories',
+  ogUrl: 'https://media.orderlyproblemsolvers.com/stories',
 })
 
 definePageMeta({
